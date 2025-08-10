@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandler.js";
 import catchErrors from "./utils/catchErrors.js";
 import { OK } from "./constants/http.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.get("/", (req, res, next) => {
     message: "healty",
   });
 });
+
+app.use("/api/auth", authRoutes);
 
 app.use(errorHandler);
 
