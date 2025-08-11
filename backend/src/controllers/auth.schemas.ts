@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import z from "zod";
 
 export const emailSchema = z.email();
@@ -23,3 +22,10 @@ export const registerSchema = loginSchema
 export const verificationCodeSchema = z
   .string()
   .regex(/^[0-9a-fA-F]{24}$/, "Invalid Verification code");
+
+export const resetPasswordSchema = z.object({
+  verificationCode: z
+    .string()
+    .regex(/^[0-9a-fA-F]{24}$/, "Invalid Verification code"),
+  password: passwordSchema,
+});
