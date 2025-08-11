@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import z from "zod";
 
 export const emailSchema = z.email();
@@ -18,3 +19,7 @@ export const registerSchema = loginSchema
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const verificationCodeSchema = z
+  .string()
+  .regex(/^[0-9a-fA-F]{24}$/, "Invalid Verification code");

@@ -4,6 +4,7 @@ import {
   createAccount,
   loginUser,
   refreshUserAccessToken,
+  verifyEmail,
 } from "../services/auth.service.js";
 import {
   clearAuthCookies,
@@ -11,7 +12,11 @@ import {
   getRefreshTokenCookieOptions,
   sethAuthCookies,
 } from "../utils/cookies.js";
-import { loginSchema, registerSchema } from "./auth.schemas.js";
+import {
+  loginSchema,
+  registerSchema,
+  verificationCodeSchema,
+} from "./auth.schemas.js";
 import appAssert from "../utils/appAssert.js";
 import { verifyToken } from "../utils/jwt.js";
 import SessionModel from "../models/session.model.js";
@@ -82,5 +87,18 @@ export const logoutHandler = catchErrors(async (req, res) => {
 
   return clearAuthCookies(res).status(OK).json({
     message: "Logout successfull",
+  });
+});
+
+export const verifyEmailHandler = catchErrors(async (req, res) => {
+  // validate request
+  const verificationCode = verificationCodeSchema.parse(req.params.code);
+
+  // call service
+  await verifyEmail(verificationCode);
+
+  // return response
+  return res.status(OK).json({
+    message: "Email was successfully verified",
   });
 });
