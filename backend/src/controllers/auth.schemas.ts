@@ -29,3 +29,7 @@ export const resetPasswordSchema = z.object({
     .regex(/^[0-9a-fA-F]{24}$/, "Invalid Verification code"),
   password: passwordSchema,
 });
+
+export const sessionIdSchema = z
+  .string()
+  .regex(/^[0-9a-fA-F]{24}$/, "Invalid Session id");
