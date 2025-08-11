@@ -3,7 +3,7 @@ import { registerHandler } from "../controllers/auth.controller.js";
 
 const authRoutes = Router();
 
-// prefix /api/auth
+// prefix /auth
 authRoutes.post("/register", registerHandler);
 
 export default authRoutes;

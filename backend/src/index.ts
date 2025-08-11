@@ -27,7 +27,7 @@ app.get("/", (req, res, next) => {
   });
 });
 
-app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
 
 app.use(errorHandler);
 
