@@ -11,6 +11,8 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import authenticate from "./middleware/autheticate.js";
 import sessionRoutes from "./routes/session.route.js";
+import themeRoutes from "./routes/theme.routes.js";
+import routes from "./routes/index.js";
 
 const app = express();
 
@@ -24,17 +26,7 @@ app.use(
 );
 app.use(cookieParser());
 
-app.get("/", (req, res, next) => {
-  res.status(OK).json({
-    message: "healty",
-  });
-});
-
-app.use("/auth", authRoutes);
-
-// protected routes
-app.use("/user", authenticate, userRoutes);
-app.use("/sessions", authenticate, sessionRoutes);
+app.use("/", routes);
 
 app.use(errorHandler);
 

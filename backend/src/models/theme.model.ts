@@ -16,9 +16,9 @@ const themeSchema = new mongoose.Schema<ThemeDocument>(
   }
 );
 
-const CategoryModel = mongoose.model<
-  ThemeDocument,
-  mongoose.Model<ThemeDocument>
->("Category", themeSchema);
+const ThemeModel = mongoose.model<ThemeDocument, mongoose.Model<ThemeDocument>>(
+  "Thema",
+  themeSchema
+);
 
-export default CategoryModel;
+export default ThemeModel;

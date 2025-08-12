@@ -8,6 +8,7 @@ export interface UserDocument
   password: string;
   fullName: string;
   verified: boolean;
+  role: string;
   createdAt: Date;
   updatedAt: Date;
   comparePassword: (value: string) => Promise<boolean>;
@@ -26,6 +27,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     password: { type: String, required: true },
     fullName: { type: String, required: true, trim: true },
     verified: { type: Boolean, required: true, default: false },
+    role: { type: String, default: "user" },
   },
   {
     timestamps: true,

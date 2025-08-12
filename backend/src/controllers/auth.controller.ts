@@ -20,7 +20,7 @@ import {
   registerSchema,
   resetPasswordSchema,
   verificationCodeSchema,
-} from "./auth.schemas.js";
+} from "../schemas/auth.schemas.js";
 import appAssert from "../utils/appAssert.js";
 import { verifyToken } from "../utils/jwt.js";
 import SessionModel from "../models/session.model.js";
