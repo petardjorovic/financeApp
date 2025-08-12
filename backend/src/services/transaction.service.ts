@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import CategoryModel from "../models/category.model.js";
 import TransactionModel from "../models/transaction.model.js";
 import { TransactionDTO } from "../types/transaction.types.js";
+import appAssert from "../utils/appAssert.js";
+import { BAD_REQUEST } from "../constants/http.js";
 
 type GetTransactionsReturn = {
   transactions: TransactionDTO[];
@@ -69,5 +71,28 @@ export const getTransactionsData = async ({
     pageNum: page,
     pages: Math.ceil(total / limit),
     limit,
+  };
+};
+
+type AddTransactionParams = {
+  type: "income" | "expense";
+  amount: number;
+  account: string;
+  categoryId: string;
+  date: string;
+  isRecurring?: boolean | undefined;
+  dueDate?: number | undefined;
+  userId: mongoose.Types.ObjectId;
+};
+
+export const addTransaction = async (request: AddTransactionParams) => {
+  const categoryExists = await CategoryModel.exists({
+    _id: request.categoryId,
+  });
+  appAssert(categoryExists, BAD_REQUEST, "Category not found");
+  const transaction = await TransactionModel.create(request);
+
+  return {
+    transaction: { ...transaction.toObject() },
   };
 };

@@ -1,9 +1,15 @@
 import mongoose from "mongoose";
-import { OK } from "../constants/http.js";
+import { CREATED, OK } from "../constants/http.js";
 import TransactionModel from "../models/transaction.model.js";
 import catchErrors from "../utils/catchErrors.js";
-import { getTransactionsQuerySchema } from "../schemas/transaction.schemas.js";
-import { getTransactionsData } from "../services/transaction.service.js";
+import {
+  addTransactionSchema,
+  getTransactionsQuerySchema,
+} from "../schemas/transaction.schemas.js";
+import {
+  addTransaction,
+  getTransactionsData,
+} from "../services/transaction.service.js";
 
 export const getTransactionsHandler = catchErrors(async (req, res) => {
   // validate request
@@ -26,4 +32,19 @@ export const getTransactionsHandler = catchErrors(async (req, res) => {
   });
 });
 
-export const addTransactionHandler = catchErrors(async (req, res) => {});
+export const addTransactionHandler = catchErrors(async (req, res) => {
+  // validate request
+  const request = addTransactionSchema.parse(req.body);
+
+  // call service
+  const { transaction } = await addTransaction({
+    ...request,
+    userId: req.userId,
+  });
+
+  // send response
+  return res.status(CREATED).json({
+    message: "Transaction successfully added",
+    transaction,
+  });
+});
