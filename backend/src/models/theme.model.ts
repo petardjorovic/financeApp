@@ -17,7 +17,7 @@ const themeSchema = new mongoose.Schema<ThemeDocument>(
 );
 
 const ThemeModel = mongoose.model<ThemeDocument, mongoose.Model<ThemeDocument>>(
-  "Thema",
+  "Theme",
   themeSchema
 );
 

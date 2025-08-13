@@ -12,3 +12,19 @@ export const fifteenMinutesFromNow = () =>
 export const fiveMinutesAgo = () => new Date(Date.now() - 5 * 60 * 1000);
 
 export const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+export const startOfMonth = () => {
+  const start = new Date();
+  start.setDate(1);
+  start.setHours(0, 0, 0, 0);
+
+  return start;
+};
+
+export const endOfMonth = () => {
+  const end = new Date(startOfMonth());
+  end.setMonth(end.getMonth() + 1);
+  end.setMilliseconds(-1);
+
+  return end;
+};
