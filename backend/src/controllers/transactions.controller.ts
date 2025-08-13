@@ -1,14 +1,16 @@
-import mongoose from "mongoose";
 import { CREATED, OK } from "../constants/http.js";
-import TransactionModel from "../models/transaction.model.js";
 import catchErrors from "../utils/catchErrors.js";
 import {
-  addTransactionSchema,
+  editTransactionSchema,
   getTransactionsQuerySchema,
+  transactionIdSchema,
+  transactionSchema,
 } from "../schemas/transaction.schemas.js";
 import {
   addTransaction,
+  editTransaction,
   getTransactionsData,
+  updateTransaction,
 } from "../services/transaction.service.js";
 
 export const getTransactionsHandler = catchErrors(async (req, res) => {
@@ -34,7 +36,7 @@ export const getTransactionsHandler = catchErrors(async (req, res) => {
 
 export const addTransactionHandler = catchErrors(async (req, res) => {
   // validate request
-  const request = addTransactionSchema.parse(req.body);
+  const request = transactionSchema.parse(req.body);
 
   // call service
   const { transaction } = await addTransaction({
@@ -45,6 +47,44 @@ export const addTransactionHandler = catchErrors(async (req, res) => {
   // send response
   return res.status(CREATED).json({
     message: "Transaction successfully added",
+    transaction,
+  });
+});
+
+export const updateTransactionHandler = catchErrors(async (req, res) => {
+  // validate request
+  const request = transactionSchema.parse(req.body);
+  const transactionId = transactionIdSchema.parse(req.params.id);
+
+  // call service
+  const { transaction } = await updateTransaction({
+    ...request,
+    transactionId,
+    userId: req.userId,
+  });
+
+  // return response
+  return res.status(OK).json({
+    message: "Transaction successfully updated",
+    transaction,
+  });
+});
+
+export const editTransactionHandler = catchErrors(async (req, res) => {
+  // validate request
+  const request = editTransactionSchema.parse(req.body);
+  const transactionId = transactionIdSchema.parse(req.params.id);
+
+  // call service
+  const { transaction } = await editTransaction({
+    ...request,
+    transactionId,
+    userId: req.userId,
+  });
+
+  // return response
+  return res.status(OK).json({
+    message: "Transaction successfully edit",
     transaction,
   });
 });

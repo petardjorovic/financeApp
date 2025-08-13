@@ -16,7 +16,7 @@ export const getTransactionsQuerySchema = z.object({
   search: z.string().optional(),
 });
 
-export const addTransactionSchema = z
+export const transactionSchema = z
   .object({
     type: z.enum(["income", "expense"]),
     amount: z
@@ -37,11 +37,23 @@ export const addTransactionSchema = z
       .union([z.string(), z.number()])
       .transform((val) => Number(val))
       .optional()
-      .refine((val) => val == null || (!isNaN(val) && val >= 1 && val <= 31), {
-        message: "Due date must be between 1 and 31",
+      .refine((val) => val == null || (!isNaN(val) && val >= 1 && val <= 28), {
+        message: "Due date must be between 1 and 28",
       }),
   })
   .refine((data) => !(data.isRecurring && !data.dueDate), {
     message: "Due date is required when isRecurring is true",
     path: ["dueDate"],
+  });
+
+export const transactionIdSchema = z
+  .string()
+  .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+    message: "Invalid transaction ID",
+  });
+
+export const editTransactionSchema = transactionSchema
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provide for update",
   });
