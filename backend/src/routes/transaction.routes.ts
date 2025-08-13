@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   addTransactionHandler,
+  deleteTransactionHandler,
   editTransactionHandler,
   getTransactionsHandler,
   updateTransactionHandler,
@@ -14,5 +15,6 @@ transactionRoutes.get("/", getTransactionsHandler);
 transactionRoutes.post("/", addTransactionHandler);
 transactionRoutes.put("/:id", updateTransactionHandler);
 transactionRoutes.patch("/:id", editTransactionHandler);
+transactionRoutes.delete("/:id", deleteTransactionHandler);
 
 export default transactionRoutes;
