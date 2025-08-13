@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
 import BudgetModel from "../models/budget.model.js";
 import appAssert from "../utils/appAssert.js";
-import { CONFLICT } from "../constants/http.js";
+import { CONFLICT, NOT_FOUND } from "../constants/http.js";
 import TransactionModel from "../models/transaction.model.js";
 import TranasctionTypes from "../constants/TransactionTypes.js";
 import { endOfMonth, startOfMonth } from "../utils/date.js";
-import { BudgetWithSpent } from "../types/budget.type.js";
+import { BudgetWithSpent, BudgetWithSpentRaw } from "../types/budget.type.js";
+import CategoryModel from "../models/category.model.js";
+import ThemeModel from "../models/theme.model.js";
 
 type AddBudgetParams = {
   categoryId: string;
@@ -43,13 +45,11 @@ export const addBudget = async ({
   };
 };
 
-export const getBudgetsWithSpent = async (
-  userId: mongoose.Types.ObjectId
-): Promise<BudgetWithSpent[]> => {
+export const getBudgetsWithSpent = async (userId: mongoose.Types.ObjectId) => {
   const budgets = await BudgetModel.find({ userId })
     .populate({ path: "categoryId", select: "name" })
     .populate({ path: "themeId", select: "name" })
-    .lean<BudgetWithSpent[]>();
+    .lean<BudgetWithSpentRaw[]>(); //! potencijalni problem oko type
 
   // Dobijamo sumu po categoryId za sve transakcije ovog meseca
   const spentData: { _id: mongoose.Types.ObjectId; total: number }[] =
@@ -80,5 +80,63 @@ export const getBudgetsWithSpent = async (
     spent: (spentMap[b.categoryId._id.toString()] || 0) * -1,
   }));
 
-  return budgetsWithSpent;
+  return { budgetsWithSpent };
+};
+
+type EditBudgetParams = {
+  categoryId?: string | undefined;
+  limit?: number | undefined;
+  themeId?: string | undefined;
+  userId: mongoose.Types.ObjectId;
+  budgetId: string;
+};
+
+export const editBudget = async ({
+  categoryId,
+  limit,
+  themeId,
+  userId,
+  budgetId,
+}: EditBudgetParams) => {
+  const orCondition: any[] = [];
+  if (categoryId) {
+    const existingCategory = await CategoryModel.exists({ _id: categoryId });
+    appAssert(existingCategory, NOT_FOUND, "Category not found");
+    orCondition.push({ categoryId });
+  }
+  if (themeId) {
+    const existingTheme = await ThemeModel.exists({ _id: themeId });
+    appAssert(existingTheme, NOT_FOUND, "Theme not found");
+    orCondition.push({ themeId });
+  }
+
+  if (orCondition.length > 0) {
+    const existingBudget = await BudgetModel.exists({
+      userId,
+      _id: { $ne: budgetId },
+      $or: orCondition,
+    });
+    appAssert(
+      !existingBudget,
+      CONFLICT,
+      "Theme or category are already in use"
+    );
+  }
+
+  const updatedBudget = await BudgetModel.findOneAndUpdate(
+    { _id: budgetId, userId },
+    {
+      $set: {
+        ...(typeof categoryId !== "undefined" && { categoryId }),
+        ...(typeof limit !== "undefined" && { limit }),
+        ...(typeof themeId !== "undefined" && { themeId }),
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  appAssert(updatedBudget, NOT_FOUND, "Budget not found");
+
+  return { updatedBudget: { ...updatedBudget.toObject() } };
 };

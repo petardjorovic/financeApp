@@ -17,3 +17,13 @@ export interface BudgetWithSpent {
   __v: number;
   spent: number;
 }
+
+export interface BudgetWithSpentRaw
+  extends Omit<BudgetWithSpent, "categoryId" | "themeId"> {
+  categoryId:
+    | mongoose.Types.ObjectId
+    | { _id: mongoose.Types.ObjectId; name: string };
+  themeId:
+    | mongoose.Types.ObjectId
+    | { _id: mongoose.Types.ObjectId; name: string };
+}
