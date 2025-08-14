@@ -8,12 +8,20 @@ import { endOfMonth, startOfMonth } from "../utils/date.js";
 import { BudgetWithSpent, BudgetWithSpentRaw } from "../types/budget.type.js";
 import CategoryModel from "../models/category.model.js";
 import ThemeModel from "../models/theme.model.js";
+import { number } from "zod";
 
 type AddBudgetParams = {
   categoryId: string;
   limit: number;
   themeId: string;
   userId: mongoose.Types.ObjectId;
+};
+
+type Transaction = {
+  _id: mongoose.Types.ObjectId;
+  amount: number;
+  account: string;
+  date: Date;
 };
 
 export const addBudget = async ({
@@ -51,34 +59,68 @@ export const getBudgetsWithSpent = async (userId: mongoose.Types.ObjectId) => {
     .populate({ path: "themeId", select: "name" })
     .lean<BudgetWithSpentRaw[]>(); //! potencijalni problem oko type
 
-  // Dobijamo sumu po categoryId za sve transakcije ovog meseca
-  const spentData: { _id: mongoose.Types.ObjectId; total: number }[] =
-    await TransactionModel.aggregate([
-      {
-        $match: {
-          userId: new mongoose.Types.ObjectId(userId),
-          type: TranasctionTypes.Expense,
-          date: { $gte: startOfMonth(), $lte: endOfMonth() },
-        },
-      },
-      {
-        $group: {
-          _id: "$categoryId",
-          total: { $sum: "$amount" },
-        },
-      },
-    ]);
+  const categoryIds = budgets.map((b) => b.categoryId._id);
 
-  // Mapiranje iz categoryId u total za brži pristup
-  const spentMap: Record<string, number> = {};
-  spentData.forEach((item) => {
-    spentMap[item._id.toString()] = item.total;
+  const latestTransactions = await TransactionModel.aggregate([
+    {
+      $match: {
+        userId: new mongoose.Types.ObjectId(userId),
+        type: TranasctionTypes.Expense,
+        categoryId: { $in: categoryIds },
+      },
+    },
+    { $sort: { date: -1 } },
+    {
+      $group: {
+        _id: "$categoryId",
+        spentThisMonth: {
+          $sum: {
+            $cond: [
+              {
+                $and: [
+                  { $gte: ["$date", startOfMonth()] },
+                  { $lte: ["$date", endOfMonth()] },
+                ],
+              },
+              "$amount",
+              0,
+            ],
+          },
+        },
+        transactions: {
+          $push: {
+            _id: "$_id",
+            amount: "$amount",
+            account: "$account",
+            date: "$date",
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        spentThisMonth: 1,
+        transactions: { $slice: ["$transactions", 3] },
+      },
+    },
+  ]);
+
+  const latestMap = latestTransactions.reduce((acc, item) => {
+    acc[item._id.toString()] = {
+      spent: item.spentThisMonth,
+      transactions: item.transactions,
+    };
+    return acc;
+  }, {} as Record<string, { spent: number; transactions: Transaction[] }>);
+
+  const budgetsWithSpent = budgets.map((b) => {
+    const data = latestMap[b.categoryId._id.toString()];
+    return {
+      ...b,
+      spent: (data?.spent ?? 0) * -1,
+      latestSpending: data?.transactions ?? [],
+    };
   });
-
-  const budgetsWithSpent = budgets.map((b) => ({
-    ...b,
-    spent: (spentMap[b.categoryId._id.toString()] || 0) * -1,
-  }));
 
   return { budgetsWithSpent };
 };
