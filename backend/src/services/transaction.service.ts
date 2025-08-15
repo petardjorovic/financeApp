@@ -4,6 +4,7 @@ import TransactionModel from "../models/transaction.model.js";
 import { TransactionDTO } from "../types/transaction.types.js";
 import appAssert from "../utils/appAssert.js";
 import { BAD_REQUEST, NOT_FOUND } from "../constants/http.js";
+import TranasctionTypes from "../constants/TransactionTypes.js";
 
 type GetTransactionsReturn = {
   transactions: TransactionDTO[];
@@ -31,7 +32,10 @@ export const getTransactionsData = async ({
   const limit = 10;
   const skip = (page - 1) * limit;
 
-  const query: Record<string, any> = { userId: userId };
+  const query: Record<string, any> = {
+    userId,
+    type: { $in: ["income", "expense"] },
+  };
 
   if (filter && filter.trim()) {
     const category = await CategoryModel.findOne({ name: filter }).lean();
@@ -86,37 +90,24 @@ type AddTransactionParams = {
 };
 
 export const addTransaction = async (request: AddTransactionParams) => {
-  const categoryExists = await CategoryModel.exists({
+  // Check weather category exists
+  const category = await CategoryModel.findById({
     _id: request.categoryId,
   });
-  appAssert(categoryExists, BAD_REQUEST, "Category not found");
-  const transaction = await TransactionModel.create(request);
+  appAssert(category, BAD_REQUEST, "Category not found");
 
-  return {
-    transaction: { ...transaction.toObject() },
-  };
-};
-
-type UpdateTransactionParams = {
-  transactionId: string;
-  userId: mongoose.Types.ObjectId;
-  type: "income" | "expense";
-  amount: number;
-  account: string;
-  categoryId: string;
-  date: string;
-  isRecurring?: boolean | undefined;
-  dueDate?: number | undefined;
-};
-
-export const updateTransaction = async (request: UpdateTransactionParams) => {
-  const { transactionId, userId, ...upadateData } = request;
-  const transaction = await TransactionModel.findOneAndUpdate(
-    { _id: transactionId, userId },
-    { $set: upadateData },
-    { new: true }
+  // Check weather tranasction type matches category type
+  appAssert(
+    category.type === request.type,
+    BAD_REQUEST,
+    `Transaction type "${request.type}" does not match category type "${category.type}"`
   );
-  appAssert(transaction, NOT_FOUND, "Transaction not found");
+
+  // create transaction in db
+  const transaction = await TransactionModel.create({
+    ...request,
+    potId: undefined,
+  });
 
   return {
     transaction: { ...transaction.toObject() },
@@ -136,16 +127,59 @@ type EditTransactionParams = {
 };
 
 export const editTransaction = async (request: EditTransactionParams) => {
-  const { transactionId, userId, ...editData } = request;
-  const transaction = await TransactionModel.findOneAndUpdate(
-    { _id: transactionId, userId },
-    { $set: editData },
-    { new: true }
-  );
+  const { transactionId, userId, categoryId, type, ...editData } = request;
 
+  //* check weather transaction exist
+  const transaction = await TransactionModel.findOne({
+    _id: transactionId,
+    userId,
+  });
   appAssert(transaction, NOT_FOUND, "Transaction not found");
 
+  //* check weather category exist and category type
+  if (categoryId) {
+    const category = await CategoryModel.findById(categoryId);
+    appAssert(category, NOT_FOUND, "Category not found");
+    appAssert(
+      category.type === transaction.type,
+      BAD_REQUEST,
+      `Transaction type ${transaction.type} does not match category type ${category.type}`
+    );
+
+    if (type) {
+      appAssert(
+        type === category.type,
+        BAD_REQUEST,
+        `Transaction type "${type}" does not match category type "${category.type}"`
+      );
+      transaction.type = type as TranasctionTypes;
+    }
+    transaction.categoryId = category._id;
+  } else {
+    if (type) {
+      appAssert(
+        type === transaction.type,
+        BAD_REQUEST,
+        `Transaction type "${type}" does not match category type "${transaction.type}"`
+      );
+      transaction.type = type as TranasctionTypes;
+    }
+  }
+
+  //* check weather is changing isRecurring
+  if (editData.isRecurring !== undefined) {
+    transaction.isRecurring = editData.isRecurring;
+    transaction.dueDate =
+      editData.isRecurring === true ? editData.dueDate : undefined;
+  }
+
+  if (editData.account) transaction.account = editData.account;
+  if (editData.amount) transaction.amount = editData.amount;
+  if (editData.date) transaction.date = new Date(editData.date);
+
+  const updatedTransaction = await transaction.save();
+
   return {
-    transaction: { ...transaction.toObject() },
+    transaction: { ...updatedTransaction.toObject() },
   };
 };

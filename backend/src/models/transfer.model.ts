@@ -7,7 +7,6 @@ interface TransferDocument extends mongoose.Document<mongoose.Types.ObjectId> {
   potId: mongoose.Types.ObjectId;
   type: TransferTypes;
   amount: number;
-  date: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,7 +22,6 @@ const transferSchema = new mongoose.Schema<TransferDocument>(
     potId: { type: mongoose.Schema.Types.ObjectId, ref: "Pot", required: true },
     type: { type: String, required: true },
     amount: { type: Number, required: true },
-    date: { type: Date, required: true, default: Date.now },
   },
   {
     timestamps: true,

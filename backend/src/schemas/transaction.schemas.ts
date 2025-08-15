@@ -22,7 +22,9 @@ export const transactionSchema = z
     amount: z
       .union([z.number(), z.string()])
       .transform((val) => Number(val))
-      .refine((val) => !isNaN(val), { message: "Amount must be a number" }),
+      .refine((val) => !isNaN(val) && val > 0, {
+        message: "Amount must be a positive number",
+      }),
     account: z.string().min(1).max(255),
     categoryId: z
       .string()
@@ -44,7 +46,11 @@ export const transactionSchema = z
   .refine((data) => !(data.isRecurring && !data.dueDate), {
     message: "Due date is required when isRecurring is true",
     path: ["dueDate"],
-  });
+  })
+  .refine((data) => !("potId" in data), {
+    message: "potId cannot be set in add transaction",
+  })
+  .strict();
 
 export const transactionIdSchema = z
   .string()
@@ -52,8 +58,53 @@ export const transactionIdSchema = z
     message: "Invalid transaction ID",
   });
 
-export const editTransactionSchema = transactionSchema
-  .partial()
+export const editTransactionSchema = z
+  .object({
+    type: z.enum(["income", "expense"]).optional(),
+    amount: z
+      .union([z.number(), z.string()])
+      .transform((val) => Number(val))
+      .refine((val) => !isNaN(val) && val > 0, {
+        message: "Amount must be a positive number",
+      })
+      .optional(),
+    account: z.string().min(1).max(255).optional(),
+    categoryId: z
+      .string()
+      .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+        message: "Invalid category ID",
+      })
+      .optional(),
+    date: z
+      .string()
+      .refine((val) => !isNaN(Date.parse(val)), {
+        message: "Invalid date format",
+      })
+      .optional(),
+    isRecurring: z.boolean().optional(),
+    dueDate: z
+      .union([z.string(), z.number()])
+      .transform((val) => Number(val))
+      .optional()
+      .refine((val) => val == null || (!isNaN(val) && val >= 1 && val <= 28), {
+        message: "Due date must be between 1 and 28",
+      }),
+  })
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provide for update",
-  });
+  })
+  .refine(
+    (data) =>
+      !(
+        data.isRecurring === true &&
+        (data.dueDate === undefined || data.dueDate === null)
+      ),
+    {
+      message: "Due date is required when isRecurring is true",
+      path: ["dueDate"],
+    }
+  )
+  .refine((data) => !("potId" in data), {
+    message: "potId cannot be set in add transaction",
+  })
+  .strict();

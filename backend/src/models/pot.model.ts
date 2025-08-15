@@ -21,7 +21,7 @@ const potSchema = new mongoose.Schema<PotDocument>(
     },
     name: { type: String, required: true, trim: true },
     target: { type: Number, required: true, min: 0 },
-    currentAmount: { type: Number, required: true, min: 0, default: 0 },
+    currentAmount: { type: Number, min: 0, default: 0 },
     themeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Theme",

@@ -8,6 +8,7 @@ import { OK } from "../constants/http.js";
 import categoryRoutes from "./category.routes.js";
 import transactionRoutes from "./transaction.routes.js";
 import budgetRoutes from "./budget.routes.js";
+import potsRoutes from "./pots.routes.js";
 
 const routes = Router();
 
@@ -26,5 +27,6 @@ routes.use("/transactions", authenticate, transactionRoutes);
 routes.use("/categories", authenticate, categoryRoutes);
 routes.use("/themes", authenticate, themeRoutes);
 routes.use("/budgets", authenticate, budgetRoutes);
+routes.use("/pots", authenticate, potsRoutes);
 
 export default routes;

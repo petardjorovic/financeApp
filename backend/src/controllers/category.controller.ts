@@ -4,9 +4,9 @@ import { addCategorySchema } from "../schemas/category.schemas.js";
 import catchErrors from "../utils/catchErrors.js";
 
 export const addCategoryHandler = catchErrors(async (req, res) => {
-  const categoryName = addCategorySchema.parse(req.body.name);
+  const request = addCategorySchema.parse(req.body);
 
-  await CategoryModel.create({ name: categoryName });
+  await CategoryModel.create(request);
 
   return res.status(OK).json({
     message: "Category successfully added",

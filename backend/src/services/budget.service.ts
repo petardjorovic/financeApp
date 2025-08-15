@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import BudgetModel from "../models/budget.model.js";
 import appAssert from "../utils/appAssert.js";
-import { CONFLICT, NOT_FOUND } from "../constants/http.js";
+import { BAD_REQUEST, CONFLICT, NOT_FOUND } from "../constants/http.js";
 import TransactionModel from "../models/transaction.model.js";
 import TranasctionTypes from "../constants/TransactionTypes.js";
 import { endOfMonth, startOfMonth } from "../utils/date.js";
@@ -22,6 +22,7 @@ type Transaction = {
   amount: number;
   account: string;
   date: Date;
+  type: string;
 };
 
 export const addBudget = async ({
@@ -39,6 +40,19 @@ export const addBudget = async ({
     !existingBudget,
     CONFLICT,
     "Budget for this category or with this theme already exists"
+  );
+
+  const [category, existingTheme] = await Promise.all([
+    CategoryModel.findById(categoryId),
+    ThemeModel.exists({ _id: themeId }),
+  ]);
+  appAssert(category, NOT_FOUND, "Category not found");
+  appAssert(existingTheme, NOT_FOUND, "Theme not found");
+
+  appAssert(
+    category.type === "expense",
+    BAD_REQUEST,
+    "Budget can only be created for expense category"
   );
 
   const budget = await BudgetModel.create({
@@ -92,6 +106,7 @@ export const getBudgetsWithSpent = async (userId: mongoose.Types.ObjectId) => {
             _id: "$_id",
             amount: "$amount",
             account: "$account",
+            type: "$type",
             date: "$date",
           },
         },
@@ -117,7 +132,7 @@ export const getBudgetsWithSpent = async (userId: mongoose.Types.ObjectId) => {
     const data = latestMap[b.categoryId._id.toString()];
     return {
       ...b,
-      spent: (data?.spent ?? 0) * -1,
+      spent: data?.spent ?? 0,
       latestSpending: data?.transactions ?? [],
     };
   });
@@ -142,8 +157,13 @@ export const editBudget = async ({
 }: EditBudgetParams) => {
   const orCondition: any[] = [];
   if (categoryId) {
-    const existingCategory = await CategoryModel.exists({ _id: categoryId });
-    appAssert(existingCategory, NOT_FOUND, "Category not found");
+    const category = await CategoryModel.findById(categoryId);
+    appAssert(category, NOT_FOUND, "Category not found");
+    appAssert(
+      category.type === "expense",
+      BAD_REQUEST,
+      "Budget can only be created for expense category"
+    );
     orCondition.push({ categoryId });
   }
   if (themeId) {

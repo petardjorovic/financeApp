@@ -7,8 +7,9 @@ interface TransactionDocument
   userId: mongoose.Types.ObjectId;
   type: TranasctionTypes;
   amount: number;
-  account: string;
-  categoryId: mongoose.Types.ObjectId;
+  account?: string;
+  categoryId?: mongoose.Types.ObjectId;
+  potId?: mongoose.Types.ObjectId;
   date: Date;
   isRecurring: boolean;
   dueDate?: number;
@@ -26,11 +27,14 @@ const transactionSchema = new mongoose.Schema<TransactionDocument>(
     },
     type: { type: String, required: true },
     amount: { type: Number, required: true },
-    account: { type: String, required: true, trim: true },
+    account: { type: String, trim: true },
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+    },
+    potId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Pot",
     },
     date: { type: Date, required: true },
     isRecurring: { type: Boolean, default: false },

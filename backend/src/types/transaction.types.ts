@@ -5,8 +5,8 @@ export type TransactionDTO = {
   userId: mongoose.Types.ObjectId;
   type: string;
   amount: number;
-  account: string;
-  categoryId: {
+  account?: string;
+  categoryId?: {
     _id: mongoose.Types.ObjectId;
   };
   date: Date;

@@ -10,7 +10,6 @@ import {
   addTransaction,
   editTransaction,
   getTransactionsData,
-  updateTransaction,
 } from "../services/transaction.service.js";
 import TransactionModel from "../models/transaction.model.js";
 import appAssert from "../utils/appAssert.js";
@@ -53,29 +52,10 @@ export const addTransactionHandler = catchErrors(async (req, res) => {
   });
 });
 
-export const updateTransactionHandler = catchErrors(async (req, res) => {
-  // validate request
-  const request = transactionSchema.parse(req.body);
-  const transactionId = transactionIdSchema.parse(req.params.id);
-
-  // call service
-  const { transaction } = await updateTransaction({
-    ...request,
-    transactionId,
-    userId: req.userId,
-  });
-
-  // return response
-  return res.status(OK).json({
-    message: "Transaction successfully updated",
-    transaction,
-  });
-});
-
 export const editTransactionHandler = catchErrors(async (req, res) => {
   // validate request
-  const request = editTransactionSchema.parse(req.body);
   const transactionId = transactionIdSchema.parse(req.params.id);
+  const request = editTransactionSchema.parse(req.body);
 
   // call service
   const { transaction } = await editTransaction({
