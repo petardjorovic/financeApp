@@ -3,12 +3,11 @@ import BudgetModel from "../models/budget.model.js";
 import appAssert from "../utils/appAssert.js";
 import { BAD_REQUEST, CONFLICT, NOT_FOUND } from "../constants/http.js";
 import TransactionModel from "../models/transaction.model.js";
-import TranasctionTypes from "../constants/TransactionTypes.js";
 import { endOfMonth, startOfMonth } from "../utils/date.js";
-import { BudgetWithSpent, BudgetWithSpentRaw } from "../types/budget.type.js";
+import { BudgetWithSpentRaw } from "../types/budget.type.js";
 import CategoryModel from "../models/category.model.js";
 import ThemeModel from "../models/theme.model.js";
-import { number } from "zod";
+import TransactionTypes from "../constants/TransactionTypes.js";
 
 type AddBudgetParams = {
   categoryId: string;
@@ -79,7 +78,7 @@ export const getBudgetsWithSpent = async (userId: mongoose.Types.ObjectId) => {
     {
       $match: {
         userId: new mongoose.Types.ObjectId(userId),
-        type: TranasctionTypes.Expense,
+        type: TransactionTypes.Expense,
         categoryId: { $in: categoryIds },
       },
     },

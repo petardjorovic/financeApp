@@ -1,8 +1,8 @@
-const enum TranasctionTypes {
+const enum TransactionTypes {
   Income = "income",
   Expense = "expense",
   Deposit = "deposit",
   Withdraw = "withdraw",
 }
 
-export default TranasctionTypes;
+export default TransactionTypes;

@@ -4,7 +4,7 @@ import TransactionModel from "../models/transaction.model.js";
 import { TransactionDTO } from "../types/transaction.types.js";
 import appAssert from "../utils/appAssert.js";
 import { BAD_REQUEST, NOT_FOUND } from "../constants/http.js";
-import TranasctionTypes from "../constants/TransactionTypes.js";
+import TransactionTypes from "../constants/TransactionTypes.js";
 
 type GetTransactionsReturn = {
   transactions: TransactionDTO[];
@@ -152,7 +152,7 @@ export const editTransaction = async (request: EditTransactionParams) => {
         BAD_REQUEST,
         `Transaction type "${type}" does not match category type "${category.type}"`
       );
-      transaction.type = type as TranasctionTypes;
+      transaction.type = type as TransactionTypes;
     }
     transaction.categoryId = category._id;
   } else {
@@ -162,7 +162,7 @@ export const editTransaction = async (request: EditTransactionParams) => {
         BAD_REQUEST,
         `Transaction type "${type}" does not match category type "${transaction.type}"`
       );
-      transaction.type = type as TranasctionTypes;
+      transaction.type = type as TransactionTypes;
     }
   }
 

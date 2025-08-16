@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import TranasctionTypes from "../constants/TransactionTypes.js";
+import TransactionTypes from "../constants/TransactionTypes.js";
 
 interface TransactionDocument
   extends mongoose.Document<mongoose.Types.ObjectId> {
   _id: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
-  type: TranasctionTypes;
+  type: TransactionTypes;
   amount: number;
   account?: string;
   categoryId?: mongoose.Types.ObjectId;
