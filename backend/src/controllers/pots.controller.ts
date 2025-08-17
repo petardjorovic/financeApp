@@ -13,6 +13,7 @@ import {
   withdrawPot,
 } from "../services/pot.service.js";
 import catchErrors from "../utils/catchErrors.js";
+import deletePotTransaction from "../utils/deletePotTransaction.js";
 
 export const getPotsHandler = catchErrors(async (req, res) => {
   const pots = await PotModel.find({ userId: req.userId });
@@ -44,6 +45,20 @@ export const editPotHandler = catchErrors(async (req, res) => {
 
   // return response
   return res.status(OK).json({ message: "Pot successfully edited", pot });
+});
+
+export const deletePotHandler = catchErrors(async (req, res) => {
+  // validate request
+  const potId = potIdSchema.parse(req.params.id);
+
+  // cal service
+  const result = await deletePotTransaction({
+    potId,
+    userId: req.userId,
+  });
+
+  // return response
+  return res.status(OK).json({ message: "Pot removed", ...result });
 });
 
 export const depositPotHandler = catchErrors(async (req, res) => {

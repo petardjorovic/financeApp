@@ -6,6 +6,7 @@ import ThemeModel from "../models/theme.model.js";
 import TransferModel from "../models/transfer.model.js";
 import TransactionModel from "../models/transaction.model.js";
 import TransactionTypes from "../constants/TransactionTypes.js";
+import deletePotTransaction from "../utils/deletePotTransaction.js";
 
 type AddPotParams = {
   name: string;

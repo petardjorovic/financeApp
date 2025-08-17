@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   addPotHandler,
+  deletePotHandler,
   depositPotHandler,
   editPotHandler,
   getPotsHandler,
@@ -14,6 +15,7 @@ const potsRoutes = Router();
 potsRoutes.get("/", getPotsHandler);
 potsRoutes.post("/", addPotHandler);
 potsRoutes.patch("/:id", editPotHandler);
+potsRoutes.delete("/:id", deletePotHandler);
 potsRoutes.post("/:id/deposit", depositPotHandler);
 potsRoutes.post("/:id/withdraw", withdrawPotHandler);
 
