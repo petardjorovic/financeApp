@@ -18,34 +18,34 @@ export const getTransactionsQuerySchema = z.object({
 
 export const transactionSchema = z
   .object({
-    type: z.enum(["income", "expense"]),
+    type: z.enum(["income", "expense"]).optional(),
     amount: z
       .union([z.number(), z.string()])
       .transform((val) => Number(val))
       .refine((val) => !isNaN(val) && val > 0, {
         message: "Amount must be a positive number",
       }),
-    account: z.string().min(1).max(255),
+    account: z.string().min(1).max(255).optional(),
     categoryId: z
       .string()
       .refine((val) => mongoose.Types.ObjectId.isValid(val), {
         message: "Invalid category ID",
+      })
+      .optional(),
+    date: z
+      .string()
+      .refine((val) => !isNaN(Date.parse(val)), {
+        message: "Invalid date format",
+      })
+      .refine((val) => new Date(val) <= new Date(), {
+        message: "Transaction date cannot be in the future",
       }),
-    date: z.string().refine((val) => !isNaN(Date.parse(val)), {
-      message: "Invalid date format",
-    }),
-    isRecurring: z.boolean().optional(),
-    dueDate: z
-      .union([z.string(), z.number()])
-      .transform((val) => Number(val))
-      .optional()
-      .refine((val) => val == null || (!isNaN(val) && val >= 1 && val <= 28), {
-        message: "Due date must be between 1 and 28",
-      }),
-  })
-  .refine((data) => !(data.isRecurring && !data.dueDate), {
-    message: "Due date is required when isRecurring is true",
-    path: ["dueDate"],
+    recurringBillId: z
+      .string()
+      .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+        message: "Invalid recurring bill ID",
+      })
+      .optional(),
   })
   .refine((data) => !("potId" in data), {
     message: "potId cannot be set in add transaction",
@@ -80,15 +80,16 @@ export const editTransactionSchema = z
       .refine((val) => !isNaN(Date.parse(val)), {
         message: "Invalid date format",
       })
+      .refine((val) => new Date(val) <= new Date(), {
+        message: "Transaction date cannot be in the future",
+      })
       .optional(),
-    isRecurring: z.boolean().optional(),
-    dueDate: z
-      .union([z.string(), z.number()])
-      .transform((val) => Number(val))
-      .optional()
-      .refine((val) => val == null || (!isNaN(val) && val >= 1 && val <= 28), {
-        message: "Due date must be between 1 and 28",
-      }),
+    recurringBillId: z
+      .string()
+      .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+        message: "Invalid recurring bill ID",
+      })
+      .optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provide for update",
@@ -96,12 +97,12 @@ export const editTransactionSchema = z
   .refine(
     (data) =>
       !(
-        data.isRecurring === true &&
-        (data.dueDate === undefined || data.dueDate === null)
+        data.recurringBillId &&
+        ("account" in data || "categoryId" in data || "type" in data)
       ),
     {
-      message: "Due date is required when isRecurring is true",
-      path: ["dueDate"],
+      message:
+        "Account, categoryId and type cannot be manually changed when recurringBillId is set",
     }
   )
   .refine((data) => !("potId" in data), {

@@ -5,6 +5,7 @@ import { TransactionDTO } from "../types/transaction.types.js";
 import appAssert from "../utils/appAssert.js";
 import { BAD_REQUEST, NOT_FOUND } from "../constants/http.js";
 import TransactionTypes from "../constants/TransactionTypes.js";
+import RecurringBillModel from "../models/recurringBill.js";
 
 type GetTransactionsReturn = {
   transactions: TransactionDTO[];
@@ -79,16 +80,148 @@ export const getTransactionsData = async ({
 };
 
 type AddTransactionParams = {
-  type: "income" | "expense";
+  type?: "income" | "expense" | undefined;
   amount: number;
-  account: string;
-  categoryId: string;
   date: string;
-  isRecurring?: boolean | undefined;
-  dueDate?: number | undefined;
+  account?: string | undefined;
+  categoryId?: string | undefined;
+  recurringBillId?: string | undefined;
   userId: mongoose.Types.ObjectId;
 };
 
+export const addTransaction = async (request: AddTransactionParams) => {
+  let categoryId: mongoose.Types.ObjectId | undefined = request.categoryId
+    ? new mongoose.Types.ObjectId(request.categoryId)
+    : undefined;
+  let account = request.account;
+  let type = request.type;
+
+  if (request.recurringBillId) {
+    const recurringBill = await RecurringBillModel.findOne({
+      _id: request.recurringBillId,
+      userId: request.userId,
+    });
+    appAssert(recurringBill, BAD_REQUEST, "Recurring bill not found");
+
+    categoryId = recurringBill.categoryId;
+    account = recurringBill.name;
+    type = TransactionTypes.Expense;
+  } else {
+    // Check weather category exists
+    appAssert(
+      request.categoryId && request.type && request.account,
+      BAD_REQUEST,
+      "Transaction type, account and category ID are required"
+    );
+    const category = await CategoryModel.findById({
+      _id: request.categoryId,
+    });
+    appAssert(category, BAD_REQUEST, "Category not found");
+
+    // Check weather tranasction type matches category type
+    appAssert(
+      category.type === request.type,
+      BAD_REQUEST,
+      `Transaction type "${request.type}" does not match category type "${category.type}"`
+    );
+  }
+
+  // create transaction in db
+  const transaction = await TransactionModel.create({
+    userId: request.userId,
+    amount: request.amount,
+    date: request.date,
+    categoryId,
+    account,
+    type,
+    recurringBillId: request.recurringBillId,
+    potId: undefined,
+  });
+
+  return {
+    transaction: { ...transaction.toObject() },
+  };
+};
+
+type EditTransactionParams = {
+  transactionId: string;
+  userId: mongoose.Types.ObjectId;
+  type?: "income" | "expense" | undefined;
+  amount?: number | undefined;
+  account?: string | undefined;
+  categoryId?: string | undefined;
+  date?: string | undefined;
+  recurringBillId?: string | undefined;
+};
+
+export const editTransaction = async (request: EditTransactionParams) => {
+  const { transactionId, userId, recurringBillId, ...editData } = request;
+
+  //* check weather transaction exist
+  const transaction = await TransactionModel.findOne({
+    _id: transactionId,
+    userId,
+  });
+  appAssert(transaction, NOT_FOUND, "Transaction not found");
+
+  if (recurringBillId) {
+    const recurringBill = await RecurringBillModel.findOne({
+      _id: recurringBillId,
+      userId,
+    });
+    appAssert(recurringBill, BAD_REQUEST, "Recurring bill not found");
+
+    transaction.recurringBillId = recurringBill._id;
+    transaction.account = recurringBill.name;
+    transaction.categoryId = recurringBill.categoryId;
+    transaction.type = TransactionTypes.Expense;
+  } else {
+    if (editData.categoryId) {
+      const category = await CategoryModel.findById(editData.categoryId);
+      appAssert(category, NOT_FOUND, "Category not found");
+      appAssert(
+        category.type === transaction.type,
+        BAD_REQUEST,
+        `Transaction type ${transaction.type} does not match category type ${category.type}`
+      );
+      if (editData.type) {
+        appAssert(
+          editData.type === category.type,
+          BAD_REQUEST,
+          `Transaction type "${editData.type}" does not match category type "${category.type}"`
+        );
+        transaction.type = editData.type as TransactionTypes;
+      }
+      transaction.categoryId = category._id;
+    } else if (editData.type) {
+      appAssert(
+        editData.type === transaction.type,
+        BAD_REQUEST,
+        `Transaction type "${editData.type}" does not match current transaction type "${transaction.type}"`
+      );
+      transaction.type = editData.type as TransactionTypes;
+    }
+    if (editData.account) transaction.account = editData.account;
+  }
+
+  if (editData.amount !== undefined) {
+    appAssert(
+      editData.amount > 0,
+      BAD_REQUEST,
+      "Amount must be a positive number"
+    );
+    transaction.amount = editData.amount;
+  }
+  if (editData.date) transaction.date = new Date(editData.date);
+
+  const updatedTransaction = await transaction.save();
+
+  return {
+    transaction: { ...updatedTransaction.toObject() },
+  };
+};
+
+/*
 export const addTransaction = async (request: AddTransactionParams) => {
   // Check weather category exists
   const category = await CategoryModel.findById({
@@ -113,19 +246,9 @@ export const addTransaction = async (request: AddTransactionParams) => {
     transaction: { ...transaction.toObject() },
   };
 };
+*/
 
-type EditTransactionParams = {
-  transactionId: string;
-  userId: mongoose.Types.ObjectId;
-  type?: "income" | "expense" | undefined;
-  amount?: number | undefined;
-  account?: string | undefined;
-  categoryId?: string | undefined;
-  date?: string | undefined;
-  isRecurring?: boolean | undefined;
-  dueDate?: number | undefined;
-};
-
+/*
 export const editTransaction = async (request: EditTransactionParams) => {
   const { transactionId, userId, categoryId, type, ...editData } = request;
 
@@ -183,3 +306,4 @@ export const editTransaction = async (request: EditTransactionParams) => {
     transaction: { ...updatedTransaction.toObject() },
   };
 };
+*/

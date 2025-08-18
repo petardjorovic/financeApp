@@ -10,7 +10,7 @@ export type TransactionDTO = {
     _id: mongoose.Types.ObjectId;
   };
   date: Date;
-  isRecurring: boolean;
+  recurringBillId?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
   __v: number;

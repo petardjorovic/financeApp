@@ -11,8 +11,7 @@ interface TransactionDocument
   categoryId?: mongoose.Types.ObjectId;
   potId?: mongoose.Types.ObjectId;
   date: Date;
-  isRecurring: boolean;
-  dueDate?: number;
+  recurringBillId?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,8 +36,10 @@ const transactionSchema = new mongoose.Schema<TransactionDocument>(
       ref: "Pot",
     },
     date: { type: Date, required: true },
-    isRecurring: { type: Boolean, default: false },
-    dueDate: { type: Number },
+    recurringBillId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "RecurringBill",
+    },
   },
   {
     timestamps: true,
@@ -48,6 +49,7 @@ const transactionSchema = new mongoose.Schema<TransactionDocument>(
 transactionSchema.index({ userId: 1, categoryId: 1 });
 transactionSchema.index({ userId: 1, date: -1 });
 transactionSchema.index({ account: "text" });
+transactionSchema.index({ recurringBillId: 1 });
 
 const TransactionModel = mongoose.model<
   TransactionDocument,

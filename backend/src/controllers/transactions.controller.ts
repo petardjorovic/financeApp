@@ -17,7 +17,6 @@ import appAssert from "../utils/appAssert.js";
 export const getTransactionsHandler = catchErrors(async (req, res) => {
   // validate request
   const queryParams = getTransactionsQuerySchema.parse(req.query);
-  const { page, filter, sort, search } = queryParams;
 
   // call service
   const { transactions, total, pageNum, pages, limit } =

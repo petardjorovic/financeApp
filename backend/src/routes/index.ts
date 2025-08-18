@@ -9,6 +9,7 @@ import categoryRoutes from "./category.routes.js";
 import transactionRoutes from "./transaction.routes.js";
 import budgetRoutes from "./budget.routes.js";
 import potsRoutes from "./pots.routes.js";
+import recurringBillsRoutes from "./recurringBill.routes.js";
 
 const routes = Router();
 
@@ -28,5 +29,6 @@ routes.use("/categories", authenticate, categoryRoutes);
 routes.use("/themes", authenticate, themeRoutes);
 routes.use("/budgets", authenticate, budgetRoutes);
 routes.use("/pots", authenticate, potsRoutes);
+routes.use("/recurringBills", authenticate, recurringBillsRoutes);
 
 export default routes;
