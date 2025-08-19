@@ -12,7 +12,7 @@ const transactionRoutes = Router();
 
 transactionRoutes.get("/", getTransactionsHandler);
 transactionRoutes.post("/", addTransactionHandler);
-transactionRoutes.patch("/:id", editTransactionHandler);
+transactionRoutes.put("/:id", editTransactionHandler);
 transactionRoutes.delete("/:id", deleteTransactionHandler);
 
 export default transactionRoutes;

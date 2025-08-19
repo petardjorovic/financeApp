@@ -59,30 +59,27 @@ export const transactionIdSchema = z
 
 export const editTransactionSchema = z
   .object({
-    type: z.enum(["income", "expense"]).optional(),
+    type: z.enum(["income", "expense"]),
     amount: z
       .union([z.number(), z.string()])
       .transform((val) => Number(val))
       .refine((val) => !isNaN(val) && val > 0, {
         message: "Amount must be a positive number",
-      })
-      .optional(),
-    account: z.string().min(1).max(255).optional(),
+      }),
+    account: z.string().min(1).max(255),
     categoryId: z
       .string()
       .refine((val) => mongoose.Types.ObjectId.isValid(val), {
         message: "Invalid category ID",
-      })
-      .optional(),
+      }),
     date: z
       .string()
       .refine((val) => !isNaN(Date.parse(val)), {
         message: "Invalid date format",
       })
-      .refine((val) => new Date(val) <= new Date(), {
+      .refine((val) => new Date(val).getTime() <= Date.now(), {
         message: "Transaction date cannot be in the future",
-      })
-      .optional(),
+      }),
     recurringBillId: z
       .string()
       .refine((val) => mongoose.Types.ObjectId.isValid(val), {
@@ -93,17 +90,6 @@ export const editTransactionSchema = z
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provide for update",
   })
-  .refine(
-    (data) =>
-      !(
-        data.recurringBillId &&
-        ("account" in data || "categoryId" in data || "type" in data)
-      ),
-    {
-      message:
-        "Account, categoryId and type cannot be manually changed when recurringBillId is set",
-    }
-  )
   .refine((data) => !("potId" in data), {
     message: "potId cannot be set in add transaction",
   })

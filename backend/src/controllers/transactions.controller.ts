@@ -54,7 +54,7 @@ export const addTransactionHandler = catchErrors(async (req, res) => {
 export const editTransactionHandler = catchErrors(async (req, res) => {
   // validate request
   const transactionId = transactionIdSchema.parse(req.params.id);
-  const request = editTransactionSchema.parse(req.body);
+  const request = transactionSchema.parse(req.body);
 
   // call service
   const { transaction } = await editTransaction({
