@@ -18,26 +18,25 @@ export const getTransactionsQuerySchema = z.object({
 
 export const transactionSchema = z
   .object({
-    type: z.enum(["income", "expense"]).optional(),
+    type: z.enum(["income", "expense"]),
     amount: z
       .union([z.number(), z.string()])
       .transform((val) => Number(val))
       .refine((val) => !isNaN(val) && val > 0, {
         message: "Amount must be a positive number",
       }),
-    account: z.string().min(1).max(255).optional(),
+    account: z.string().min(1).max(255),
     categoryId: z
       .string()
       .refine((val) => mongoose.Types.ObjectId.isValid(val), {
         message: "Invalid category ID",
-      })
-      .optional(),
+      }),
     date: z
       .string()
       .refine((val) => !isNaN(Date.parse(val)), {
         message: "Invalid date format",
       })
-      .refine((val) => new Date(val) <= new Date(), {
+      .refine((val) => new Date(val).getTime() <= Date.now(), {
         message: "Transaction date cannot be in the future",
       }),
     recurringBillId: z

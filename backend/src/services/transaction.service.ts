@@ -80,49 +80,43 @@ export const getTransactionsData = async ({
 };
 
 type AddTransactionParams = {
-  type?: "income" | "expense" | undefined;
+  type: "income" | "expense";
   amount: number;
+  account: string;
+  categoryId: string;
   date: string;
-  account?: string | undefined;
-  categoryId?: string | undefined;
   recurringBillId?: string | undefined;
   userId: mongoose.Types.ObjectId;
 };
 
 export const addTransaction = async (request: AddTransactionParams) => {
-  let categoryId: mongoose.Types.ObjectId | undefined = request.categoryId
-    ? new mongoose.Types.ObjectId(request.categoryId)
-    : undefined;
-  let account = request.account;
-  let type = request.type;
+  // check category
+  const category = await CategoryModel.findById({
+    _id: request.categoryId,
+  });
+  appAssert(category, BAD_REQUEST, "Category not found");
+  appAssert(
+    category.type === request.type,
+    BAD_REQUEST,
+    `Transaction type "${request.type}" does not match category type "${category.type}"`
+  );
 
+  // case recurringBill exists
   if (request.recurringBillId) {
     const recurringBill = await RecurringBillModel.findOne({
       _id: request.recurringBillId,
       userId: request.userId,
     });
     appAssert(recurringBill, BAD_REQUEST, "Recurring bill not found");
-
-    categoryId = recurringBill.categoryId;
-    account = recurringBill.name;
-    type = TransactionTypes.Expense;
-  } else {
-    // Check weather category exists
     appAssert(
-      request.categoryId && request.type && request.account,
+      recurringBill.categoryId.toString() === category._id.toString(),
       BAD_REQUEST,
-      "Transaction type, account and category ID are required"
+      `Not found category`
     );
-    const category = await CategoryModel.findById({
-      _id: request.categoryId,
-    });
-    appAssert(category, BAD_REQUEST, "Category not found");
-
-    // Check weather tranasction type matches category type
     appAssert(
-      category.type === request.type,
+      recurringBill.name === request.account,
       BAD_REQUEST,
-      `Transaction type "${request.type}" does not match category type "${category.type}"`
+      "Wrong input from account"
     );
   }
 
@@ -130,10 +124,10 @@ export const addTransaction = async (request: AddTransactionParams) => {
   const transaction = await TransactionModel.create({
     userId: request.userId,
     amount: request.amount,
-    date: request.date,
-    categoryId,
-    account,
-    type,
+    date: new Date(request.date),
+    categoryId: request.categoryId,
+    account: request.account,
+    type: request.type,
     recurringBillId: request.recurringBillId,
     potId: undefined,
   });
@@ -236,6 +230,8 @@ export const addTransaction = async (request: AddTransactionParams) => {
     `Transaction type "${request.type}" does not match category type "${category.type}"`
   );
 
+
+
   // create transaction in db
   const transaction = await TransactionModel.create({
     ...request,
@@ -304,6 +300,62 @@ export const editTransaction = async (request: EditTransactionParams) => {
 
   return {
     transaction: { ...updatedTransaction.toObject() },
+  };
+};
+*/
+
+/*
+export const addTransaction = async (request: AddTransactionParams) => {
+  let categoryId: mongoose.Types.ObjectId | undefined = request.categoryId
+    ? new mongoose.Types.ObjectId(request.categoryId)
+    : undefined;
+  let account = request.account;
+  let type = request.type;
+
+  if (request.recurringBillId) {
+    const recurringBill = await RecurringBillModel.findOne({
+      _id: request.recurringBillId,
+      userId: request.userId,
+    });
+    appAssert(recurringBill, BAD_REQUEST, "Recurring bill not found");
+
+    categoryId = recurringBill.categoryId;
+    account = recurringBill.name;
+    type = TransactionTypes.Expense;
+  } else {
+    // Check weather category exists
+    appAssert(
+      request.categoryId && request.type && request.account,
+      BAD_REQUEST,
+      "Transaction type, account and category ID are required"
+    );
+    const category = await CategoryModel.findById({
+      _id: request.categoryId,
+    });
+    appAssert(category, BAD_REQUEST, "Category not found");
+
+    // Check weather tranasction type matches category type
+    appAssert(
+      category.type === request.type,
+      BAD_REQUEST,
+      `Transaction type "${request.type}" does not match category type "${category.type}"`
+    );
+  }
+
+  // create transaction in db
+  const transaction = await TransactionModel.create({
+    userId: request.userId,
+    amount: request.amount,
+    date: request.date,
+    categoryId,
+    account,
+    type,
+    recurringBillId: request.recurringBillId,
+    potId: undefined,
+  });
+
+  return {
+    transaction: { ...transaction.toObject() },
   };
 };
 */
