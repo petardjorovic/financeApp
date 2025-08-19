@@ -9,9 +9,13 @@ export const addRecurringBillSchema = z.object({
     .refine((val) => !isNaN(val) && val >= 1 && val <= 28, {
       message: "Due date must be between 1 and 28",
     }),
-  categoryId: z
-    .string()
-    .refine((val) => mongoose.Types.ObjectId.isValid(val), {
-      message: "Invalid category ID",
-    }),
+  categoryId: z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
+    message: "Invalid category ID",
+  }),
 });
+
+export const recurringBillIdSchema = z
+  .string()
+  .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+    message: "Invalid recurring bill ID",
+  });
