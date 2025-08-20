@@ -49,7 +49,7 @@ const transactionSchema = new mongoose.Schema<TransactionDocument>(
 transactionSchema.index({ userId: 1, categoryId: 1 });
 transactionSchema.index({ userId: 1, date: -1 });
 transactionSchema.index({ account: "text" });
-transactionSchema.index({ recurringBillId: 1 });
+transactionSchema.index({ recurringBillId: 1, date: 1, userId: 1 });
 
 const TransactionModel = mongoose.model<
   TransactionDocument,

@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 import z from "zod";
 
+export const getRecurringBillsSchema = z.object({
+  sort: z
+    .enum(["Latest", "Oldest", "A-Z", "Z-A", "Highest", "Lowest"])
+    .optional(),
+  search: z.string().min(1).max(255).optional(),
+});
+
 export const addRecurringBillSchema = z.object({
   name: z.string().min(1).max(255),
   dueDate: z
