@@ -14,7 +14,10 @@ export const addThemeHandler = catchErrors(async (req, res) => {
 });
 
 export const getThemesHandler = catchErrors(async (req, res) => {
-  const themes = await ThemeModel.find().sort({ name: 1 }).lean();
+  const themes = await ThemeModel.find()
+    .sort({ name: 1 })
+    .select({ _id: 1, name: 1 })
+    .lean();
 
   return res.status(OK).json(themes);
 });

@@ -17,7 +17,8 @@ export const registerSchema = loginSchema
   .refine((data) => data.confirmPassword === data.password, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  })
+  .strict();
 
 export const verificationCodeSchema = z
   .string()
