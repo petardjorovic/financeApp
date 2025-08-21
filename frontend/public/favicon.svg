@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 100 100">
+  <!-- Crni krug pozadina -->
+  <circle cx="50" cy="50" r="50" fill="#000" />
+
+  <!-- Beli tekst, savršeno centriran -->
+  <text
+    x="50"
+    y="50"
+    text-anchor="middle"
+    font-family="Alfa Slab One, Arial, sans-serif"
+    font-size="42"
+    font-weight="900"
+    fill="#fff"
+    alignment-baseline="middle"
+    dominant-baseline="middle"
+  >
+    pdf
+  </text>
+</svg>
