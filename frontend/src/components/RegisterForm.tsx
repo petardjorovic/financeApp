@@ -16,7 +16,9 @@ function RegisterForm() {
         <img src={logoLarge} alt="logo" />
       </div>
       <div className="w-[343px] sm:w-[400px] md:w-[400px] lg:w-[560px] p-[32px] bg-White rounded-[12px]">
-        <h1 className="font-bold text-[32px] mb-[32px]">Sign Up</h1>
+        <h1 className="font-bold text-[32px] mb-[32px] text-Grey-900">
+          Sign Up
+        </h1>
         <form className="m-0">
           <div className="mb-4">
             <Label
@@ -99,7 +101,7 @@ function RegisterForm() {
               )}
             </div>
           </div>
-          <Button className="w-full p-4 rounded-[8px] text-sm font-semibold h-[53px] mb-8">
+          <Button className="w-full p-4 rounded-[8px] text-sm font-semibold h-[53px] mb-8 bg-Grey-900">
             Create Account
           </Button>
           <p className="text-Grey-500 text-sm text-center">

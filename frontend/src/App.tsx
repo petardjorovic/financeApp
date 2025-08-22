@@ -6,6 +6,10 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
+import { Toaster } from "react-hot-toast";
+import Overview from "./pages/Overview.tsx";
 
 function App() {
   return (
@@ -13,11 +17,23 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Overview />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/password/forgot" element={<ForgotPassword />} />
+          <Route path="/password/reset" element={<ResetPassword />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{ margin: "8px" }}
+        toastOptions={{
+          success: { duration: 3000 },
+          error: { duration: 5000 },
+        }}
+      />
     </QueryClientProvider>
   );
 }
