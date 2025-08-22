@@ -52,7 +52,7 @@ function LoginForm() {
               name="email"
               render={({ field }) => (
                 <FormItem className="space-y-0">
-                  <FormLabel className="text-xs mb-0 text-Grey-500 font-semibold">
+                  <FormLabel className="text-xs mb-0 text-Grey-500 font-semibold leading-1">
                     Email address
                   </FormLabel>
                   <FormControl>
@@ -72,7 +72,7 @@ function LoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem className="space-y-0 mb-1">
-                  <FormLabel className="text-xs mb-0 text-Grey-500 font-semibold">
+                  <FormLabel className="text-xs mb-0 text-Grey-500 font-semibold leading-1">
                     Password
                   </FormLabel>
                   <FormControl>
