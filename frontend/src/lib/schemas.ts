@@ -37,3 +37,12 @@ export const registerFormSchema = z
 export const forgotPasswordSchema = z.object({
   email: emailSchema,
 });
+
+export const resetPasswordSchema = z.object({
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters." })
+    .max(255, {
+      message: "Password length cannot be more than 255 characters.",
+    }),
+});

@@ -41,7 +41,7 @@ function VerifyEmail() {
               </AlertTitle>
             </Alert>
             <p className="mb-4">
-              The is either invalid or expired.{" "}
+              The link is either invalid or expired.{" "}
               <Link to={"/forgot/password"} className="mx-auto">
                 <Button
                   variant={"link"}

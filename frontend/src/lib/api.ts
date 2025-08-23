@@ -22,6 +22,11 @@ export type User = {
   updatedAt: Date;
 };
 
+export type ResetPasswordParams = {
+  verificationCode: string;
+  password: string;
+};
+
 export const login = async (data: LoginParams): Promise<{ message: string }> =>
   API.post("/auth/login", data);
 
@@ -35,3 +40,7 @@ export const verifyEmail = async (code: string): Promise<{ message: string }> =>
 export const sendPasswordResetEmail = async (data: {
   email: string;
 }): Promise<{ message: string }> => API.post("/auth/password/forgot", data);
+
+export const resetPassword = async (
+  data: ResetPasswordParams
+): Promise<{ message: string }> => API.post("/auth/password/reset", data);
