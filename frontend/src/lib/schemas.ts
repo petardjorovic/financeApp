@@ -33,3 +33,7 @@ export const registerFormSchema = z
     message: "Passwords must match",
     path: ["confirmPassword"],
   });
+
+export const forgotPasswordSchema = z.object({
+  email: emailSchema,
+});
