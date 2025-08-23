@@ -2,7 +2,7 @@ import logoLarge from "../assets/images/logo-larges.svg";
 
 function HeroAuth() {
   return (
-    <div className="h-screen p-[20px] hidden md:block md:w-[42%]">
+    <div className="h-auto hidden md:block md:w-[42%]">
       <div
         className={`rounded-md bg-no-repeat bg-[url("/src/assets/images/illustration-authentication.svg")] flex flex-col justify-end bg-cover w-full h-full p-[40px] relative overflow-hidden`}
       >

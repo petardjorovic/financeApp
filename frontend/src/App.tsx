@@ -11,6 +11,8 @@ import ResetPassword from "./pages/ResetPassword.tsx";
 import { Toaster } from "react-hot-toast";
 import Overview from "./pages/Overview.tsx";
 import VerifyEmail from "./pages/VerifyEmail.tsx";
+import AppContainer from "./components/AppContainer.tsx";
+import Profile from "./pages/Profile.tsx";
 
 function App() {
   return (
@@ -18,7 +20,10 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Overview />} />
+          <Route path="/" element={<AppContainer />}>
+            <Route index element={<Overview />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/password/forgot" element={<ForgotPassword />} />

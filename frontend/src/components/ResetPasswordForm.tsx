@@ -43,7 +43,7 @@ function ResetPasswordForm({ code }: { code: string | null }) {
 
   return (
     <div className="w-[90%] sm:w-[400px] md:w-[400px] lg:w-[560px] p-[32px] bg-White rounded-[12px]">
-      <h1 className="font-bold text-[32px] mb-4 text-Grey-900 text-center">
+      <h1 className="font-bold text-2xl md:text-[32px] mb-4 text-Grey-900 text-center">
         Change your password
       </h1>
       <Form {...form}>

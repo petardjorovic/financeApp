@@ -44,3 +44,5 @@ export const sendPasswordResetEmail = async (data: {
 export const resetPassword = async (
   data: ResetPasswordParams
 ): Promise<{ message: string }> => API.post("/auth/password/reset", data);
+
+export const getUser = async (): Promise<User> => API.get("/user");
