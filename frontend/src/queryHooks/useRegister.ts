@@ -1,9 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { register, type User } from "@/lib/api";
+import { register } from "@/lib/api";
 import type { registerFormValues } from "@/components/RegisterForm";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+
+type RegisterReturnType = { message: string };
 
 export const useRegister = () => {
   const navigate = useNavigate();
@@ -11,10 +13,16 @@ export const useRegister = () => {
     mutate: signUp,
     isPending,
     isError,
-  } = useMutation<User, AxiosError<{ message: string }>, registerFormValues>({
+  } = useMutation<
+    RegisterReturnType,
+    AxiosError<{ message: string }>,
+    registerFormValues
+  >({
     mutationFn: register,
     onSuccess: () => {
-      toast.success("You have register. Please check your email.");
+      toast.success(
+        "Registration successful! Please check your email to verify your account."
+      );
       navigate("/login");
     },
     onError: (err) => {

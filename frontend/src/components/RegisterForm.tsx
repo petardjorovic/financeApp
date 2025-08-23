@@ -171,7 +171,11 @@ function RegisterForm() {
               type="submit"
               disabled={isPending}
             >
-              {isPending ? <Loader2Icon /> : "Create Account"}
+              {isPending ? (
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Create Account"
+              )}
             </Button>
             <p className="text-Grey-500 text-sm text-center">
               Already have an account?{" "}

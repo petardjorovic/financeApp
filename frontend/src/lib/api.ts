@@ -22,8 +22,12 @@ export type User = {
   updatedAt: Date;
 };
 
-export const login = (data: LoginParams): Promise<{ message: string }> =>
+export const login = async (data: LoginParams): Promise<{ message: string }> =>
   API.post("/auth/login", data);
 
-export const register = (data: RegisterParams): Promise<User> =>
-  API.post("/auth/register", data);
+export const register = async (
+  data: RegisterParams
+): Promise<{ message: string }> => API.post("/auth/register", data);
+
+export const verifyEmail = async (code: string): Promise<{ message: string }> =>
+  API.get(`/auth/email/verify/${code}`);

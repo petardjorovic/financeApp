@@ -38,7 +38,10 @@ export const registerHandler = catchErrors(async (req, res) => {
   // return response
   return sethAuthCookies({ res, accessToken, refreshToken })
     .status(CREATED)
-    .json(user);
+    .json({
+      message:
+        "Registration successful! Please check your email to verify your account.",
+    });
 });
 
 export const loginHandler = catchErrors(async (req, res) => {

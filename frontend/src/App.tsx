@@ -10,6 +10,7 @@ import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import { Toaster } from "react-hot-toast";
 import Overview from "./pages/Overview.tsx";
+import VerifyEmail from "./pages/VerifyEmail.tsx";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/password/forgot" element={<ForgotPassword />} />
           <Route path="/password/reset" element={<ResetPassword />} />
+          <Route path="/email/verify/:code" element={<VerifyEmail />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
@@ -30,7 +32,7 @@ function App() {
         gutter={12}
         containerStyle={{ margin: "8px" }}
         toastOptions={{
-          success: { duration: 3000 },
+          success: { duration: 5000 },
           error: { duration: 5000 },
         }}
       />

@@ -106,6 +106,9 @@ export const loginUser = async ({
   const user = await UserModel.findOne({ email });
   appAssert(user, UNAUTHORIZED, "Invalid email or password");
 
+  // check weather user is verified
+  appAssert(user.verified, UNAUTHORIZED, "Please verify your email to log in");
+
   // validate password from request
   const isPasswordValid = await user.comparePassword(password);
   appAssert(isPasswordValid, UNAUTHORIZED, "Invalid email or password");
