@@ -1,6 +1,7 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/queryHooks/useAuth";
+import MainAppLayout from "@/layouts/MainAppLayout";
 
 function AppContainer() {
   const { user, isLoading } = useAuth();
@@ -10,9 +11,7 @@ function AppContainer() {
       <Loader2 className="mb-4" />
     </div>
   ) : user ? (
-    <div className="container">
-      <Outlet />
-    </div>
+    <MainAppLayout />
   ) : (
     <Navigate
       to={"/login"}

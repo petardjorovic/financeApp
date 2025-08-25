@@ -13,6 +13,10 @@ import Overview from "./pages/Overview.tsx";
 import VerifyEmail from "./pages/VerifyEmail.tsx";
 import AppContainer from "./components/AppContainer.tsx";
 import Profile from "./pages/Profile.tsx";
+import Transactions from "./pages/Transactions.tsx";
+import Budgets from "./pages/Budgets.tsx";
+import Pots from "./pages/Pots.tsx";
+import RecurringBills from "./pages/RecurringBills.tsx";
 
 function App() {
   return (
@@ -22,7 +26,11 @@ function App() {
         <Routes>
           <Route path="/" element={<AppContainer />}>
             <Route index element={<Overview />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="transactions" element={<Transactions />} />
+            <Route path="budgets" element={<Budgets />} />
+            <Route path="pots" element={<Pots />} />
+            <Route path="recurringbills" element={<RecurringBills />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
