@@ -21,7 +21,7 @@ import RecurringBills from "./pages/RecurringBills.tsx";
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} position="top" /> */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AppContainer />}>

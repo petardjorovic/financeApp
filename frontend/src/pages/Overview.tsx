@@ -1,5 +1,5 @@
 function Overview() {
-  return <div>Overview</div>;
+  return <div className="">Overview</div>;
 }
 
 export default Overview;

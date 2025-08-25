@@ -45,4 +45,4 @@ export const resetPassword = async (
   data: ResetPasswordParams
 ): Promise<{ message: string }> => API.post("/auth/password/reset", data);
 
-export const getUser = async (): Promise<User> => API.get("/user");
+export const getUser = async (): Promise<{ user: User }> => API.get("/user");
