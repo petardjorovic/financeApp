@@ -1,8 +1,8 @@
+import { Link } from "react-router-dom";
+import { AlertCircleIcon, CheckCircle2Icon, Loader2 } from "lucide-react";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useVerifyEmail } from "@/queryHooks/useVerifyEmail";
-import { AlertCircleIcon, CheckCircle2Icon, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
 import logoLarge from "../assets/images/logo-larges.svg";
 
 function VerifyEmail() {

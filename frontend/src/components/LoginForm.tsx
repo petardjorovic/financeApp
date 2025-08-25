@@ -1,8 +1,8 @@
+import z from "zod";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
 import { Loader2Icon } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -39,12 +39,12 @@ function LoginForm() {
   };
 
   return (
-    <>
+    <div className="w-full md:w-[58%] min-h-screen flex flex-col md:items-center md:justify-center pb-4 md:py-5">
       <div className="bg-Grey-900 px-[40px] py-[24px] w-full md:hidden rounded-b-[8px] h-[70px] flex justify-center items-center mb-4">
         <img src={logoLarge} alt="logo" />
       </div>
-      <div className="flex-1 flex items-center justify-center">
-        <div className="w-[90%] sm:w-[400px] md:w-[400px] lg:w-[560px] p-[32px] bg-White rounded-[12px]">
+      <div className="flex-1 flex items-center justify-center px-4">
+        <div className="w-full sm:w-[560px] md:w-[400px] lg:w-[560px] p-[32px] bg-White rounded-[12px]">
           <h1 className="font-bold text-[32px] mb-[32px] text-Grey-900">
             Login
           </h1>
@@ -138,7 +138,7 @@ function LoginForm() {
           </Form>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

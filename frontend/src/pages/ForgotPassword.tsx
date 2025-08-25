@@ -1,3 +1,8 @@
+import type z from "zod";
+import { Link } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { AlertCircleIcon, CheckCircle2Icon, Loader2Icon } from "lucide-react";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,11 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { forgotPasswordSchema } from "@/lib/schemas";
 import { useSendPassordResetEmail } from "@/queryHooks/useSendPasswordResetEmail";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircleIcon, CheckCircle2Icon, Loader2Icon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import type z from "zod";
 import logoLarge from "../assets/images/logo-larges.svg";
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;

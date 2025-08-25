@@ -1,6 +1,6 @@
-import { useAuth } from "@/queryHooks/useAuth";
-import { Loader2 } from "lucide-react";
 import { Navigate, Outlet } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "@/queryHooks/useAuth";
 
 function AppContainer() {
   const { user, isLoading } = useAuth();

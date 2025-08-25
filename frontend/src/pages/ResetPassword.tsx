@@ -1,8 +1,8 @@
-import ResetPasswordForm from "@/components/ResetPasswordForm";
+import { Link, useSearchParams } from "react-router-dom";
+import { AlertCircleIcon } from "lucide-react";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { AlertCircleIcon } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import ResetPasswordForm from "@/components/ResetPasswordForm";
 import logoLarge from "../assets/images/logo-larges.svg";
 
 function ResetPassword() {
