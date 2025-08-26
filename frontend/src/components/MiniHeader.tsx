@@ -3,7 +3,7 @@ import UserMenu from "./UserMenu";
 
 function MiniHeader() {
   return (
-    <header className="bg-Grey-900 px-4 sm:px-10 py-[24px] w-full md:hidden rounded-b-[8px] h-[70px] flex justify-between items-center mb-4">
+    <header className="bg-Grey-900 px-4 sm:px-10 py-[24px] w-full md:hidden rounded-b-[8px] h-[70px] flex justify-between items-center">
       <img src={logoLarge} alt="logo" />
       <UserMenu />
     </header>
