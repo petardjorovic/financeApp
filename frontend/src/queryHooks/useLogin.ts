@@ -32,7 +32,7 @@ export const useLogin = () => {
       navigate(redirectUrl, { replace: true });
     },
     onError: (err) => {
-      const message = err.response?.data?.message ?? "Login failed";
+      const message = err.message || "Login failed";
       toast.error(message);
     },
   });

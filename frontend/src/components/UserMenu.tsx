@@ -10,11 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import { LogOut, User2Icon } from "lucide-react";
+import { useLogout } from "@/queryHooks/useLogout";
 
 function UserMenu() {
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
-  console.log(user, "user");
+  const { signOut } = useLogout();
 
   const initials = user?.fullName
     ? user?.fullName
@@ -41,7 +43,7 @@ function UserMenu() {
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col overflow-hidden">
-            <span className="text-sm font-semibold truncate">
+            <span className="text-sm font-semibold">
               {isLoading ? "Loading..." : user?.fullName || "Unknown user"}
             </span>
             <span className="text-xs text-Grey-300 truncate">
@@ -52,11 +54,13 @@ function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate("/profile")}>
-            Profile
+            <User2Icon /> Profile
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut()}>
+          <LogOut /> Log out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

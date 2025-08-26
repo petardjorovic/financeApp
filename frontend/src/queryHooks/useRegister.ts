@@ -26,7 +26,7 @@ export const useRegister = () => {
       navigate("/login");
     },
     onError: (err) => {
-      toast.error(err.response?.data?.message || "SignUp failed");
+      toast.error(err.message || "SignUp failed");
     },
   });
 

@@ -1,15 +1,15 @@
 import API from "@/config/apiClient";
 
-type LoginParams = {
-  email: string;
-  password: string;
-};
-
 type RegisterParams = {
   fullName: string;
   email: string;
   password: string;
   confirmPassword: string;
+};
+
+type LoginParams = {
+  email: string;
+  password: string;
 };
 
 export type User = {
@@ -27,12 +27,14 @@ export type ResetPasswordParams = {
   password: string;
 };
 
-export const login = async (data: LoginParams): Promise<{ message: string }> =>
-  API.post("/auth/login", data);
-
 export const register = async (
   data: RegisterParams
 ): Promise<{ message: string }> => API.post("/auth/register", data);
+
+export const login = async (data: LoginParams): Promise<{ message: string }> =>
+  API.post("/auth/login", data);
+
+export const logout = async () => API.get("/auth/logout");
 
 export const verifyEmail = async (code: string): Promise<{ message: string }> =>
   API.get(`/auth/email/verify/${code}`);
@@ -45,4 +47,4 @@ export const resetPassword = async (
   data: ResetPasswordParams
 ): Promise<{ message: string }> => API.post("/auth/password/reset", data);
 
-export const getUser = async (): Promise<{ user: User }> => API.get("/user");
+export const getUser = async (): Promise<User> => API.get("/user");
