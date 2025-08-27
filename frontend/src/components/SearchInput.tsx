@@ -1,13 +1,10 @@
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
-import { useSearchParams } from "react-router-dom";
 
-type SearchInputProps = {
-  search: string;
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
-};
-
-function SearchInput({ search, setSearch }: SearchInputProps) {
+function SearchInput() {
+  const [search, setSearch] = useState<string>("");
   const [searchParams, setSearchParams] = useSearchParams();
   function onSearchChange(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import arrowDown from "@/assets/images/arrow-down.svg";
 
 import { cn } from "@/lib/utils";
 
@@ -47,8 +46,33 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        {/* <ChevronDownIcon className="size-4 opacity-50" /> */}
-        <img src={arrowDown} alt="arrow-down" className="w-3 h-3" />
+        <ChevronDownIcon className="size-4 opacity-50" />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  );
+}
+
+function SelectTriggerIcon({
+  className,
+  size = "default",
+  children,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
+  size?: "sm" | "default";
+}) {
+  return (
+    <SelectPrimitive.Trigger
+      data-slot="select-trigger"
+      data-size={size}
+      className={cn(
+        "h-auto flex p-0 rounded-[8px] w-auto items-center focus:outline-none cursor-pointer",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <SelectPrimitive.Icon asChild>
+        <ChevronDownIcon className="size-4 opacity-50" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -185,5 +209,6 @@ export {
   SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
+  SelectTriggerIcon,
   SelectValue,
 };
