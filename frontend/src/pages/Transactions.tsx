@@ -5,9 +5,12 @@ import { useCategories } from "@/queryHooks/useCategories";
 import { Loader2 } from "lucide-react";
 import SortByTransactions from "@/components/SortByTransactions";
 import CategoryFilter from "@/components/CategoryFilter";
+import { useTransactions } from "@/queryHooks/useTransactions";
+import Pagination from "@/components/Pagination";
 
 function Transactions() {
   const { isLoading } = useCategories();
+  const { data, isLoading: isTransationsLoading } = useTransactions();
 
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
@@ -23,8 +26,8 @@ function Transactions() {
         </Button>
       </div>
       {/* TRANSACTIONS CONTENT */}
-      <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1">
-        {isLoading ? (
+      <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col">
+        {isLoading || isTransationsLoading ? (
           <div className="h-full w-full flex items-center justify-center">
             <Loader2 />
           </div>
@@ -41,7 +44,7 @@ function Transactions() {
             {/* Transaction table */}
             <div></div>
             {/* Pagination */}
-            <div></div>
+            <Pagination totalPages={data?.pages} />
           </>
         )}
       </div>

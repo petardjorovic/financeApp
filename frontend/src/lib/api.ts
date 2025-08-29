@@ -28,6 +28,23 @@ export type Category = {
   type: "income" | "expense";
 };
 
+export type Transaction = {
+  _id: string;
+  userId: string;
+  type: string;
+  amount: number;
+  account: string;
+  categoryId: {
+    _id: string;
+    name: string;
+  };
+  date: string;
+  recurringBillId: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
+
 export type ResetPasswordParams = {
   verificationCode: string;
   password: string;
@@ -57,3 +74,25 @@ export const getUser = async (): Promise<User> => API.get("/user");
 
 export const getCategories = async (): Promise<Category[]> =>
   API.get("/categories");
+
+type GetTransactionsProps = {
+  page: number;
+  filter: string;
+  sort: string;
+  search: string;
+};
+
+export const getTransactions = async ({
+  page,
+  filter,
+  sort,
+  search,
+}: GetTransactionsProps): Promise<{
+  transactions: Transaction[];
+  total: number;
+  page: number;
+  pages: number;
+}> =>
+  API.get(
+    `/transactions?page=${page}&filter=${filter}&sort=${sort}&search=${search}`
+  );
