@@ -22,6 +22,12 @@ export type User = {
   updatedAt: Date;
 };
 
+export type Category = {
+  _id: string;
+  name: string;
+  type: "income" | "expense";
+};
+
 export type ResetPasswordParams = {
   verificationCode: string;
   password: string;
@@ -48,3 +54,6 @@ export const resetPassword = async (
 ): Promise<{ message: string }> => API.post("/auth/password/reset", data);
 
 export const getUser = async (): Promise<User> => API.get("/user");
+
+export const getCategories = async (): Promise<Category[]> =>
+  API.get("/categories");

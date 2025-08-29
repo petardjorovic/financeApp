@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -7,51 +6,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useSearchParams } from "react-router-dom";
+import { useTransFilters } from "@/contexts/TransFilterContext";
 import arrowDown from "../assets/images/arrow-down.svg";
 
 const sortOptions = ["Latest", "Oldest", "A-Z", "Z-A", "Highest", "Lowest"];
 
 function DesktopSortBySelect() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initialSort = searchParams.get("sort");
-
-  const defaultSort = sortOptions.includes(initialSort || "")
-    ? initialSort!
-    : "Latest";
-
-  const [sortBy, setSortBy] = useState<string>(defaultSort);
-
-  const handleChange = (value: string) => {
-    setSortBy(value);
-    searchParams.set("sort", value);
-    if (searchParams.get("page")) searchParams.set("page", "1");
-    setSearchParams(searchParams);
-  };
-
-  useEffect(() => {
-    if (!sortOptions.includes(initialSort || "")) {
-      searchParams.set("sort", "Latest");
-      setSearchParams(searchParams);
-    }
-  }, [initialSort, searchParams, setSearchParams]);
+  const { sortBy, setSortByTerm } = useTransFilters();
 
   return (
     <>
-      <div className="hidden md:flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <p className="text-Grey-500 text-sm leading-[21px]">Sort By</p>
         <Select
           value={sortBy}
-          onValueChange={handleChange}
+          onValueChange={setSortByTerm}
           defaultValue="Latest"
         >
           <SelectTrigger className="[&_svg]:hidden">
             <SelectValue />
             <img src={arrowDown} alt="arrowDown" />
           </SelectTrigger>
-          {/* <SelectTriggerIcon className="[&_svg]:hidden md:hidden">
-            <img src={sortByIcon} />
-          </SelectTriggerIcon> */}
           <SelectContent className="min-w-[113px] mt-3 shadow-[0_0_20px_rgba(0,0,0,0.2)] rounded-[8px] bg-White border-none overflow-hidden">
             <SelectGroup>
               {sortOptions.map((option) => (
@@ -76,3 +51,27 @@ function DesktopSortBySelect() {
 }
 
 export default DesktopSortBySelect;
+
+/*
+const initialSort = searchParams.get("sort");
+
+  const defaultSort = sortOptions.includes(initialSort || "")
+    ? initialSort!
+    : "Latest";
+
+  const [sortBy, setSortBy] = useState<string>(defaultSort);
+
+  const handleChange = (value: string) => {
+    setSortBy(value);
+    searchParams.set("sort", value);
+    if (searchParams.get("page")) searchParams.set("page", "1");
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    if (!sortOptions.includes(initialSort || "")) {
+      searchParams.set("sort", "Latest");
+      setSearchParams(searchParams);
+    }
+  }, [initialSort, searchParams, setSearchParams]);
+  */

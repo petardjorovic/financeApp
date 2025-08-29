@@ -1,48 +1,37 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTriggerIcon,
 } from "./ui/select";
 import sortByIcon from "../assets/images/sortBy.svg";
+import { useTransFilters } from "@/contexts/TransFilterContext";
 
 const sortOptions = ["Latest", "Oldest", "A-Z", "Z-A", "Highest", "Lowest"];
 
 function MobileSortBySelect() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initialSort = searchParams.get("sort");
-
-  const defaultSort = sortOptions.includes(initialSort || "")
-    ? initialSort!
-    : "Latest";
-
-  const [sortBy, setSortBy] = useState<string>(defaultSort);
-
-  const handleChange = (value: string) => {
-    setSortBy(value);
-    searchParams.set("sort", value);
-    if (searchParams.get("page")) searchParams.set("page", "1");
-    setSearchParams(searchParams);
-  };
-
-  useEffect(() => {
-    if (!sortOptions.includes(initialSort || "")) {
-      searchParams.set("sort", "Latest");
-      setSearchParams(searchParams);
-    }
-  }, [initialSort, searchParams, setSearchParams]);
+  const { sortBy, setSortByTerm } = useTransFilters();
 
   return (
     <>
-      <Select value={sortBy} onValueChange={handleChange} defaultValue="Latest">
-        <SelectTriggerIcon className="[&_svg]:hidden md:hidden">
+      <Select
+        value={sortBy}
+        onValueChange={setSortByTerm}
+        defaultValue="Latest"
+      >
+        <SelectTriggerIcon className="[&_svg]:hidden">
           <img src={sortByIcon} />
         </SelectTriggerIcon>
-        <SelectContent className="min-w-[113px] mt-3 shadow-[0_0_20px_rgba(0,0,0,0.2)] rounded-[8px] bg-White border-none overflow-hidden">
+        <SelectContent
+          className="min-w-[113px] mt-7 h-[300px] shadow-[0_0_20px_rgba(0,0,0,0.2)] rounded-[8px] bg-White border-none overflow-hidden"
+          align="end"
+        >
           <SelectGroup>
+            <SelectLabel className="text-Grey-500 text-sm leading-[21px] px-5 py-3 border-b border-b-Grey-100">
+              Sort by
+            </SelectLabel>
             {sortOptions.map((option) => (
               <SelectItem
                 key={option}
@@ -64,3 +53,28 @@ function MobileSortBySelect() {
 }
 
 export default MobileSortBySelect;
+
+/*
+const [searchParams, setSearchParams] = useSearchParams();
+  const initialSort = searchParams.get("sort");
+
+  const defaultSort = sortOptions.includes(initialSort || "")
+    ? initialSort!
+    : "Latest";
+
+  const [sortBy, setSortBy] = useState<string>(defaultSort);
+
+  const handleChange = (value: string) => {
+    setSortBy(value);
+    searchParams.set("sort", value);
+    if (searchParams.get("page")) searchParams.set("page", "1");
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    if (!sortOptions.includes(initialSort || "")) {
+      searchParams.set("sort", "Latest");
+      setSearchParams(searchParams);
+    }
+  }, [initialSort, searchParams, setSearchParams]);
+  */

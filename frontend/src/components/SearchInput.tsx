@@ -20,7 +20,7 @@ function SearchInput() {
 
   return (
     <form
-      className="relative w-[215px] sm:w-[162px] lg:w-[320px]"
+      className="relative w-[200px] sm:w-[162px] lg:w-[320px]"
       onSubmit={onSearchChange}
     >
       <Input

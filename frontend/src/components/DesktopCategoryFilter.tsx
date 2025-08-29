@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -7,36 +6,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useCategories } from "@/queryHooks/useCategories";
 import arrowDown from "../assets/images/arrow-down.svg";
+import { useTransFilters } from "@/contexts/TransFilterContext";
 
 function DesktopCategoryFilter() {
-  const [category, setCategory] = useState<string>("All Transactions");
+  const { categories } = useCategories();
+  const { filter, setFilterTerm } = useTransFilters();
 
   return (
     <div className="flex items-center gap-2">
       <p className="text-Grey-500 text-sm leading-[21px]">Category</p>
       <Select
-        value={category}
-        onValueChange={setCategory}
+        value={filter}
+        onValueChange={setFilterTerm}
         defaultValue="All Transactions"
       >
         <SelectTrigger className="min-w-[177px] [&_svg]:hidden">
           <SelectValue />
           <img src={arrowDown} alt="arrowDown" />
         </SelectTrigger>
-        <SelectContent className="mt-2">
+        <SelectContent className="mt-3 min-w-[177px] h-[300px] shadow-[0_0_20px_rgba(0,0,0,0.2)] rounded-[8px] bg-White border-none overflow-hidden">
           <SelectGroup>
-            <SelectItem value="All Transactions">All Transactions</SelectItem>
-            <SelectItem value="Entertainment">Entertainment</SelectItem>
-            <SelectItem value="Bills">Bills</SelectItem>
-            <SelectItem value="Groceries">Groceries</SelectItem>
-            <SelectItem value="Dining Out">Dining Out</SelectItem>
-            <SelectItem value="Transportation">Transportation</SelectItem>
-            <SelectItem value="Personal Care">Personal Care</SelectItem>
-            <SelectItem value="Education">Education</SelectItem>
-            <SelectItem value="Lifestyle">Lifestyle</SelectItem>
-            <SelectItem value="Shopping">Shopping</SelectItem>
-            <SelectItem value="General">General</SelectItem>
+            <SelectItem
+              value="All Transactions"
+              className="[&_svg]:hidden text-Grey-900 px-5 py-3 border-b border-b-Grey-100 rounded-none data-[state=checked]:font-bold data-[state=checked]:bg-transparent text-sm leading-[21px]"
+            >
+              All Transactions
+            </SelectItem>
+            {categories.map((category) => (
+              <SelectItem
+                key={category._id}
+                value={category.name}
+                className="[&_svg]:hidden text-Grey-900 px-5 py-3 border-b border-b-Grey-100 last:border-b-0 rounded-none data-[state=checked]:font-bold data-[state=checked]:bg-transparent text-sm leading-[21px]"
+              >
+                {category.name}
+              </SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -45,3 +51,39 @@ function DesktopCategoryFilter() {
 }
 
 export default DesktopCategoryFilter;
+
+/*
+const [searchParams, setSearchParams] = useSearchParams();
+  const initialCategory = searchParams.get("filter");
+  const categoryNames = categories.map((cat) => cat.name);
+  const defaultCategory = categoryNames.includes(initialCategory || "")
+    ? initialCategory!
+    : "All Transactions";
+
+  const [category, setCategory] = useState<string>(defaultCategory);
+
+  const handleChange = (value: string) => {
+    setCategory(value);
+    searchParams.set("filter", value);
+    if (searchParams.get("page")) searchParams.set("page", "1");
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    if (!categories.length) return;
+
+    if (
+      !categories.some((cat) => cat.name === initialCategory) &&
+      initialCategory !== "All Transactions"
+    ) {
+      searchParams.set("filter", "All Transactions");
+      setSearchParams(searchParams);
+    }
+  }, [
+    initialCategory,
+    searchParams,
+    setSearchParams,
+    categories,
+    defaultCategory,
+  ]);
+  */
