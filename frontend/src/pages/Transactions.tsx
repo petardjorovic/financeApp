@@ -7,8 +7,11 @@ import SortByTransactions from "@/components/SortByTransactions";
 import CategoryFilter from "@/components/CategoryFilter";
 import { useTransactions } from "@/queryHooks/useTransactions";
 import Pagination from "@/components/Pagination";
+import { useTransFilters } from "@/contexts/TransFilterContext";
+import TransactionaTable from "@/components/TransactionaTable";
 
 function Transactions() {
+  const { setSearchTerm } = useTransFilters();
   const { isLoading } = useCategories();
   const { data, isLoading: isTransationsLoading } = useTransactions();
 
@@ -26,8 +29,8 @@ function Transactions() {
         </Button>
       </div>
       {/* TRANSACTIONS CONTENT */}
-      <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col">
-        {isLoading || isTransationsLoading ? (
+      <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
+        {isLoading ? (
           <div className="h-full w-full flex items-center justify-center">
             <Loader2 />
           </div>
@@ -35,16 +38,28 @@ function Transactions() {
           <>
             {/* Table operations */}
             <div className="h-[45px] w-full flex justify-between">
-              <SearchInput />
+              <SearchInput onSearch={setSearchTerm} />
               <div className="h-full flex items-center gap-6">
                 <SortByTransactions />
                 <CategoryFilter />
               </div>
             </div>
-            {/* Transaction table */}
-            <div></div>
-            {/* Pagination */}
-            <Pagination totalPages={data?.pages} />
+            {isTransationsLoading ? (
+              <div className="h-full w-full flex items-center justify-center">
+                <Loader2 />
+              </div>
+            ) : (
+              <>
+                {/* Transaction table */}
+
+                {data?.transactions.length && (
+                  <TransactionaTable transactions={data.transactions} />
+                )}
+
+                {/* Pagination */}
+                <Pagination totalPages={data?.pages} />
+              </>
+            )}
           </>
         )}
       </div>

@@ -1,21 +1,28 @@
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Search } from "lucide-react";
+import { useRef, useState } from "react";
+import { Search, X } from "lucide-react";
 import { Input } from "./ui/input";
 
-function SearchInput() {
+type SearchInputProps = {
+  onSearch: (val: string) => void;
+};
+
+function SearchInput({ onSearch }: SearchInputProps) {
   const [search, setSearch] = useState<string>("");
-  const [searchParams, setSearchParams] = useSearchParams();
+  const inputRefLg = useRef<HTMLInputElement>(null);
+  const inputRefSm = useRef<HTMLInputElement>(null);
+
   function onSearchChange(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    onSearch(search.trim());
+    inputRefLg.current?.blur();
+    inputRefSm.current?.blur();
+  }
 
-    const newParams = new URLSearchParams(searchParams);
-    if (search.trim()) {
-      newParams.set("search", search.trim());
-    } else {
-      newParams.delete("search");
-    }
-    setSearchParams(newParams);
+  function clearSearch() {
+    setSearch("");
+    onSearch("");
+    inputRefLg.current?.blur();
+    inputRefSm.current?.blur();
   }
 
   return (
@@ -25,21 +32,33 @@ function SearchInput() {
     >
       <Input
         type="text"
+        ref={inputRefLg}
         value={search}
-        placeholder="Search transaction"
         onChange={(e) => setSearch(e.target.value)}
-        className="pl-5 pr-13 sm:hidden lg:block py-3 rounded-[8px] text-sm leading-[21px] text-black placeholder:text-Beige-500 border-Beige-500 h-full cursor-pointer focus-visible:ring-0 focus-visible:border-black"
+        placeholder="Search transaction"
+        className="pl-5 pr-15 sm:hidden lg:block py-3 rounded-[8px] text-sm leading-[21px] text-black placeholder:text-Beige-500 border-Beige-500 h-full cursor-pointer focus-visible:ring-0 focus-visible:border-black"
       />
       <Input
         type="text"
+        ref={inputRefSm}
         value={search}
-        placeholder="Search tran..."
         onChange={(e) => setSearch(e.target.value)}
-        className="pl-5 pr-13 hidden sm:block lg:hidden py-3 rounded-[8px] text-sm leading-[21px] text-black placeholder:text-Beige-500 border-Beige-500 h-full cursor-pointer focus-visible:ring-0 focus-visible:border-black"
+        placeholder="Search tran..."
+        className="pl-5 pr-15 hidden sm:block lg:hidden py-3 rounded-[8px] text-sm leading-[21px] text-black placeholder:text-Beige-500 border-Beige-500 h-full cursor-pointer focus-visible:ring-0 focus-visible:border-black"
       />
       <button type="submit">
         <Search className="absolute right-5 top-1/2 -translate-y-1/2 text-Grey-900 w-4 h-4 cursor-pointer" />
       </button>
+
+      {search && (
+        <button
+          type="button"
+          onClick={clearSearch}
+          className="absolute right-10 top-1/2 -translate-y-1/2 text-Grey-500 hover:text-black ml-1"
+        >
+          <X className="w-4 h-4" color="#c94736" />
+        </button>
+      )}
     </form>
   );
 }
