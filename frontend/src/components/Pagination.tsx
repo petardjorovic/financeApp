@@ -20,7 +20,7 @@ function Pagination({ totalPages }: { totalPages: number | undefined }) {
   };
 
   return (
-    <div className="flex w-full h-[64px] border pt-6 justify-between mt-auto">
+    <div className="flex w-full h-[64px] pt-6 justify-between mt-auto">
       <Button
         onClick={handlePrevious}
         className="group flex items-center gap-x-4 justify-center rounded-[8px] bg-White border border-Beige-500 cursor-pointer text-sm leading-[21px] text-Grey-900 w-[48px] sm:w-[94px] h-10 p-4 hover:bg-Beige-500 hover:text-White transition-colors duration-300"

@@ -45,15 +45,17 @@ function Transactions() {
               </div>
             </div>
             {isTransationsLoading ? (
-              <div className="h-full w-full flex items-center justify-center">
+              <div className="h-full w-full flex flex-1 items-center justify-center">
                 <Loader2 />
               </div>
             ) : (
               <>
                 {/* Transaction table */}
 
-                {data?.transactions.length && (
+                {data?.transactions.length ? (
                   <TransactionaTable transactions={data.transactions} />
+                ) : (
+                  <p className="text-center">There are no transactions</p>
                 )}
 
                 {/* Pagination */}
