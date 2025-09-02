@@ -28,7 +28,7 @@ function Transactions() {
           <span className="hidden sm:inline-block">Add Transaction</span>
         </Button>
       </div>
-      {/* TRANSACTIONS CONTENT */}
+      {/* Transaction content */}
       <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
         {isLoading ? (
           <div className="h-full w-full flex items-center justify-center">

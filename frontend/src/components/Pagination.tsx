@@ -1,11 +1,12 @@
 import { useTransFilters } from "@/contexts/TransFilterContext";
 import { Button } from "./ui/button";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
-import { getPages } from "@/utils/getPages";
+import { getPagesDesktop, getPagesMobile } from "@/utils/getPagesDesktop";
 
 function Pagination({ totalPages }: { totalPages: number | undefined }) {
   const { page, setPageNumber } = useTransFilters();
-  const pagesForShows = getPages(page, totalPages!);
+  const pagesForShowsDesktop = getPagesDesktop(page, totalPages!);
+  const pagesForShowsMobile = getPagesMobile(page, totalPages!);
 
   const handlePrevious = () => {
     if (page > 1) {
@@ -29,8 +30,9 @@ function Pagination({ totalPages }: { totalPages: number | undefined }) {
         <FaCaretLeft />
         <span className="hidden sm:inline-block">Prev</span>
       </Button>
-      <div className="flex items-center justify-center gap-x-1">
-        {pagesForShows.map((p) => (
+      {/* Desktop */}
+      <div className="hidden sm:flex items-center justify-center gap-x-1">
+        {pagesForShowsDesktop.map((p) => (
           <button
             key={p}
             className={`flex items-center justify-center text-sm leading-[21px] p-4 h-10 w-10 rounded-[8px] border border-Grey-500 text-Grey-900 transition-colors duration-300 cursor-pointer ${
@@ -39,6 +41,25 @@ function Pagination({ totalPages }: { totalPages: number | undefined }) {
                 : "hover:bg-Grey-500 hover:text-White"
             }`}
             onClick={() => setPageNumber(p)}
+          >
+            {p}
+          </button>
+        ))}
+      </div>
+      {/* Mobile */}
+      <div className="flex sm:hidden items-center justify-center gap-x-1">
+        {pagesForShowsMobile.map((p, i) => (
+          <button
+            key={i}
+            className={`flex items-center justify-center text-sm leading-[21px] p-4 h-10 w-10 rounded-[8px] border border-Grey-500 text-Grey-900 transition-colors duration-300 cursor-pointer ${
+              p === page
+                ? "bg-Grey-900 text-White"
+                : "hover:bg-Grey-500 hover:text-White"
+            }`}
+            onClick={() => {
+              if (typeof p !== "number") return;
+              setPageNumber(p);
+            }}
           >
             {p}
           </button>

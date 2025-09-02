@@ -14,6 +14,7 @@ import Budgets from "./pages/Budgets.tsx";
 import Pots from "./pages/Pots.tsx";
 import RecurringBills from "./pages/RecurringBills.tsx";
 import { setNavigate } from "./lib/navigation.ts";
+import EditTransaction from "./pages/EditTransaction.tsx";
 
 function App() {
   const navigate = useNavigate();
@@ -23,6 +24,10 @@ function App() {
       <Route path="/" element={<AppContainer />}>
         <Route index element={<Overview />} />
         <Route path="transactions" element={<Transactions />} />
+        <Route
+          path="transaction/:transactionId/edit"
+          element={<EditTransaction />}
+        />
         <Route path="budgets" element={<Budgets />} />
         <Route path="pots" element={<Pots />} />
         <Route path="recurringbills" element={<RecurringBills />} />
