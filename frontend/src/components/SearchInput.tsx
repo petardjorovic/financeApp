@@ -4,9 +4,10 @@ import { Input } from "./ui/input";
 
 type SearchInputProps = {
   onSearch: (val: string) => void;
+  setPage: (val: number) => void;
 };
 
-function SearchInput({ onSearch }: SearchInputProps) {
+function SearchInput({ onSearch, setPage }: SearchInputProps) {
   const [search, setSearch] = useState<string>("");
   const inputRefLg = useRef<HTMLInputElement>(null);
   const inputRefSm = useRef<HTMLInputElement>(null);
@@ -14,6 +15,7 @@ function SearchInput({ onSearch }: SearchInputProps) {
   function onSearchChange(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     onSearch(search.trim());
+    setPage(1);
     inputRefLg.current?.blur();
     inputRefSm.current?.blur();
   }
@@ -21,6 +23,7 @@ function SearchInput({ onSearch }: SearchInputProps) {
   function clearSearch() {
     setSearch("");
     onSearch("");
+    setPage(1);
     inputRefLg.current?.blur();
     inputRefSm.current?.blur();
   }
@@ -54,7 +57,7 @@ function SearchInput({ onSearch }: SearchInputProps) {
         <button
           type="button"
           onClick={clearSearch}
-          className="absolute right-10 top-1/2 -translate-y-1/2 text-Grey-500 hover:text-black ml-1"
+          className="absolute right-10 top-1/2 -translate-y-1/2 cursor-pointer ml-1"
         >
           <X className="w-4 h-4" color="#c94736" />
         </button>

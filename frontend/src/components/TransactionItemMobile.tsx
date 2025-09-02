@@ -47,7 +47,10 @@ function TransactionItemMobile({ transaction }: { transaction: Transaction }) {
             {formatDate(transaction.date)}
           </p>
         </div>
-        <TransactionMoreMenu transactionId={transaction._id} />
+        <TransactionMoreMenu
+          transactionId={transaction._id}
+          account={transaction.account}
+        />
       </div>
     </div>
   );

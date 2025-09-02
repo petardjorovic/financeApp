@@ -96,3 +96,10 @@ export const getTransactions = async ({
   API.get(
     `/transactions?page=${page}&filter=${filter}&sort=${sort}&search=${search}`
   );
+
+export const deleteTransaction = async ({
+  transactionId,
+}: {
+  transactionId: string;
+}): Promise<{ message: string }> =>
+  API.delete(`/transactions/${transactionId}`);

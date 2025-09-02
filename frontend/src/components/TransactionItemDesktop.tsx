@@ -53,7 +53,10 @@ function TransactionItemDesktop({ transaction }: { transaction: Transaction }) {
             {transaction.type === "income" ? "+$" : "-$"}
             {transaction.amount}
           </span>
-          <TransactionMoreMenu transactionId={transaction._id} />
+          <TransactionMoreMenu
+            transactionId={transaction._id}
+            account={transaction.account}
+          />
         </div>
       </td>
     </tr>

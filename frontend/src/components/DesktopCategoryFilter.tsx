@@ -12,14 +12,19 @@ import { useTransFilters } from "@/contexts/TransFilterContext";
 
 function DesktopCategoryFilter() {
   const { categories } = useCategories();
-  const { filter, setFilterTerm } = useTransFilters();
+  const { filter, setFilterTerm, setPageNumber } = useTransFilters();
+
+  const handleChange = (value: string) => {
+    setFilterTerm(value);
+    setPageNumber(1);
+  };
 
   return (
     <div className="flex items-center gap-2">
       <p className="text-Grey-500 text-sm leading-[21px]">Category</p>
       <Select
         value={filter}
-        onValueChange={setFilterTerm}
+        onValueChange={handleChange}
         defaultValue="All Transactions"
       >
         <SelectTrigger className="min-w-[177px] [&_svg]:hidden">

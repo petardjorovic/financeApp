@@ -3,8 +3,6 @@ import TransactionItemMobile from "./TransactionItemMobile";
 import type { Transaction } from "@/lib/api";
 
 function TransactionaTable({ transactions }: { transactions: Transaction[] }) {
-  console.log(transactions);
-
   return (
     <div className="w-full">
       {/* DESKTOP VIEW */}
@@ -28,7 +26,7 @@ function TransactionaTable({ transactions }: { transactions: Transaction[] }) {
           </thead>
           <tbody>
             {transactions.map((item) => (
-              <TransactionItemDesktop transaction={item} />
+              <TransactionItemDesktop transaction={item} key={item._id} />
             ))}
           </tbody>
         </table>
@@ -37,7 +35,7 @@ function TransactionaTable({ transactions }: { transactions: Transaction[] }) {
       {/* SMALL SCREEN VIEW */}
       <div className="sm:hidden w-full">
         {transactions.map((item) => (
-          <TransactionItemMobile transaction={item} />
+          <TransactionItemMobile transaction={item} key={item._id} />
         ))}
       </div>
     </div>

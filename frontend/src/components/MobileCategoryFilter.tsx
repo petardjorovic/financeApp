@@ -11,12 +11,17 @@ import { useTransFilters } from "@/contexts/TransFilterContext";
 
 function MobileCategoryFilter() {
   const { categories } = useCategories();
-  const { filter, setFilterTerm } = useTransFilters();
+  const { filter, setFilterTerm, setPageNumber } = useTransFilters();
+
+  const handleChange = (value: string) => {
+    setFilterTerm(value);
+    setPageNumber(1);
+  };
 
   return (
     <Select
       value={filter}
-      onValueChange={setFilterTerm}
+      onValueChange={handleChange}
       defaultValue="All Transactions"
     >
       <SelectTriggerIcon className="[&_svg]:hidden">
