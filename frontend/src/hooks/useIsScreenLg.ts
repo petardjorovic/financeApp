@@ -1,24 +1,27 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useIsScreenLg = (breakpoint = 1280) => {
-  const getIsScreenLg = useCallback(
-    () => typeof window !== "undefined" && window.innerWidth < breakpoint,
-    [breakpoint]
-  );
+  const getIsScreenLg = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia(`(max-width: ${breakpoint}px)`).matches;
 
   const [isScreenLg, setIsScreenLg] = useState(getIsScreenLg);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const handleResize = () => {
-      setIsScreenLg(getIsScreenLg);
+    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint}px)`);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsScreenLg(event.matches);
     };
 
-    window.addEventListener("resize", handleResize);
+    mediaQuery.addEventListener("change", handleChange);
 
-    return () => window.removeEventListener("resize", handleResize);
-  }, [getIsScreenLg]);
+    setIsScreenLg(mediaQuery.matches);
+
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [breakpoint]);
 
   return isScreenLg;
 };

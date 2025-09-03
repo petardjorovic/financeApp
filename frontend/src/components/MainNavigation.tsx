@@ -9,11 +9,16 @@ import { useIsScreenLg } from "@/hooks/useIsScreenLg";
 
 function MainNavigation() {
   const [collapse, setCollapse] = useState<boolean>(false);
+  console.log("render");
 
   const isScreenLg = useIsScreenLg(1280);
 
   useEffect(() => {
-    setCollapse(isScreenLg);
+    if (!isScreenLg) {
+      setCollapse(false);
+    } else {
+      setCollapse(true);
+    }
   }, [isScreenLg]);
 
   return (
