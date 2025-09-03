@@ -30,8 +30,20 @@ export const getTransactionsHandler = catchErrors(async (req, res) => {
     transactions,
     total,
     page: pageNum,
-    pages: Math.ceil(total / limit),
+    pages,
   });
+});
+
+export const getSingleTransactionHandler = catchErrors(async (req, res) => {
+  const transactionId = transactionIdSchema.parse(req.params.id);
+
+  const transaction = await TransactionModel.findOne({
+    _id: transactionId,
+    userId: req.userId,
+  }).populate({ path: "categoryId", select: "name" });
+  appAssert(transaction, NOT_FOUND, "Transaction not found");
+
+  return res.status(OK).json({ transaction });
 });
 
 export const addTransactionHandler = catchErrors(async (req, res) => {
