@@ -1,13 +1,13 @@
-import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import TransactionaTable from "@/components/TransactionaTable";
 import SearchInput from "@/components/SearchInput";
-import { useCategories } from "@/queryHooks/useCategories";
 import SortByTransactions from "@/components/SortByTransactions";
 import CategoryFilter from "@/components/CategoryFilter";
-import { useTransactions } from "@/queryHooks/useTransactions";
 import Pagination from "@/components/Pagination";
+import { Button } from "@/components/ui/button";
+import { useTransactions } from "@/queryHooks/useTransactions";
+import { useCategories } from "@/queryHooks/useCategories";
 import { useTransFilters } from "@/contexts/TransFilterContext";
-import TransactionaTable from "@/components/TransactionaTable";
+import { Loader2 } from "lucide-react";
 import transactionIcon from "../assets/images/icon-nav-transactions-white.svg";
 
 function Transactions() {

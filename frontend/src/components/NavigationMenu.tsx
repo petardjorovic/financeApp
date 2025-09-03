@@ -1,3 +1,6 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { useLogout } from "@/queryHooks/useLogout";
+import { LogOut } from "lucide-react";
 import NavMenuItem from "./NavMenuItem";
 import iconOverview from "../assets/images/icon-nav-overview.svg";
 import iconTransactions from "../assets/images/icon-nav-transactions.svg";
@@ -11,9 +14,6 @@ import activeTransactions from "../assets/images/active-icon-Transaction.svg";
 import activeRecurringBills from "../assets/images/active-icon-RecurringBills.svg";
 import activePots from "../assets/images/active-icon-Pots.svg";
 import activeProfile from "../assets/images/active-icon-user.svg";
-import { AnimatePresence, motion } from "framer-motion";
-import { LogOut } from "lucide-react";
-import { useLogout } from "@/queryHooks/useLogout";
 
 const navItems = [
   {

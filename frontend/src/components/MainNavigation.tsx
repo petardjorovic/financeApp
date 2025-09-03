@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logoLarge from "../assets/images/logo-larges.svg";
 import minimizeIcon from "../assets/images/icon-minimize-menu.svg";
 import maximizeIcon from "../assets/images/icon-maximize-menu.png";
 import NavigationMenu from "./NavigationMenu";
 import miniLogo from "../assets/images/miniLogo.svg";
 import { AnimatePresence, motion } from "framer-motion";
+import { useIsScreenLg } from "@/hooks/useIsScreenLg";
 
 function MainNavigation() {
   const [collapse, setCollapse] = useState<boolean>(false);
+
+  const isScreenLg = useIsScreenLg(1280);
+
+  useEffect(() => {
+    setCollapse(isScreenLg);
+  }, [isScreenLg]);
 
   return (
     <div
