@@ -9,8 +9,10 @@ import { useCategories } from "@/queryHooks/useCategories";
 import { useTransFilters } from "@/contexts/TransFilterContext";
 import { Loader2 } from "lucide-react";
 import transactionIcon from "../assets/images/icon-nav-transactions-white.svg";
+import { useNavigate } from "react-router-dom";
 
 function Transactions() {
+  const navigate = useNavigate();
   const { setSearchTerm, setPageNumber } = useTransFilters();
   const { isLoading } = useCategories();
   const { data, isLoading: isTransationsLoading } = useTransactions();
@@ -22,7 +24,10 @@ function Transactions() {
         <h1 className="text-[32px] leading-[38px] font-bold text-Grey-900">
           Transactions
         </h1>
-        <Button className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[53px]">
+        <Button
+          className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[53px]"
+          onClick={() => navigate("/transaction/add")}
+        >
           +{" "}
           <img src={transactionIcon} alt="transactions" className="sm:hidden" />{" "}
           <span className="hidden sm:inline-block">Add Transaction</span>

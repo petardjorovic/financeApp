@@ -9,7 +9,6 @@ import { useIsScreenLg } from "@/hooks/useIsScreenLg";
 
 function MainNavigation() {
   const [collapse, setCollapse] = useState<boolean>(false);
-  console.log("render");
 
   const isScreenLg = useIsScreenLg(1280);
 

@@ -45,6 +45,19 @@ export type Transaction = {
   __v: number;
 };
 
+export type RecurringBill = {
+  _id: string;
+  userId: string;
+  name: string;
+  dueDate: number;
+  categoryId: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  isPaidThisMonth: boolean;
+  paidAmountThisMonth: number;
+};
+
 export type ResetPasswordParams = {
   verificationCode: string;
   password: string;
@@ -97,9 +110,35 @@ export const getTransactions = async ({
     `/transactions?page=${page}&filter=${filter}&sort=${sort}&search=${search}`
   );
 
+export const getSingleTransaction = async (
+  transactionId: string
+): Promise<Transaction> => {
+  const response: { transaction: Transaction } = await API.get(
+    `/transactions/${transactionId}`
+  );
+
+  return response.transaction;
+};
+
+export type AddTransactionParams = {
+  type: "income" | "expense";
+  account: string;
+  amount: number;
+  categoryId: string;
+  date: string;
+  recurringBillId?: string;
+};
+
+export const addTransaction = async (
+  values: AddTransactionParams
+): Promise<{ message: string }> => API.post("/transactions", values);
+
 export const deleteTransaction = async ({
   transactionId,
 }: {
   transactionId: string;
 }): Promise<{ message: string }> =>
   API.delete(`/transactions/${transactionId}`);
+
+export const getRecurringBills = async (): Promise<RecurringBill[]> =>
+  API.get("/recurringBills");
