@@ -10,57 +10,68 @@ type GetRecurringBillsParams = {
   sort?: "Latest" | "Oldest" | "A-Z" | "Z-A" | "Highest" | "Lowest" | undefined;
   search?: string | undefined;
   userId: mongoose.Types.ObjectId;
+  raw?: string | undefined;
 };
 
 export const getRecurringBills = async ({
   sort,
   search,
   userId,
+  raw,
 }: GetRecurringBillsParams) => {
-  const start = startOfMonth();
-  const end = endOfMonth();
-  const sortStage = getSortByTerm(sort || "Latest");
-  const searchTerm = search ? { name: { $regex: search, $options: "i" } } : {};
+  if (raw === "true") {
+    const recurringBills = await RecurringBillModel.find({ userId });
+    return recurringBills;
+  } else {
+    const start = startOfMonth();
+    const end = endOfMonth();
+    const sortStage = getSortByTerm(sort || "Latest");
+    const searchTerm = search
+      ? { name: { $regex: search, $options: "i" } }
+      : {};
 
-  const pipeline: mongoose.PipelineStage[] = [
-    { $match: { userId: new mongoose.Types.ObjectId(userId), ...searchTerm } },
-    {
-      $lookup: {
-        from: "transactions",
-        let: { billId: "$_id", userId: "$userId" },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  { $eq: ["$userId", "$$userId"] },
-                  { $eq: ["$recurringBillId", "$$billId"] },
-                  { $gte: ["$date", start] },
-                  { $lte: ["$date", end] },
-                ],
+    const pipeline: mongoose.PipelineStage[] = [
+      {
+        $match: { userId: new mongoose.Types.ObjectId(userId), ...searchTerm },
+      },
+      {
+        $lookup: {
+          from: "transactions",
+          let: { billId: "$_id", userId: "$userId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$userId", "$$userId"] },
+                    { $eq: ["$recurringBillId", "$$billId"] },
+                    { $gte: ["$date", start] },
+                    { $lte: ["$date", end] },
+                  ],
+                },
               },
             },
-          },
-          { $group: { _id: null, totalPaid: { $sum: "$amount" } } },
-        ],
-        as: "paidData",
-      },
-    },
-    {
-      $addFields: {
-        isPaidThisMonth: { $gt: [{ $size: "$paidData" }, 0] },
-        paidAmountThisMonth: {
-          $ifNull: [{ $arrayElemAt: ["$paidData.totalPaid", 0] }, 0],
+            { $group: { _id: null, totalPaid: { $sum: "$amount" } } },
+          ],
+          as: "paidData",
         },
       },
-    },
-    { $project: { paidData: 0 } },
-    { $sort: sortStage },
-  ];
+      {
+        $addFields: {
+          isPaidThisMonth: { $gt: [{ $size: "$paidData" }, 0] },
+          paidAmountThisMonth: {
+            $ifNull: [{ $arrayElemAt: ["$paidData.totalPaid", 0] }, 0],
+          },
+        },
+      },
+      { $project: { paidData: 0 } },
+      { $sort: sortStage },
+    ];
 
-  const recurringBills = await RecurringBillModel.aggregate(pipeline);
+    const recurringBills = await RecurringBillModel.aggregate(pipeline);
 
-  return recurringBills;
+    return recurringBills;
+  }
 };
 
 type AddRecurringBillParams = {

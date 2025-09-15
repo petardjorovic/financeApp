@@ -140,5 +140,5 @@ export const deleteTransaction = async ({
 }): Promise<{ message: string }> =>
   API.delete(`/transactions/${transactionId}`);
 
-export const getRecurringBills = async (): Promise<RecurringBill[]> =>
-  API.get("/recurringBills");
+export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
+  API.get("/recurringBills?raw=true");

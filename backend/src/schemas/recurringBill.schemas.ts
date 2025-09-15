@@ -6,6 +6,7 @@ export const getRecurringBillsSchema = z.object({
     .enum(["Latest", "Oldest", "A-Z", "Z-A", "Highest", "Lowest"])
     .optional(),
   search: z.string().min(1).max(255).optional(),
+  raw: z.literal("true").optional(),
 });
 
 export const addRecurringBillSchema = z.object({
