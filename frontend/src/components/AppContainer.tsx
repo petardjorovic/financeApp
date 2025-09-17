@@ -8,7 +8,7 @@ function AppContainer() {
 
   return isLoading ? (
     <div className="flex w-screen h-screen items-center justify-center bg-Beige-100">
-      <Loader2 className="mb-4 h-4 w-4 animate-spin" />
+      <Loader2 className="animate-spin" />
     </div>
   ) : user ? (
     <MainAppLayout />

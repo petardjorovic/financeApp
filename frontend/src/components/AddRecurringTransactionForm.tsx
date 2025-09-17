@@ -52,7 +52,6 @@ function AddRecurringTransactionForm() {
     queryFn: getRawRecurringBills,
     enabled: recurringForm.getValues("isRecurring"),
   });
-  console.log(recurringBills);
 
   const onSubmitRecurring = (values: AddTransactionFormValues) => {
     const { amount, account, type, categoryId, date, recurringBillId } = values;
@@ -75,7 +74,11 @@ function AddRecurringTransactionForm() {
     recurringForm.setValue("categoryId", selectedBill.categoryId);
   };
 
-  return (
+  return isRecuringLoading ? (
+    <div className="flex items-center justify-center w-full min-h-[278px]">
+      <Loader2 className="animate-spin" />
+    </div>
+  ) : (
     <Form {...recurringForm}>
       <form
         onSubmit={recurringForm.handleSubmit(onSubmitRecurring)}
@@ -168,7 +171,7 @@ function AddRecurringTransactionForm() {
             type="button"
             onClick={() => navigate(-1)}
           >
-            Cancel
+            Back
           </Button>
           <Button
             type="submit"

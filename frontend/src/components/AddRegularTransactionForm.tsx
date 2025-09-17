@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Loader2Icon } from "lucide-react";
+import { Loader2, Loader2Icon } from "lucide-react";
 import { useCategories } from "@/queryHooks/useCategories";
 import { useAddTransaction } from "@/queryHooks/useAddTransaction";
 import { addRegularTransactionSchema } from "@/lib/schemas";
@@ -62,11 +62,15 @@ function AddRegularTransactionForm() {
     regularForm.setValue("categoryId", "");
   }, [selectedType, regularForm]);
 
-  return (
+  return isLoading ? (
+    <div className="flex items-center justify-center w-full min-h-[418px]">
+      <Loader2 className="animate-spin" />
+    </div>
+  ) : (
     <Form {...regularForm}>
       <form
         onSubmit={regularForm.handleSubmit(onSubmitRegular)}
-        className="px-1 md:px-4"
+        className="px-1 md:px-4 flex flex-col h-full"
       >
         {/* Type */}
         <FormField
@@ -118,47 +122,44 @@ function AddRegularTransactionForm() {
           )}
         />
         {/* Category */}
-        {isLoading ? (
-          <Loader2Icon className="animate-spin" />
-        ) : (
-          <FormField
-            control={regularForm.control}
-            name="categoryId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
-                <FormLabel className="w-60 sm:w-80 lg:w-40">Category</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    required
-                  >
-                    <SelectTrigger className="w-60 sm:w-80 lg:w-70 border border-Grey-300">
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Category</SelectLabel>
-                        {selectedType === "income"
-                          ? incomeCategories.map((cat) => (
-                              <SelectItem value={cat._id} key={cat._id}>
-                                {cat.name}
-                              </SelectItem>
-                            ))
-                          : expenseCategories.map((cat) => (
-                              <SelectItem value={cat._id} key={cat._id}>
-                                {cat.name}
-                              </SelectItem>
-                            ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
-              </FormItem>
-            )}
-          />
-        )}
+        <FormField
+          control={regularForm.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+              <FormLabel className="w-60 sm:w-80 lg:w-40">Category</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  required
+                >
+                  <SelectTrigger className="w-60 sm:w-80 lg:w-70 border border-Grey-300">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Category</SelectLabel>
+                      {selectedType === "income"
+                        ? incomeCategories.map((cat) => (
+                            <SelectItem value={cat._id} key={cat._id}>
+                              {cat.name}
+                            </SelectItem>
+                          ))
+                        : expenseCategories.map((cat) => (
+                            <SelectItem value={cat._id} key={cat._id}>
+                              {cat.name}
+                            </SelectItem>
+                          ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
+            </FormItem>
+          )}
+        />
+
         {/* Amount */}
         <FormField
           control={regularForm.control}
@@ -205,7 +206,7 @@ function AddRegularTransactionForm() {
             type="button"
             onClick={() => navigate(-1)}
           >
-            Cancel
+            Back
           </Button>
           <Button
             type="submit"
