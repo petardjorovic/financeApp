@@ -1,4 +1,5 @@
 import z from "zod";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +30,7 @@ import { Loader2, Loader2Icon } from "lucide-react";
 type AddTransactionFormValues = z.infer<typeof addRecurringTransactionSchema>;
 
 function AddRecurringTransactionForm() {
+  const navigate = useNavigate();
   const { addTx, isAddingTx } = useAddTransaction();
   const recurringForm = useForm({
     resolver: zodResolver(addRecurringTransactionSchema),
@@ -73,56 +75,72 @@ function AddRecurringTransactionForm() {
     recurringForm.setValue("categoryId", selectedBill.categoryId);
   };
 
-  return isRecuringLoading ? (
-    <div className="flex items-center gap-2">
-      <Loader2 className="animate-spin" />
-    </div>
-  ) : (
+  return (
     <Form {...recurringForm}>
-      <form onSubmit={recurringForm.handleSubmit(onSubmitRecurring)}>
+      <form
+        onSubmit={recurringForm.handleSubmit(onSubmitRecurring)}
+        className="px-1 md:px-4"
+      >
         {/* RecurringBillId */}
+
         <FormField
           control={recurringForm.control}
           name="recurringBillId"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Recurring Bill</FormLabel>
+            <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+              <FormLabel className="w-60 sm:w-80 lg:w-40">
+                Recurring Bill
+              </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={(value) => handleRecurringBillChange(value)}
                   value={field.value}
                   required
                 >
-                  <SelectTrigger className="w-[250px]">
-                    <SelectValue placeholder="Choose recurring bill" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Recurring Bill</SelectLabel>
-                      {recurringBills?.map((rec) => (
-                        <SelectItem value={rec._id} key={rec._id}>
-                          {rec.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
+                  {isRecuringLoading ? (
+                    <div className="w-60 sm:w-80 lg:w-70 flex items-center justify-center">
+                      <Loader2 className="animate-spin" />
+                    </div>
+                  ) : (
+                    <>
+                      <SelectTrigger className="w-60 sm:w-80 lg:w-70 border border-Grey-300">
+                        <SelectValue placeholder="Choose recurring bill" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Recurring Bill</SelectLabel>
+                          {recurringBills?.map((rec) => (
+                            <SelectItem value={rec._id} key={rec._id}>
+                              {rec.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </>
+                  )}
                 </Select>
               </FormControl>
-              <FormMessage className="mt-0" />
+              <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
             </FormItem>
           )}
         />
+
         {/* Amount */}
         <FormField
           control={recurringForm.control}
           name={"amount"}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amount</FormLabel>
-              <FormControl>
-                <Input type="number" step={"0.01"} {...field} />
+            <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+              <FormLabel className="w-60 sm:w-80 lg:w-40">Amount</FormLabel>
+              <FormControl className="w-60 sm:w-80 lg:w-70">
+                <Input
+                  type="number"
+                  step={"0.01"}
+                  {...field}
+                  className="px-5 py-3 h-[45px] border border-Grey-300"
+                />
               </FormControl>
-              <FormMessage className="mt-0" />
+              <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
             </FormItem>
           )}
         />
@@ -131,22 +149,39 @@ function AddRecurringTransactionForm() {
           control={recurringForm.control}
           name={"date"}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
+            <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+              <FormLabel className="w-60 sm:w-80 lg:w-40">Date</FormLabel>
+              <FormControl className="w-60 sm:w-80 lg:w-70">
+                <Input
+                  type="date"
+                  {...field}
+                  className="px-5 py-3 h-[45px] border border-Grey-300"
+                />
               </FormControl>
-              <FormMessage className="mt-0" />
+              <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isAddingTx}>
-          {isAddingTx ? (
-            <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            "Add"
-          )}
-        </Button>
+        <div className="flex py-3 gap-x-3 justify-center lg:justify-end">
+          <Button
+            className="text-White bg-Red rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[45px] hover:bg-Red/70"
+            type="button"
+            onClick={() => navigate(-1)}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={isAddingTx}
+            className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[45px] w-42 sm:w-50"
+          >
+            {isAddingTx ? (
+              <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Create New Transaction"
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

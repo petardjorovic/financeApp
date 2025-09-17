@@ -13,35 +13,39 @@ function AddTransaction() {
           Add Transaction
         </h1>
       </div>
-      <Tabs defaultValue="regular" className="w-full">
-        <TabsList className="grid w-[400px] grid-cols-2 bg-Grey-300 rounded-sm p-1">
-          <TabsTrigger
-            value="regular"
-            className={`w-auto rounded-sm ${!isRecurringTx ? "bg-White" : ""}`}
-            onClick={() => setIsRecurringTx(false)}
-          >
-            Regular tx
-          </TabsTrigger>
-          <TabsTrigger
-            value="recurring"
-            className={`w-auto rounded-sm ${isRecurringTx ? "bg-White" : ""}`}
-            onClick={() => setIsRecurringTx(true)}
-          >
-            Recurring tx
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="regular" className="mt-4">
-          {/* REGULAR FORM */}
-          <div>
+      <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
+        <Tabs defaultValue="regular" className="w-full">
+          <TabsList className="flex items-center justify-center bg-Beige-100 rounded-sm p-1 mx-auto h-auto">
+            <TabsTrigger
+              value="regular"
+              className={`w-30 rounded-sm px-3 py-1 ${
+                !isRecurringTx ? "bg-White" : "cursor-pointer"
+              }`}
+              onClick={() => setIsRecurringTx(false)}
+            >
+              Regular tx
+            </TabsTrigger>
+            <TabsTrigger
+              value="recurring"
+              className={`w-30 px-3 py-1 rounded-sm ${
+                isRecurringTx ? "bg-White" : "cursor-pointer"
+              }`}
+              onClick={() => setIsRecurringTx(true)}
+            >
+              Recurring tx
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="regular" className="mt-4">
+            {/* REGULAR FORM */}
             <AddRegularTransactionForm />
-          </div>
-        </TabsContent>
+          </TabsContent>
 
-        {/* RECURRING FORM */}
-        <TabsContent value="recurring" className="mt-4">
-          <AddRecurringTransactionForm />
-        </TabsContent>
-      </Tabs>
+          {/* RECURRING FORM */}
+          <TabsContent value="recurring" className="mt-4">
+            <AddRecurringTransactionForm />
+          </TabsContent>
+        </Tabs>
+      </div>
     </main>
   );
 }

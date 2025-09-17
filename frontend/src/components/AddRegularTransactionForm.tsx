@@ -25,10 +25,12 @@ import { Loader2Icon } from "lucide-react";
 import { useCategories } from "@/queryHooks/useCategories";
 import { useAddTransaction } from "@/queryHooks/useAddTransaction";
 import { addRegularTransactionSchema } from "@/lib/schemas";
+import { useNavigate } from "react-router-dom";
 
 type AddTransactionFormValues = z.infer<typeof addRegularTransactionSchema>;
 
 function AddRegularTransactionForm() {
+  const navigate = useNavigate();
   const { categories, isLoading } = useCategories();
   const incomeCategories = categories.filter((cat) => cat.type === "income");
   const expenseCategories = categories.filter((cat) => cat.type === "expense");
@@ -62,21 +64,24 @@ function AddRegularTransactionForm() {
 
   return (
     <Form {...regularForm}>
-      <form onSubmit={regularForm.handleSubmit(onSubmitRegular)}>
+      <form
+        onSubmit={regularForm.handleSubmit(onSubmitRegular)}
+        className="px-1 md:px-4"
+      >
         {/* Type */}
         <FormField
           control={regularForm.control}
           name="type"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Type</FormLabel>
+            <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+              <FormLabel className="w-60 sm:w-80 lg:w-40">Type</FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value}
                   required
                 >
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-60 sm:w-80 lg:w-70 border border-Grey-300">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -88,7 +93,7 @@ function AddRegularTransactionForm() {
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormMessage className="mt-0" />
+              <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
             </FormItem>
           )}
         />
@@ -97,12 +102,18 @@ function AddRegularTransactionForm() {
           control={regularForm.control}
           name="account"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Recipient / Sender</FormLabel>
-              <FormControl>
-                <Input className="px-5 py-3 h-[45px]" {...field} required />
+            <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+              <FormLabel className="w-60 sm:w-80 lg:w-40">
+                Recipient / Sender
+              </FormLabel>
+              <FormControl className="w-60 sm:w-80 lg:w-70">
+                <Input
+                  className="px-5 py-3 h-[45px] border border-Grey-300"
+                  {...field}
+                  required
+                />
               </FormControl>
-              <FormMessage className="mt-0" />
+              <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
             </FormItem>
           )}
         />
@@ -114,15 +125,15 @@ function AddRegularTransactionForm() {
             control={regularForm.control}
             name="categoryId"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
+              <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+                <FormLabel className="w-60 sm:w-80 lg:w-40">Category</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
                     required
                   >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-60 sm:w-80 lg:w-70 border border-Grey-300">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -143,7 +154,7 @@ function AddRegularTransactionForm() {
                     </SelectContent>
                   </Select>
                 </FormControl>
-                <FormMessage className="mt-0" />
+                <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
               </FormItem>
             )}
           />
@@ -153,17 +164,17 @@ function AddRegularTransactionForm() {
           control={regularForm.control}
           name="amount"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amount</FormLabel>
-              <FormControl>
+            <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+              <FormLabel className="w-60 sm:w-80 lg:w-40">Amount</FormLabel>
+              <FormControl className="w-60 sm:w-80 lg:w-70">
                 <Input
                   type="number"
                   step="0.01"
-                  placeholder="Enter amount"
                   {...field}
+                  className="px-5 py-3 h-[45px] border border-Grey-300"
                 />
               </FormControl>
-              <FormMessage className="mt-0" />
+              <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
             </FormItem>
           )}
         />
@@ -172,27 +183,42 @@ function AddRegularTransactionForm() {
           control={regularForm.control}
           name="date"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date of Transaction</FormLabel>
-              <FormControl>
+            <FormItem className="flex flex-col items-center lg:flex lg:flex-row lg:gap-x-5 xl:gap-x-15 lg:border-b lg:border-b-Grey-100 py-3">
+              <FormLabel className="w-60 sm:w-80 lg:w-40">
+                Date of Transaction
+              </FormLabel>
+              <FormControl className="w-60 sm:w-80 lg:w-70">
                 <Input
-                  className="px-5 py-3 h-[45px]"
+                  className="px-5 py-3 h-[45px] border border-Grey-300"
                   {...field}
                   required
                   type="date"
                 />
               </FormControl>
-              <FormMessage className="mt-0" />
+              <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isAddingTx}>
-          {isAddingTx ? (
-            <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            "Add"
-          )}
-        </Button>
+        <div className="flex py-3 gap-x-3 justify-center lg:justify-end">
+          <Button
+            className="text-White bg-Red rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[45px] hover:bg-Red/70"
+            type="button"
+            onClick={() => navigate(-1)}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={isAddingTx}
+            className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[45px] w-42 sm:w-50"
+          >
+            {isAddingTx ? (
+              <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Create New Transaction"
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );
