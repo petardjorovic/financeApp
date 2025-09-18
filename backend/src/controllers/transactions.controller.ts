@@ -78,7 +78,6 @@ export const editTransactionHandler = catchErrors(async (req, res) => {
   // return response
   return res.status(OK).json({
     message: "Transaction successfully edit",
-    transaction,
   });
 });
 

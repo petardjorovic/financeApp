@@ -31,7 +31,7 @@ export type Category = {
 export type Transaction = {
   _id: string;
   userId: string;
-  type: string;
+  type: "income" | "expense";
   amount: number;
   account: string;
   categoryId: {
@@ -132,6 +132,23 @@ export type AddTransactionParams = {
 export const addTransaction = async (
   values: AddTransactionParams
 ): Promise<{ message: string }> => API.post("/transactions", values);
+
+export type EditTransactionParams = {
+  id: string;
+  type: "income" | "expense";
+  account: string;
+  amount: number;
+  categoryId: string;
+  date: string;
+  recurringBillId?: string;
+};
+
+export const editTransaction = async (
+  values: EditTransactionParams
+): Promise<{ message: string }> => {
+  const { id, ...rest } = values;
+  return API.put(`/transactions/${id}`, rest);
+};
 
 export const deleteTransaction = async ({
   transactionId,

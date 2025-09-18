@@ -82,3 +82,21 @@ export const addRecurringTransactionSchema = baseTransactionSchema.extend({
     .string()
     .min(1, { message: "Please select a recurring bill" }),
 });
+
+export const editTransactionSchema = baseTransactionSchema
+  .extend({
+    isRecurring: z.enum(["true", "false"]),
+    recurringBillId: z.string(),
+  })
+  .refine(
+    (data) => {
+      if (data.isRecurring === "true") {
+        return !!data.recurringBillId;
+      }
+      return true;
+    },
+    {
+      message: "Recurring bill is required",
+      path: ["recurringBillId"],
+    }
+  );
