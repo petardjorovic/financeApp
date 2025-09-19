@@ -99,27 +99,19 @@ function AddRecurringTransactionForm() {
                   value={field.value}
                   required
                 >
-                  {isRecuringLoading ? (
-                    <div className="w-60 sm:w-80 lg:w-70 flex items-center justify-center">
-                      <Loader2 className="animate-spin" />
-                    </div>
-                  ) : (
-                    <>
-                      <SelectTrigger className="w-60 sm:w-80 lg:w-70 border border-Grey-300">
-                        <SelectValue placeholder="Choose recurring bill" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Recurring Bill</SelectLabel>
-                          {recurringBills?.map((rec) => (
-                            <SelectItem value={rec._id} key={rec._id}>
-                              {rec.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </>
-                  )}
+                  <SelectTrigger className="w-60 sm:w-80 lg:w-70 border border-Grey-300">
+                    <SelectValue placeholder="Choose recurring bill" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Recurring Bill</SelectLabel>
+                      {recurringBills?.map((rec) => (
+                        <SelectItem value={rec._id} key={rec._id}>
+                          {rec.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
                 </Select>
               </FormControl>
               <FormMessage className="lg:py-3 w-60 sm:w-80 lg:w-70" />

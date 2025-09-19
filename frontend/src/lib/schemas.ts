@@ -83,10 +83,32 @@ export const addRecurringTransactionSchema = baseTransactionSchema.extend({
     .min(1, { message: "Please select a recurring bill" }),
 });
 
-export const editTransactionSchema = baseTransactionSchema
-  .extend({
+export const editTransactionSchema = z
+  .object({
+    type: z.enum(["income", "expense"]),
+    account: z
+      .string()
+      .min(2, { message: "Recipient / Sender must be at least 2 characters" })
+      .max(255, {
+        message: "Recipient / Sender cannot be longer than 255 characters",
+      }),
+    amount: z
+      .union([z.number(), z.string()])
+      .transform((val) => Number(val))
+      .refine((val) => !isNaN(val) && val > 0, {
+        message: "Amount must be a positive number",
+      }),
+    categoryId: z.string().min(1, { message: "You must choose some category" }),
+    date: z
+      .string()
+      .refine((val) => !isNaN(Date.parse(val)), {
+        message: "Invalid date format",
+      })
+      .refine((val) => new Date(val).getTime() <= Date.now(), {
+        message: "Transaction date cannot be in the future",
+      }),
     isRecurring: z.enum(["true", "false"]),
-    recurringBillId: z.string(),
+    recurringBillId: z.string().optional(),
   })
   .refine(
     (data) => {
