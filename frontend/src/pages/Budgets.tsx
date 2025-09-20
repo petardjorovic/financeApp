@@ -23,7 +23,7 @@ function Budgets() {
           <Loader2 className="animate-spin" />
         </div>
       ) : (
-        <div className="flex w-full gap-6">
+        <div className="flex flex-col lg:flex-row w-full gap-6">
           <BudgetChart />
           <div>
             {budgets?.map((budget) => (

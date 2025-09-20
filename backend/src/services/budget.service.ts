@@ -69,7 +69,7 @@ export const addBudget = async ({
 export const getBudgetsWithSpent = async (userId: mongoose.Types.ObjectId) => {
   const budgets = await BudgetModel.find({ userId })
     .populate({ path: "categoryId", select: "name" })
-    .populate({ path: "themeId", select: "name" })
+    .populate({ path: "themeId", select: "name color" })
     .lean<BudgetWithSpentRaw[]>(); //! potencijalni problem oko type
 
   const categoryIds = budgets.map((b) => b.categoryId._id);

@@ -16,7 +16,10 @@ import catchErrors from "../utils/catchErrors.js";
 import deletePotTransaction from "../utils/deletePotTransaction.js";
 
 export const getPotsHandler = catchErrors(async (req, res) => {
-  const pots = await PotModel.find({ userId: req.userId });
+  const pots = await PotModel.find({ userId: req.userId }).populate({
+    path: "themeId",
+    select: "name color",
+  });
 
   return res.status(OK).json(pots);
 });

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 interface ThemeDocument extends mongoose.Document<mongoose.Types.ObjectId> {
   _id: mongoose.Types.ObjectId;
   name: string;
+  color: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -10,6 +11,7 @@ interface ThemeDocument extends mongoose.Document<mongoose.Types.ObjectId> {
 const themeSchema = new mongoose.Schema<ThemeDocument>(
   {
     name: { type: String, required: true, unique: true },
+    color: { type: String, required: true, unique: true },
   },
   {
     timestamps: true,

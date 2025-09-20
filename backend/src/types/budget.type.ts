@@ -11,6 +11,7 @@ export interface BudgetWithSpent {
   themeId: {
     _id: mongoose.Types.ObjectId;
     name: string;
+    color: string;
   };
   createdAt: Date;
   updatedAt: Date;

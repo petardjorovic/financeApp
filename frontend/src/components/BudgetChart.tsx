@@ -1,42 +1,87 @@
+import {
+  Cell,
+  Label,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 import { useBudgets } from "@/queryHooks/useBudgets";
+import BudgetSummary from "./BudgetSummary";
 
 function BudgetChart() {
   const { budgets } = useBudgets();
+  const data = budgets?.map((b) => ({
+    name: b.categoryId.name,
+    value: b.limit,
+    color: b.themeId.color,
+  }));
+  const totalSpent =
+    budgets?.reduce((total, curr) => total + curr.spent, 0) ?? 0;
+  const totalLimit =
+    budgets?.reduce((total, curr) => total + curr.limit, 0) ?? 0;
+
   return (
-    <div className="bg-White rounded-[12px] px-5 py-6 md:px-8 md:py-8 flex flex-col md:flex-row lg:flex-col gap-8">
+    <div className="bg-White rounded-[12px] px-5 py-6 md:px-8 md:py-8 flex items-center flex-col md:flex-row lg:flex-col md:justify-center h-[583px] md:h-[344px] lg:h-[599px] gap-8 lg:w-[428px]">
       {/* chart */}
-      <div></div>
-      {/* summary */}
-      <div className="min-w-[296px]">
-        <h2 className="text-Grey-900 text-[20px] leading-[24px] font-bold mb-6">
-          Spending Summary
-        </h2>
-        <div>
-          {budgets?.map((budget) => (
-            <div
-              key={budget._id}
-              className="flex items-center justify-center pb-4 not-first:pt-4 border-b border-b-Grey-100 last:border-b-white last:pb-0"
+      <div className="flex items-center justify-center">
+        <ResponsiveContainer width={250} height={250}>
+          <PieChart>
+            <Pie
+              data={data}
+              nameKey={"name"}
+              dataKey="value"
+              innerRadius={75}
+              outerRadius={120}
+              cx="50%"
+              cy="50%"
+              paddingAngle={0}
             >
-              <div className="flex flex-1 gap-4 items-center justify-start">
-                <div
-                  className={`w-1 h-[21px] rounded-[8px] bg-${budget.themeId.name}`}
-                ></div>
-                <span className="text-Grey-500 text-sm leading-[21px]">
-                  {budget.categoryId.name}
-                </span>
-              </div>
-              <div className="w-auto flex gap-2 items-center">
-                <span className="text-base font-semibold text-Grey-900 leading-[24px]">
-                  ${budget.spent.toFixed(2)}
-                </span>
-                <span className="text-Grey-500 text-xs leading-[18px]">
-                  of ${budget.limit.toFixed(2)}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+              {data?.map((entry) => {
+                return (
+                  <Cell
+                    key={entry.value}
+                    fill={entry.color}
+                    stroke={entry.color}
+                  />
+                );
+              })}
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <>
+                        <text
+                          x={viewBox.cx}
+                          y={viewBox.cy - 10}
+                          textAnchor="middle"
+                          dominantBaseline="central"
+                          className="fill-Grey-900 font-bold text-[32px] leading-[38px]"
+                        >
+                          ${totalSpent}
+                        </text>
+                        <text
+                          x={viewBox.cx}
+                          y={viewBox.cy + 20}
+                          textAnchor="middle"
+                          dominantBaseline="central"
+                          className="fill-Grey-500 text-xs leading-[18px]"
+                        >
+                          of ${totalLimit.toFixed(2)}
+                        </text>
+                      </>
+                    );
+                  }
+                  return null;
+                }}
+              />
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
       </div>
+      {/* summary */}
+      <BudgetSummary budgets={budgets} />
     </div>
   );
 }
