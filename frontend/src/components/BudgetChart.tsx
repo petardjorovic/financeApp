@@ -76,6 +76,16 @@ function BudgetChart() {
                 }}
               />
             </Pie>
+            <Pie
+              data={[{ value: 1 }]} // samo jedan segment
+              dataKey="value"
+              cx="50%"
+              cy="50%"
+              innerRadius={70}
+              outerRadius={92}
+              fill="rgba(255, 255, 255, 0.3)" // Tailwind Gray-100
+              stroke="none"
+            />
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>

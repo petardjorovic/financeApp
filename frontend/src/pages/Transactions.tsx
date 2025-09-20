@@ -10,12 +10,18 @@ import { useTransFilters } from "@/contexts/TransFilterContext";
 import { Loader2 } from "lucide-react";
 import transactionIcon from "../assets/images/icon-nav-transactions-white.svg";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Transactions() {
   const navigate = useNavigate();
-  const { setSearchTerm, setPageNumber } = useTransFilters();
+  const { setSearchTerm, setPageNumber, search, resetFilters } =
+    useTransFilters();
   const { isLoading } = useCategories();
   const { data, isLoading: isTransationsLoading } = useTransactions();
+
+  useEffect(() => {
+    resetFilters();
+  }, [resetFilters]);
 
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
@@ -42,7 +48,11 @@ function Transactions() {
         <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
           {/* Table operations */}
           <div className="h-[45px] w-full flex justify-between">
-            <SearchInput onSearch={setSearchTerm} setPage={setPageNumber} />
+            <SearchInput
+              onSearch={setSearchTerm}
+              setPage={setPageNumber}
+              value={search}
+            />
             <div className="h-full flex items-center gap-6">
               <SortByTransactions />
               <CategoryFilter />

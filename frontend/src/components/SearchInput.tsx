@@ -1,13 +1,14 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "./ui/input";
 
 type SearchInputProps = {
   onSearch: (val: string) => void;
   setPage: (val: number) => void;
+  value: string;
 };
 
-function SearchInput({ onSearch, setPage }: SearchInputProps) {
+function SearchInput({ onSearch, setPage, value }: SearchInputProps) {
   const [search, setSearch] = useState<string>("");
   const inputRefLg = useRef<HTMLInputElement>(null);
   const inputRefSm = useRef<HTMLInputElement>(null);
@@ -27,6 +28,10 @@ function SearchInput({ onSearch, setPage }: SearchInputProps) {
     inputRefLg.current?.blur();
     inputRefSm.current?.blur();
   }
+
+  useEffect(() => {
+    setSearch(value);
+  }, [value]);
 
   return (
     <form

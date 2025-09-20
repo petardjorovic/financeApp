@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FilterContext } from "./TransFilterContext";
 
 export const TransFiltersProvider = ({
@@ -16,6 +16,13 @@ export const TransFiltersProvider = ({
   const setFilterTerm = (val: string) => setFilter(val);
   const setPageNumber = (val: number) => setPage(val);
 
+  const resetFilters = useCallback(() => {
+    setPage(1);
+    setSearch("");
+    setFilter("All Transactions");
+    setSortBy("Latest");
+  }, []);
+
   return (
     <FilterContext.Provider
       value={{
@@ -27,6 +34,7 @@ export const TransFiltersProvider = ({
         setFilterTerm,
         setPageNumber,
         setSortByTerm,
+        resetFilters,
       }}
     >
       {children}

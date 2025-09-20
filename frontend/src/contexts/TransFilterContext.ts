@@ -9,6 +9,7 @@ type FilterCtxProps = {
   setFilterTerm: (val: string) => void;
   page: number;
   setPageNumber: (val: number) => void;
+  resetFilters: () => void;
 };
 
 export const FilterContext = createContext<FilterCtxProps | undefined>(
