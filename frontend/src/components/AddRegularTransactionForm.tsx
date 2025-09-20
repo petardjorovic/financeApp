@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import z from "zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,18 +19,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Loader2, Loader2Icon } from "lucide-react";
 import { useCategories } from "@/queryHooks/useCategories";
 import { useAddTransaction } from "@/queryHooks/useAddTransaction";
 import { addRegularTransactionSchema } from "@/lib/schemas";
-import { useNavigate } from "react-router-dom";
+import TransactionActionButtons from "./TransactionActionButtons";
+import { Loader2 } from "lucide-react";
 
 type AddTransactionFormValues = z.infer<typeof addRegularTransactionSchema>;
 
 function AddRegularTransactionForm() {
-  const navigate = useNavigate();
   const { categories, isLoading } = useCategories();
   const incomeCategories = categories.filter((cat) => cat.type === "income");
   const expenseCategories = categories.filter((cat) => cat.type === "expense");
@@ -200,26 +198,10 @@ function AddRegularTransactionForm() {
             </FormItem>
           )}
         />
-        <div className="flex py-3 gap-x-3 justify-center lg:justify-end">
-          <Button
-            className="text-White bg-Red rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[45px] hover:bg-Red/70"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </Button>
-          <Button
-            type="submit"
-            disabled={isAddingTx}
-            className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[45px] w-42 sm:w-50"
-          >
-            {isAddingTx ? (
-              <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              "Create New Transaction"
-            )}
-          </Button>
-        </div>
+        <TransactionActionButtons
+          disabled={isAddingTx}
+          submitBtnLabel="Create New Transaction"
+        />
       </form>
     </Form>
   );

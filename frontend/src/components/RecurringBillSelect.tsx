@@ -32,17 +32,13 @@ function RecurringBillSelect({
   recurringBills,
 }: {
   form: ReturnType<typeof useForm<EditFormValues>>;
-  recurringBills: RecurringBill[];
+  recurringBills?: RecurringBill[];
 }) {
   const { control, setValue } = form;
 
   const handleRecurringBillChange = (billId: string) => {
     const selectedBill = recurringBills?.find((bill) => bill._id === billId);
     if (!selectedBill) return;
-    // if (!selectedBill) {
-    //   setValue("recurringBillId", "", { shouldValidate: true });
-    //   return;
-    // }
 
     setValue("type", "expense");
     setValue("recurringBillId", selectedBill._id, {

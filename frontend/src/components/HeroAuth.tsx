@@ -1,4 +1,5 @@
-import logoLarge from "../assets/images/logo-larges.svg";
+// import logoLarge from "../assets/images/logo-larges.svg";
+import pdfinanceLogo from "../assets/images/pdfinance logo.svg";
 
 function HeroAuth() {
   return (
@@ -7,9 +8,11 @@ function HeroAuth() {
         className={`rounded-md bg-no-repeat bg-[url("/src/assets/images/illustration-authentication.svg")] flex flex-col justify-end bg-cover w-full h-full p-[40px] relative overflow-hidden`}
       >
         <img
-          src={logoLarge}
+          // src={logoLarge}
+          src={pdfinanceLogo}
           alt="logo"
-          className="absolute top-[20px] left-[20px]"
+          className="absolute top-[40px] left-[40px]"
+          // className="absolute top-[20px] left-[20px]"
         />
         <div className="">
           <h2 className="font-bold text-[32px] text-White leading-[38.4px] max-w-[400px] mb-5">

@@ -159,3 +159,30 @@ export const deleteTransaction = async ({
 
 export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
   API.get("/recurringBills?raw=true");
+
+//* BUDGETS
+export type Budget = {
+  _id: string;
+  userId: string;
+  categoryId: {
+    _id: string;
+    name: string;
+  };
+  limit: number;
+  themeId: {
+    _id: string;
+    name: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  spent: number;
+  latestSpending: {
+    _id: string;
+    amount: number;
+    account: string;
+    type: "expense" | "string";
+    date: string;
+  }[];
+};
+export const getBudgets = async (): Promise<Budget[]> => API.get("/budgets");
