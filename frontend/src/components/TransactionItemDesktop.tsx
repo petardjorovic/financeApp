@@ -26,6 +26,7 @@ function TransactionItemDesktop({ transaction }: { transaction: Transaction }) {
               className="w-10 h-10 rounded-full bg-Red object-cover"
             />
           )}
+
           <span className="px-4 py-3 text-Grey-900 text-sm leading-[21px] font-semibold">
             {transaction.account}
           </span>

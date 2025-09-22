@@ -25,7 +25,7 @@ function Budgets() {
       ) : (
         <div className="flex flex-col lg:flex-row w-full gap-6">
           <BudgetChart />
-          <div>
+          <div className="space-y-6 flex flex-1 flex-col">
             {budgets?.map((budget) => (
               <BudgetItem key={budget._id} budget={budget} />
             ))}
