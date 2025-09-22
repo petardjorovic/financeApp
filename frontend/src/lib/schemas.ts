@@ -122,3 +122,18 @@ export const editTransactionSchema = z
       path: ["recurringBillId"],
     }
   );
+
+const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+
+export const editBudgetSchema = z.object({
+  categoryId: z
+    .string()
+    .regex(objectIdRegex, { message: "Invalid category ID" }),
+  limit: z
+    .union([z.number(), z.string()])
+    .transform((val) => Number(val))
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "Maximum Spend must be a positive number",
+    }),
+  themeId: z.string().regex(objectIdRegex, { message: "Invalid theme ID" }),
+});

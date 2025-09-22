@@ -187,3 +187,9 @@ export type Budget = {
   }[];
 };
 export const getBudgets = async (): Promise<Budget[]> => API.get("/budgets");
+
+export const deleteBudget = async ({
+  budgetId,
+}: {
+  budgetId: string;
+}): Promise<{ message: string }> => API.delete(`/budgets/${budgetId}`);

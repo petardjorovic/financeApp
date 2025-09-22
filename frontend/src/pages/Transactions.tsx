@@ -9,19 +9,23 @@ import { useCategories } from "@/queryHooks/useCategories";
 import { useTransFilters } from "@/contexts/TransFilterContext";
 import { Loader2 } from "lucide-react";
 import transactionIcon from "../assets/images/icon-nav-transactions-white.svg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 function Transactions() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setSearchTerm, setPageNumber, search, resetFilters } =
     useTransFilters();
   const { isLoading } = useCategories();
   const { data, isLoading: isTransationsLoading } = useTransactions();
 
   useEffect(() => {
-    resetFilters();
-  }, [resetFilters]);
+    // resetuj samo ako nisi došao iz BudgetItem (See all)
+    if (!location?.state?.fromBudget) {
+      resetFilters();
+    }
+  }, [resetFilters, location?.state?.fromBudget]);
 
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">

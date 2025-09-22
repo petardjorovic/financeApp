@@ -1,15 +1,24 @@
+import { useNavigate } from "react-router-dom";
 import type { Budget } from "@/lib/api";
-import { MoreHorizontal } from "lucide-react";
+import { formatDate } from "@/utils/formatDate";
+import { useTransFilters } from "@/contexts/TransFilterContext";
+import BudgetMoreMenu from "./BudgetMoreMenu";
 import { GoTriangleRight } from "react-icons/go";
 import expense from "../assets/images/expense.png";
-import { formatDate } from "@/utils/formatDate";
 
 function BudgetItem({ budget }: { budget: Budget }) {
+  const navigate = useNavigate();
+  const { setFilterTerm } = useTransFilters();
   const progresValue = ((budget.spent / budget.limit) * 100).toFixed(0);
+
+  const goToTransactions = () => {
+    setFilterTerm(budget.categoryId.name);
+    navigate("/transactions", { state: { fromBudget: true } });
+  };
 
   return (
     <div className="flex flex-col items-center gap-y-5 rounded-[12px] px-5 py-6 md:px-8 md:py-8 bg-White">
-      {/* title */}
+      {/* TITLE */}
       <div className="w-full h-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div
@@ -20,9 +29,9 @@ function BudgetItem({ budget }: { budget: Budget }) {
             {budget.categoryId.name}
           </span>
         </div>
-        <MoreHorizontal className="w-4 h-4 cursor-pointer" color="#b3b3b3" />
+        <BudgetMoreMenu budget={budget} />
       </div>
-      {/* Amount bar */}
+      {/* AMOUNT BAR */}
       <div className="flex flex-col gap-y-4 w-full">
         <p className="text-Grey-500 text-sm leading-[21px]">
           Maximum of ${budget.limit}
@@ -67,14 +76,17 @@ function BudgetItem({ budget }: { budget: Budget }) {
           </div>
         </div>
       </div>
-      {/* Latest spanding */}
+      {/* LATEST SPANDING */}
       <div className="w-full p-4 md:p-5 flex flex-col gap-5 rounded-[12px] bg-Beige-100">
         {/* Title */}
         <div className="flex items-center justify-between h-6">
           <span className="text-base leading-[24px] font-semibold text-Grey-900">
             Latest Spending
           </span>
-          <span className="flex items-center gap-x-3 text-Grey-500 text-sm leading-[21px]">
+          <span
+            className="flex items-center gap-x-3 text-Grey-500 text-sm leading-[21px] cursor-pointer"
+            onClick={() => goToTransactions()}
+          >
             See All <GoTriangleRight className="w-4 h-4" />
           </span>
         </div>

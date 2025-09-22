@@ -16,7 +16,7 @@ export const useDeleteTransaction = () => {
       queryClient.invalidateQueries({ queryKey: [TRANSACTIONS] });
     },
     onError: (err) => {
-      toast.error(err.message);
+      toast.error(err.message ?? "An error occurred, please try again later.");
     },
   });
 
