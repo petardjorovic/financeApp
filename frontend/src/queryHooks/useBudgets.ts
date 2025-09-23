@@ -1,4 +1,5 @@
-import { getBudgets, type Budget } from "@/lib/api";
+import { getBudgets } from "@/lib/api";
+import type { Budget } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const BUDGETS = "budgets";

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import TransactionaTable from "@/components/TransactionaTable";
 import SearchInput from "@/components/SearchInput";
 import SortByTransactions from "@/components/SortByTransactions";
@@ -9,16 +11,20 @@ import { useCategories } from "@/queryHooks/useCategories";
 import { useTransFilters } from "@/contexts/TransFilterContext";
 import { Loader2 } from "lucide-react";
 import transactionIcon from "../assets/images/icon-nav-transactions-white.svg";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 function Transactions() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setSearchTerm, setPageNumber, search, resetFilters } =
-    useTransFilters();
-  const { isLoading } = useCategories();
-  const { data, isLoading: isTransationsLoading } = useTransactions();
+  const { resetFilters } = useTransFilters();
+  const { isPending: isCategoriesLoading, isError: categoriesError } =
+    useCategories();
+  const {
+    data,
+    isPending: isTransactionsLoading,
+    isError: transactionsError,
+  } = useTransactions();
+  const isLoadingAll = isCategoriesLoading || isTransactionsLoading;
+  const isErrorAll = categoriesError || transactionsError;
 
   useEffect(() => {
     // resetuj samo ako nisi došao iz BudgetItem (See all)
@@ -44,35 +50,39 @@ function Transactions() {
         </Button>
       </div>
       {/* Transaction content */}
-      {isLoading || isTransationsLoading ? (
+      {isLoadingAll ? (
         <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 items-center justify-center">
           <Loader2 className="animate-spin" />
         </div>
-      ) : (
-        <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
-          {/* Table operations */}
-          <div className="h-[45px] w-full flex justify-between">
-            <SearchInput
-              onSearch={setSearchTerm}
-              setPage={setPageNumber}
-              value={search}
-            />
-            <div className="h-full flex items-center gap-6">
-              <SortByTransactions />
-              <CategoryFilter />
-            </div>
+      ) : isErrorAll ? (
+        <>
+          <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
+            <p>Failed to load data.</p>
           </div>
+        </>
+      ) : (
+        <>
+          <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
+            {/* Table operations */}
+            <div className="h-[45px] w-full flex justify-between">
+              <SearchInput />
+              <div className="h-full flex items-center gap-6">
+                <SortByTransactions />
+                <CategoryFilter />
+              </div>
+            </div>
 
-          {/* Transaction table */}
-          {data?.transactions.length ? (
-            <TransactionaTable transactions={data.transactions} />
-          ) : (
-            <p className="text-center">There are no transactions</p>
-          )}
+            {/* Transaction table */}
+            {data?.transactions.length ? (
+              <TransactionaTable transactions={data.transactions} />
+            ) : (
+              <p className="text-center">There are no transactions</p>
+            )}
 
-          {/* Pagination */}
-          <Pagination totalPages={data?.pages} />
-        </div>
+            {/* Pagination */}
+            <Pagination totalPages={data?.pages} />
+          </div>
+        </>
       )}
     </main>
   );

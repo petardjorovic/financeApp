@@ -1,12 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import type { Budget } from "@/lib/api";
 import { formatDate } from "@/utils/formatDate";
 import { useTransFilters } from "@/contexts/TransFilterContext";
-import BudgetMoreMenu from "./BudgetMoreMenu";
 import { GoTriangleRight } from "react-icons/go";
 import expense from "../assets/images/expense.png";
+import type { Budget } from "@/lib/types";
 
-function BudgetItem({ budget }: { budget: Budget }) {
+function BudgetItem({
+  budget,
+  children,
+}: {
+  budget: Budget;
+  children: React.ReactNode;
+}) {
   const navigate = useNavigate();
   const { setFilterTerm } = useTransFilters();
   const progresValue = ((budget.spent / budget.limit) * 100).toFixed(0);
@@ -29,7 +34,8 @@ function BudgetItem({ budget }: { budget: Budget }) {
             {budget.categoryId.name}
           </span>
         </div>
-        <BudgetMoreMenu budget={budget} />
+        {/* Budget More Menu */}
+        {children}
       </div>
       {/* AMOUNT BAR */}
       <div className="flex flex-col gap-y-4 w-full">

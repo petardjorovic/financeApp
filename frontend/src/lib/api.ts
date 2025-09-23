@@ -1,4 +1,12 @@
 import API from "@/config/apiClient";
+import type {
+  Budget,
+  Category,
+  RecurringBill,
+  Theme,
+  Transaction,
+  User,
+} from "./types";
 
 type RegisterParams = {
   fullName: string;
@@ -7,65 +15,14 @@ type RegisterParams = {
   confirmPassword: string;
 };
 
+export const register = async (
+  data: RegisterParams
+): Promise<{ message: string }> => API.post("/auth/register", data);
+
 type LoginParams = {
   email: string;
   password: string;
 };
-
-export type User = {
-  _id: string;
-  email: string;
-  fullName: string;
-  verified: boolean;
-  role: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Category = {
-  _id: string;
-  name: string;
-  type: "income" | "expense";
-};
-
-export type Transaction = {
-  _id: string;
-  userId: string;
-  type: "income" | "expense";
-  amount: number;
-  account: string;
-  categoryId: {
-    _id: string;
-    name: string;
-  };
-  date: string;
-  recurringBillId: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-};
-
-export type RecurringBill = {
-  _id: string;
-  userId: string;
-  name: string;
-  dueDate: number;
-  categoryId: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  isPaidThisMonth: boolean;
-  paidAmountThisMonth: number;
-};
-
-export type ResetPasswordParams = {
-  verificationCode: string;
-  password: string;
-};
-
-export const register = async (
-  data: RegisterParams
-): Promise<{ message: string }> => API.post("/auth/register", data);
 
 export const login = async (data: LoginParams): Promise<{ message: string }> =>
   API.post("/auth/login", data);
@@ -79,15 +36,22 @@ export const sendPasswordResetEmail = async (data: {
   email: string;
 }): Promise<{ message: string }> => API.post("/auth/password/forgot", data);
 
+export type ResetPasswordParams = {
+  verificationCode: string;
+  password: string;
+};
+
 export const resetPassword = async (
   data: ResetPasswordParams
 ): Promise<{ message: string }> => API.post("/auth/password/reset", data);
 
 export const getUser = async (): Promise<User> => API.get("/user");
 
+//* CATEGORIES
 export const getCategories = async (): Promise<Category[]> =>
   API.get("/categories");
 
+//* TRANSACTIONS
 type GetTransactionsProps = {
   page: number;
   filter: string;
@@ -161,35 +125,28 @@ export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
   API.get("/recurringBills?raw=true");
 
 //* BUDGETS
-export type Budget = {
-  _id: string;
-  userId: string;
-  categoryId: {
-    _id: string;
-    name: string;
-  };
-  limit: number;
-  themeId: {
-    _id: string;
-    name: string;
-    color: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  spent: number;
-  latestSpending: {
-    _id: string;
-    amount: number;
-    account: string;
-    type: "expense" | "string";
-    date: string;
-  }[];
-};
 export const getBudgets = async (): Promise<Budget[]> => API.get("/budgets");
+
+export type EditBudgetProps = {
+  budgetId: string;
+  categoryId?: string | undefined;
+  limit?: number | undefined;
+  themeId?: string | undefined;
+};
+
+export const editBudget = async ({
+  budgetId,
+  categoryId,
+  limit,
+  themeId,
+}: EditBudgetProps): Promise<{ message: string }> =>
+  API.patch(`/budgets/${budgetId}`, { categoryId, limit, themeId });
 
 export const deleteBudget = async ({
   budgetId,
 }: {
   budgetId: string;
 }): Promise<{ message: string }> => API.delete(`/budgets/${budgetId}`);
+
+//* THEMES
+export const getThemes = async (): Promise<Theme[]> => API.get("/themes");

@@ -1,30 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "./ui/input";
+import { useTransFilters } from "@/contexts/TransFilterContext";
 
-type SearchInputProps = {
-  onSearch: (val: string) => void;
-  setPage: (val: number) => void;
-  value: string;
-};
-
-function SearchInput({ onSearch, setPage, value }: SearchInputProps) {
+function SearchInput() {
   const [search, setSearch] = useState<string>("");
   const inputRefLg = useRef<HTMLInputElement>(null);
   const inputRefSm = useRef<HTMLInputElement>(null);
+  const { setSearchTerm, setPageNumber, search: value } = useTransFilters();
 
   function onSearchChange(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    onSearch(search.trim());
-    setPage(1);
+    setSearchTerm(search.trim());
+    setPageNumber(1);
     inputRefLg.current?.blur();
     inputRefSm.current?.blur();
   }
 
   function clearSearch() {
     setSearch("");
-    onSearch("");
-    setPage(1);
+    setSearchTerm("");
+    setPageNumber(1);
     inputRefLg.current?.blur();
     inputRefSm.current?.blur();
   }

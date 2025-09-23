@@ -1,4 +1,5 @@
-import { getCategories, type Category } from "@/lib/api";
+import { getCategories } from "@/lib/api";
+import type { Category } from "@/lib/types";
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 
 export const CATEGORIES = "categories";

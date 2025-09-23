@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { RecurringBill } from "@/lib/api";
+import type { RecurringBill } from "@/lib/types";
 
 type EditFormValues = {
   type: "income" | "expense";

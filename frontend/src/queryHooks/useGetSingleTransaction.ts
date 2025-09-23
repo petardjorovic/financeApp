@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getSingleTransaction, type Transaction } from "@/lib/api";
+import { getSingleTransaction } from "@/lib/api";
+import type { Transaction } from "@/lib/types";
 
 const TRANSACTION = "transaction";
 

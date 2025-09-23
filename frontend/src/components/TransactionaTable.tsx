@@ -1,6 +1,6 @@
+import type { Transaction } from "@/lib/types";
 import TransactionItemDesktop from "./TransactionItemDesktop";
 import TransactionItemMobile from "./TransactionItemMobile";
-import type { Transaction } from "@/lib/api";
 
 function TransactionaTable({ transactions }: { transactions: Transaction[] }) {
   return (

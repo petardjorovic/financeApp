@@ -1,8 +1,8 @@
-import type { Transaction } from "@/lib/api";
 import income from "../assets/images/income.png";
 import expense from "../assets/images/expense.png";
 import { formatDate } from "@/utils/formatDate";
 import TransactionMoreMenu from "./TransactionMoreMenu";
+import type { Transaction } from "@/lib/types";
 
 function TransactionItemMobile({ transaction }: { transaction: Transaction }) {
   return (

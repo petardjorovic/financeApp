@@ -1,4 +1,5 @@
-import { getRawRecurringBills, type RecurringBill } from "@/lib/api";
+import { getRawRecurringBills } from "@/lib/api";
+import type { RecurringBill } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useRawRecurringBills = (isRecurring: string) => {

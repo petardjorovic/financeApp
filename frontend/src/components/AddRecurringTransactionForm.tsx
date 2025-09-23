@@ -22,10 +22,11 @@ import {
 } from "@/components/ui/select";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { getRawRecurringBills, type RecurringBill } from "@/lib/api";
+import { getRawRecurringBills } from "@/lib/api";
 import { addRecurringTransactionSchema } from "@/lib/schemas";
 import { useAddTransaction } from "@/queryHooks/useAddTransaction";
 import { Loader2, Loader2Icon } from "lucide-react";
+import type { RecurringBill } from "@/lib/types";
 
 type AddTransactionFormValues = z.infer<typeof addRecurringTransactionSchema>;
 

@@ -14,37 +14,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import type { Budget } from "@/lib/api";
 import { useDeleteBudget } from "@/queryHooks/useDeleteBudget";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import { editBudgetSchema } from "@/lib/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
+import EditBudgetForm from "./EditBudgetForm";
+import type { Budget } from "@/lib/types";
 
-export type editBudgetFormValues = z.infer<typeof editBudgetSchema>;
+type BudgetMoreMenuProps = {
+  budget: Budget;
+  budgets: Budget[] | undefined;
+};
 
-function BudgetMoreMenu({ budget }: { budget: Budget }) {
+function BudgetMoreMenu({ budget, budgets }: BudgetMoreMenuProps) {
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
   const { delBudget, isDeletingBudget } = useDeleteBudget();
   const [isOpenEdit, setIsOpenEdit] = useState<boolean>(false);
-  const editBudgetForm = useForm({
-    resolver: zodResolver(editBudgetSchema),
-  });
 
   return (
     <>
@@ -71,7 +56,7 @@ function BudgetMoreMenu({ budget }: { budget: Budget }) {
             <AlertDialogTitle>
               <div className="flex items-center justify-between gap-1">
                 <span className="text-[18px] leading-[22px] sm:text-[28px] sm:leading-[32px] tracking-[0px] font-bold">
-                  Delete "{budget.categoryId.name}"?
+                  Delete "{budget?.categoryId.name}"?
                 </span>
                 <IoIosCloseCircleOutline
                   className="fill-Grey-500 w-[25px] h-[25px] cursor-pointer"
@@ -100,39 +85,12 @@ function BudgetMoreMenu({ budget }: { budget: Budget }) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <Dialog open={isOpenEdit} onOpenChange={setIsOpenEdit}>
-        <DialogContent className="sm:max-w-[425px]">
-          <form>
-            <DialogHeader>
-              <DialogTitle>Edit profile</DialogTitle>
-              <DialogDescription>
-                Make changes to your profile here. Click save when you&apos;re
-                done.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <Label htmlFor="name-1">Name</Label>
-                <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="username-1">Username</Label>
-                <Input
-                  id="username-1"
-                  name="username"
-                  defaultValue="@peduarte"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <EditBudgetForm
+        isOpenEdit={isOpenEdit}
+        setIsOpenEdit={setIsOpenEdit}
+        budget={budget}
+        budgets={budgets}
+      />
     </>
   );
 }

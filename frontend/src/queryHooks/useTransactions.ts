@@ -1,6 +1,7 @@
 import queryClient from "@/config/queryClient";
 import { useTransFilters } from "@/contexts/TransFilterContext";
-import { getTransactions, type Transaction } from "@/lib/api";
+import { getTransactions } from "@/lib/api";
+import type { Transaction } from "@/lib/types";
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 
 export const TRANSACTIONS = "transactions";

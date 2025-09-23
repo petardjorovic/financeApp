@@ -6,11 +6,10 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { useBudgets } from "@/queryHooks/useBudgets";
 import BudgetSummary from "./BudgetSummary";
+import type { Budget } from "@/lib/types";
 
-function BudgetChart() {
-  const { budgets } = useBudgets();
+function BudgetChart({ budgets }: { budgets: Budget[] }) {
   const data = budgets?.map((b) => ({
     name: b.categoryId.name,
     value: b.limit,

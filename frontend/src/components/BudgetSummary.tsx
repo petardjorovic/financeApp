@@ -1,4 +1,4 @@
-import type { Budget } from "@/lib/api";
+import type { Budget } from "@/lib/types";
 
 function BudgetSummary({ budgets }: { budgets: Budget[] | undefined }) {
   return (
