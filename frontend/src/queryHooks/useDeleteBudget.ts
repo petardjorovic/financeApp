@@ -4,7 +4,9 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { BUDGETS } from "./useBudgets";
 
-export const useDeleteBudget = () => {
+export const useDeleteBudget = (
+  setIsOpenDelete: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   const {
     mutate: delBudget,
     isPending: isDeletingBudget,
@@ -14,6 +16,7 @@ export const useDeleteBudget = () => {
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: [BUDGETS] });
+      setIsOpenDelete(false);
     },
     onError: (err) => {
       toast.error(err.message ?? "An error occurred, please try again later.");

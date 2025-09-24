@@ -1,3 +1,4 @@
+import AddBudgetForm from "@/components/AddBudgetForm";
 import BudgetChart from "@/components/BudgetChart";
 import BudgetItem from "@/components/BudgetItem";
 import BudgetMoreMenu from "@/components/BudgetMoreMenu";
@@ -6,8 +7,10 @@ import { useBudgets } from "@/queryHooks/useBudgets";
 import { useCategories } from "@/queryHooks/useCategories";
 import { useThemes } from "@/queryHooks/useThemes";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 function Budgets() {
+  const [isAddBudgetOpen, setIsAddBudgetOpen] = useState<boolean>(false);
   const {
     isPending: isLoadingBudgets,
     budgets,
@@ -27,7 +30,10 @@ function Budgets() {
         <h1 className="text-[32px] leading-[38px] font-bold text-Grey-900">
           Budgets
         </h1>
-        <Button className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[53px]">
+        <Button
+          className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[53px]"
+          onClick={() => setIsAddBudgetOpen(true)}
+        >
           + Add New Budget
         </Button>
       </div>
@@ -52,6 +58,11 @@ function Budgets() {
           </div>
         </div>
       )}
+
+      <AddBudgetForm
+        isAddBudgetOpen={isAddBudgetOpen}
+        setIsAddBudgetOpen={setIsAddBudgetOpen}
+      />
     </main>
   );
 }

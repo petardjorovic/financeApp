@@ -14,6 +14,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectItemTwo,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -34,6 +35,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useEffect } from "react";
 import { useEditBudget } from "@/queryHooks/useEditBudget";
 import { Loader2Icon } from "lucide-react";
+import { FaCircle } from "react-icons/fa";
 
 export type editBudgetFormValues = z.infer<typeof editBudgetSchema>;
 
@@ -49,7 +51,7 @@ function EditBudgetForm({ isOpenEdit, setIsOpenEdit, budget, budgets }: Props) {
     resolver: zodResolver(editBudgetSchema),
     defaultValues: {
       categoryId: budget.categoryId._id,
-      limit: budget.limit,
+      limit: budget.limit.toFixed(2),
       themeId: budget.themeId._id,
     },
   });
@@ -99,7 +101,7 @@ function EditBudgetForm({ isOpenEdit, setIsOpenEdit, budget, budgets }: Props) {
     if (!isOpenEdit) {
       editBudgetForm.reset({
         categoryId: budget.categoryId._id,
-        limit: budget.limit,
+        limit: budget.limit.toFixed(2),
         themeId: budget.themeId._id,
       });
     }
@@ -201,12 +203,17 @@ function EditBudgetForm({ isOpenEdit, setIsOpenEdit, budget, budgets }: Props) {
                     Maximum Spend
                   </FormLabel>
                   <FormControl className="w-full">
-                    <Input
-                      type="number"
-                      step="0.01"
-                      {...field}
-                      className="px-5 py-3 h-[45px] border border-Grey-300"
-                    />
+                    <div className="relative h-[45px]">
+                      <span className="text-sm text-Grey-500 leading-[21px] absolute left-5 top-1/2 -translate-y-1/2">
+                        $
+                      </span>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        {...field}
+                        className="pr-5 pl-10 py-3 h-[45px] border border-Grey-300"
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage className="w-full" />
                 </FormItem>
@@ -237,22 +244,28 @@ function EditBudgetForm({ isOpenEdit, setIsOpenEdit, budget, budgets }: Props) {
                               key={theme._id}
                               className="flex items-center justify-between w-full not-last:border-b not-last:border-b-Grey-100 not-first:h-[45px] not-last:pb-3 not-first:pt-3"
                             >
-                              <div className="flex items-center gap-3">
-                                <div
+                              <div className="flex items-center gap-3 w-full">
+                                {/* <div
                                   className="w-4 h-4 rounded-full aspect-square"
                                   style={{ backgroundColor: `${theme.color}` }}
-                                ></div>
-                                <SelectItem
+                                ></div> */}
+                                <SelectItemTwo
                                   value={theme._id}
                                   key={theme._id}
                                   disabled={isThemeInUse(theme._id)}
                                   className="text-sm text-Grey-900 leading-[21px]"
                                 >
-                                  {theme.name}
-                                </SelectItem>
+                                  <span className="flex items-center gap-3">
+                                    <FaCircle
+                                      color={theme.color}
+                                      className="w-4 h-4"
+                                    />
+                                    {theme.name}
+                                  </span>
+                                </SelectItemTwo>
                               </div>
                               {isThemeInUse(theme._id) && (
-                                <span className="text-xs text-Grey-500 leading-[18px]">
+                                <span className="text-[10px] sm:text-xs text-Grey-500 leading-[18px] w-24">
                                   Already used
                                 </span>
                               )}

@@ -16,7 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { MoreVertical } from "lucide-react";
+import { Loader2Icon, MoreVertical } from "lucide-react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useDeleteTransaction } from "@/queryHooks/useDeleteTranasaction";
 
@@ -29,7 +29,7 @@ function TransactionMoreMenu({
 }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { delTransaction, isDeleting } = useDeleteTransaction();
+  const { delTransaction, isDeleting } = useDeleteTransaction(setIsOpen);
   return (
     <>
       <DropdownMenu>
@@ -55,7 +55,12 @@ function TransactionMoreMenu({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (!isDeleting) setIsOpen(open);
+        }}
+      >
         <AlertDialogContent className="h-auto px-5 py-6 w-[560px] sm:h-[278px] sm:px-8 sm:py-8 rounded-[12px]">
           <AlertDialogHeader className="">
             <AlertDialogTitle>
@@ -85,7 +90,11 @@ function TransactionMoreMenu({
               onClick={() => delTransaction({ transactionId })}
               disabled={isDeleting}
             >
-              Yes, Confirm Delete
+              {isDeleting ? (
+                <Loader2Icon className="h-4 w-4 animate-spin" />
+              ) : (
+                "Yes, Confirm Delete"
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

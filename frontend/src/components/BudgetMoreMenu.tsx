@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { MoreHorizontal } from "lucide-react";
+import { Loader2Icon, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useDeleteBudget } from "@/queryHooks/useDeleteBudget";
@@ -28,7 +28,7 @@ type BudgetMoreMenuProps = {
 
 function BudgetMoreMenu({ budget, budgets }: BudgetMoreMenuProps) {
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
-  const { delBudget, isDeletingBudget } = useDeleteBudget();
+  const { delBudget, isDeletingBudget } = useDeleteBudget(setIsOpenDelete);
   const [isOpenEdit, setIsOpenEdit] = useState<boolean>(false);
 
   return (
@@ -50,7 +50,12 @@ function BudgetMoreMenu({ budget, budgets }: BudgetMoreMenuProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog open={isOpenDelete} onOpenChange={setIsOpenDelete}>
+      <AlertDialog
+        open={isOpenDelete}
+        onOpenChange={(open) => {
+          if (!isDeletingBudget) setIsOpenDelete(open);
+        }}
+      >
         <AlertDialogContent className="h-auto px-5 py-6 w-[560px] sm:h-[278px] sm:px-8 sm:py-8 rounded-[12px]">
           <AlertDialogHeader className="">
             <AlertDialogTitle>
@@ -79,7 +84,11 @@ function BudgetMoreMenu({ budget, budgets }: BudgetMoreMenuProps) {
               onClick={() => delBudget({ budgetId: budget._id })}
               disabled={isDeletingBudget}
             >
-              Yes, Confirm Delete
+              {isDeletingBudget ? (
+                <Loader2Icon className="h-4 w-4 animate-spin" />
+              ) : (
+                "Yes, Confirm Delete"
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
