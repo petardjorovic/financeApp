@@ -26,7 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { editBudgetSchema } from "@/lib/schemas";
+import { budgetSchema } from "@/lib/schemas";
 import { useThemes } from "@/queryHooks/useThemes";
 import { useCategories } from "@/queryHooks/useCategories";
 import type { Budget } from "@/lib/types";
@@ -37,7 +37,7 @@ import { useEditBudget } from "@/queryHooks/useEditBudget";
 import { Loader2Icon } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
 
-export type editBudgetFormValues = z.infer<typeof editBudgetSchema>;
+export type editBudgetFormValues = z.infer<typeof budgetSchema>;
 
 type Props = {
   isOpenEdit: boolean;
@@ -48,7 +48,7 @@ type Props = {
 
 function EditBudgetForm({ isOpenEdit, setIsOpenEdit, budget, budgets }: Props) {
   const editBudgetForm = useForm({
-    resolver: zodResolver(editBudgetSchema),
+    resolver: zodResolver(budgetSchema),
     defaultValues: {
       categoryId: budget.categoryId._id,
       limit: budget.limit.toFixed(2),
@@ -245,10 +245,6 @@ function EditBudgetForm({ isOpenEdit, setIsOpenEdit, budget, budgets }: Props) {
                               className="flex items-center justify-between w-full not-last:border-b not-last:border-b-Grey-100 not-first:h-[45px] not-last:pb-3 not-first:pt-3"
                             >
                               <div className="flex items-center gap-3 w-full">
-                                {/* <div
-                                  className="w-4 h-4 rounded-full aspect-square"
-                                  style={{ backgroundColor: `${theme.color}` }}
-                                ></div> */}
                                 <SelectItemTwo
                                   value={theme._id}
                                   key={theme._id}

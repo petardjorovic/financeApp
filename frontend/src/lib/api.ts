@@ -127,6 +127,16 @@ export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
 //* BUDGETS
 export const getBudgets = async (): Promise<Budget[]> => API.get("/budgets");
 
+export type AddBudgetProps = {
+  categoryId: string;
+  limit: number;
+  themeId: string;
+};
+
+export const addBudget = async (
+  data: AddBudgetProps
+): Promise<{ message: string }> => API.post("/budgets", data);
+
 export type EditBudgetProps = {
   budgetId: string;
   categoryId?: string | undefined;

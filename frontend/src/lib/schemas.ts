@@ -125,7 +125,7 @@ export const editTransactionSchema = z
 
 const objectIdRegex = /^[0-9a-fA-F]{24}$/;
 
-export const editBudgetSchema = z.object({
+export const budgetSchema = z.object({
   categoryId: z
     .string()
     .regex(objectIdRegex, { message: "Invalid category ID" }),

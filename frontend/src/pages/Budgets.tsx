@@ -62,6 +62,7 @@ function Budgets() {
       <AddBudgetForm
         isAddBudgetOpen={isAddBudgetOpen}
         setIsAddBudgetOpen={setIsAddBudgetOpen}
+        budgets={budgets}
       />
     </main>
   );
