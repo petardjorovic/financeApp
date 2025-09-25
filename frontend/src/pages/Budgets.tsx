@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AddBudgetForm from "@/components/AddBudgetForm";
 import BudgetChart from "@/components/BudgetChart";
 import BudgetItem from "@/components/BudgetItem";
@@ -7,7 +8,6 @@ import { useBudgets } from "@/queryHooks/useBudgets";
 import { useCategories } from "@/queryHooks/useCategories";
 import { useThemes } from "@/queryHooks/useThemes";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
 
 function Budgets() {
   const [isAddBudgetOpen, setIsAddBudgetOpen] = useState<boolean>(false);

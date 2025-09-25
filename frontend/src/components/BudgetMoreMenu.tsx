@@ -1,3 +1,5 @@
+import { useState } from "react";
+import EditBudgetForm from "./EditBudgetForm";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,12 +16,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { Loader2Icon, MoreHorizontal } from "lucide-react";
-import { useState } from "react";
-import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useDeleteBudget } from "@/queryHooks/useDeleteBudget";
-import EditBudgetForm from "./EditBudgetForm";
 import type { Budget } from "@/lib/types";
+import { Loader2Icon, MoreHorizontal } from "lucide-react";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 type BudgetMoreMenuProps = {
   budget: Budget;
@@ -33,6 +33,7 @@ function BudgetMoreMenu({ budget, budgets }: BudgetMoreMenuProps) {
 
   return (
     <>
+      {/* MORE MENU */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <MoreHorizontal className="w-4 h-4 cursor-pointer" color="#b3b3b3" />
@@ -50,6 +51,7 @@ function BudgetMoreMenu({ budget, budgets }: BudgetMoreMenuProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {/* DELETE BUDGET MODAL */}
       <AlertDialog
         open={isOpenDelete}
         onOpenChange={(open) => {
@@ -94,6 +96,7 @@ function BudgetMoreMenu({ budget, budgets }: BudgetMoreMenuProps) {
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* EFIT BUDGET MODAL */}
       <EditBudgetForm
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}
