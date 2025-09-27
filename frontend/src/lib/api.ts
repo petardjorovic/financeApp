@@ -2,12 +2,14 @@ import API from "@/config/apiClient";
 import type {
   Budget,
   Category,
+  Pot,
   RecurringBill,
   Theme,
   Transaction,
   User,
 } from "./types";
 
+//* AUTHENTICATION
 type RegisterParams = {
   fullName: string;
   email: string;
@@ -50,6 +52,9 @@ export const getUser = async (): Promise<User> => API.get("/user");
 //* CATEGORIES
 export const getCategories = async (): Promise<Category[]> =>
   API.get("/categories");
+
+//* THEMES
+export const getThemes = async (): Promise<Theme[]> => API.get("/themes");
 
 //* TRANSACTIONS
 type GetTransactionsProps = {
@@ -121,9 +126,6 @@ export const deleteTransaction = async ({
 }): Promise<{ message: string }> =>
   API.delete(`/transactions/${transactionId}`);
 
-export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
-  API.get("/recurringBills?raw=true");
-
 //* BUDGETS
 export const getBudgets = async (): Promise<Budget[]> => API.get("/budgets");
 
@@ -158,5 +160,9 @@ export const deleteBudget = async ({
   budgetId: string;
 }): Promise<{ message: string }> => API.delete(`/budgets/${budgetId}`);
 
-//* THEMES
-export const getThemes = async (): Promise<Theme[]> => API.get("/themes");
+//* POTS
+export const getPots = async (): Promise<Pot[]> => API.get("/pots");
+
+//* RECURRING BILLS
+export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
+  API.get("/recurringBills?raw=true");

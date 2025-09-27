@@ -79,7 +79,7 @@ function AddBudgetForm({
                 Add New Budget
               </span>
               <IoIosCloseCircleOutline
-                className="fill-Grey-500 w-[25px] h-[25px] cursor-pointer"
+                className="fill-Grey-500 w-[25px] h-[25px]"
                 onClick={() => setIsAddBudgetOpen(false)}
               />
             </div>
@@ -113,7 +113,7 @@ function AddBudgetForm({
             <Button
               type="submit"
               disabled={isAddingBudget}
-              className="w-full mt-5 h-[53px] rounded-[8px] bg-Grey-900 text-White p-4 text-sm font-semibold"
+              className="w-full mt-5 h-[53px] rounded-[8px] bg-Grey-900 text-White p-4 text-sm font-semibold cursor-pointer"
             >
               {isAddingBudget ? (
                 <Loader2Icon className=" h-4 w-4 animate-spin" />

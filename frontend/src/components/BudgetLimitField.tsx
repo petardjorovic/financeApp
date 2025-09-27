@@ -43,7 +43,7 @@ function BudgetLimitField({
                 type="number"
                 step="0.01"
                 {...field}
-                className="pr-5 pl-10 py-3 h-[45px] border border-Grey-300"
+                className="pr-5 pl-10 py-3 h-[45px] border border-Grey-300 cursor-pointer"
               />
             </div>
           </FormControl>

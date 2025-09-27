@@ -75,3 +75,19 @@ export type Theme = {
   name: string;
   color: string;
 };
+
+export type Pot = {
+  _id: string;
+  userId: string;
+  name: string;
+  target: number;
+  currentAmount: number;
+  themeId: {
+    _id: string;
+    name: string;
+    color: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};

@@ -31,7 +31,7 @@ function Budgets() {
           Budgets
         </h1>
         <Button
-          className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[53px]"
+          className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] h-[53px] hover:bg-Grey-500 transition-colors duration-300 cursor-pointer"
           onClick={() => setIsAddBudgetOpen(true)}
         >
           + Add New Budget

@@ -102,7 +102,7 @@ function EditBudgetForm({ isOpenEdit, setIsOpenEdit, budget, budgets }: Props) {
                 Edit Budget
               </span>
               <IoIosCloseCircleOutline
-                className="fill-Grey-500 w-[25px] h-[25px] cursor-pointer"
+                className="fill-Grey-500 w-[25px] h-[25px]"
                 onClick={() => setIsOpenEdit(false)}
               />
             </div>
@@ -135,7 +135,7 @@ function EditBudgetForm({ isOpenEdit, setIsOpenEdit, budget, budgets }: Props) {
             <Button
               type="submit"
               disabled={isEditingBudget}
-              className="w-full mt-5 h-[53px] rounded-[8px] bg-Grey-900 text-White p-4 text-sm font-semibold"
+              className="w-full mt-5 h-[53px] rounded-[8px] bg-Grey-900 text-White p-4 text-sm font-semibold cursor-pointer"
             >
               {isEditingBudget ? (
                 <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />

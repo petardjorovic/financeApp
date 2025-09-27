@@ -66,7 +66,7 @@ function BudgetMoreMenu({ budget, budgets }: BudgetMoreMenuProps) {
                   Delete "{budget?.categoryId.name}"?
                 </span>
                 <IoIosCloseCircleOutline
-                  className="fill-Grey-500 w-[25px] h-[25px] cursor-pointer"
+                  className="fill-Grey-500 w-[25px] h-[25px]"
                   onClick={() => setIsOpenDelete(false)}
                 />
               </div>
