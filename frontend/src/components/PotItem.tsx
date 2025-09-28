@@ -1,9 +1,8 @@
 import type { Pot } from "@/lib/types";
-import { MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 
-function PotItem({ pot }: { pot: Pot }) {
-  const percentComplete = (pot.currentAmount / pot.target) * 100;
+function PotItem({ pot, children }: { pot: Pot; children: React.ReactNode }) {
+  const progressValue = (pot.currentAmount / pot.target) * 100;
 
   return (
     <div className="px-5 py-6 sm:px-6 flex flex-col items-center gap-8 rounded-[12px] bg-White">
@@ -18,7 +17,8 @@ function PotItem({ pot }: { pot: Pot }) {
             {pot.name}
           </span>
         </div>
-        <MoreHorizontal className="w-4 h-4 cursor-pointer" color="#b3b3b3" />
+        {/* Pot more menu */}
+        {children}
       </div>
       {/* POT BAR */}
       <div className="flex flex-col items-center justify-center gap-4 w-full h-[114px]">
@@ -40,13 +40,13 @@ function PotItem({ pot }: { pot: Pot }) {
               className="rounded-[4px] h-full transition-[width] duration-500 ease-in-out"
               style={{
                 backgroundColor: `${pot.themeId.color}`,
-                width: `${percentComplete}%`,
+                width: `${progressValue}%`,
               }}
             ></div>
           </div>
           <div className="h-[18px] w-full flex items-center justify-between">
             <span className="text-Grey-500 text-xs leading-[18px] font-semibold">
-              {percentComplete.toFixed(2)}%
+              {progressValue.toFixed(2)}%
             </span>
             <span className="text-Grey-500 text-xs leading-[18px]">
               Target of ${pot.target.toFixed(2)}

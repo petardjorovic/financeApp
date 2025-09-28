@@ -172,6 +172,12 @@ export type AddPotProps = {
 export const addPot = async (data: AddPotProps): Promise<{ message: string }> =>
   API.post("/pots", data);
 
+export const deletePot = async ({
+  potId,
+}: {
+  potId: string;
+}): Promise<{ message: string }> => API.delete(`/pots/${potId}`);
+
 //* RECURRING BILLS
 export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
   API.get("/recurringBills?raw=true");

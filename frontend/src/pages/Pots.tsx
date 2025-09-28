@@ -1,5 +1,6 @@
 import AddPotForm from "@/components/AddPotForm";
 import PotItem from "@/components/PotItem";
+import PotMoreMenu from "@/components/PotMoreMenu";
 import { Button } from "@/components/ui/button";
 import { usePots } from "@/queryHooks/usePots";
 import { useThemes } from "@/queryHooks/useThemes";
@@ -39,7 +40,9 @@ function Pots() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {pots?.map((pot) => (
-            <PotItem key={pot._id} pot={pot} />
+            <PotItem key={pot._id} pot={pot}>
+              <PotMoreMenu key={pot._id} pot={pot} pots={pots} />
+            </PotItem>
           ))}
         </div>
       )}

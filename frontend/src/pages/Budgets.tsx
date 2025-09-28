@@ -52,7 +52,11 @@ function Budgets() {
           <div className="space-y-6 flex flex-1 flex-col">
             {budgets?.map((budget) => (
               <BudgetItem key={budget._id} budget={budget}>
-                <BudgetMoreMenu budget={budget} budgets={budgets} />
+                <BudgetMoreMenu
+                  budget={budget}
+                  budgets={budgets}
+                  key={budget._id}
+                />
               </BudgetItem>
             ))}
           </div>
