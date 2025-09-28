@@ -34,7 +34,6 @@ export const addPotHandler = catchErrors(async (req, res) => {
   // return response
   return res.status(CREATED).json({
     message: "Pot successfully added",
-    pot,
   });
 });
 

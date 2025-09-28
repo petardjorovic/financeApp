@@ -103,6 +103,7 @@ function AddBudgetForm({
 
             {/* Limit */}
             <BudgetLimitField form={addBudgetForm} />
+
             {/* Theme */}
             <BudgetThemeField
               budgetsThemes={budgetsThemes}

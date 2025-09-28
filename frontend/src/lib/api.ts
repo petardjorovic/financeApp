@@ -163,6 +163,15 @@ export const deleteBudget = async ({
 //* POTS
 export const getPots = async (): Promise<Pot[]> => API.get("/pots");
 
+export type AddPotProps = {
+  name: string;
+  target: number;
+  themeId: string;
+};
+
+export const addPot = async (data: AddPotProps): Promise<{ message: string }> =>
+  API.post("/pots", data);
+
 //* RECURRING BILLS
 export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
   API.get("/recurringBills?raw=true");
