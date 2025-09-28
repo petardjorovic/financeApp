@@ -19,6 +19,7 @@ import {
 } from "./ui/alert-dialog";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useDeletePot } from "@/queryHooks/useDeletePot";
+import EditPotForm from "./EditPotForm";
 
 type Props = {
   pot: Pot;
@@ -95,13 +96,13 @@ function PotMoreMenu({ pot, pots }: Props) {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* EFIT BUDGET MODAL */}
-      {/* <EditBudgetForm
+      {/* EFIT POT MODAL */}
+      <EditPotForm
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}
-        budget={budget}
-        budgets={budgets}
-      /> */}
+        pot={pot}
+        pots={pots}
+      />
     </>
   );
 }

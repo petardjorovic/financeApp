@@ -46,7 +46,7 @@ export const editPotHandler = catchErrors(async (req, res) => {
   const pot = await editPot({ ...request, potId, userId: req.userId });
 
   // return response
-  return res.status(OK).json({ message: "Pot successfully edited", pot });
+  return res.status(OK).json({ message: "Pot successfully edited" });
 });
 
 export const deletePotHandler = catchErrors(async (req, res) => {

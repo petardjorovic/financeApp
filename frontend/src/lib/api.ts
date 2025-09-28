@@ -172,6 +172,21 @@ export type AddPotProps = {
 export const addPot = async (data: AddPotProps): Promise<{ message: string }> =>
   API.post("/pots", data);
 
+export type EditPotProps = {
+  potId: string;
+  name?: string;
+  target?: number;
+  themeId?: string;
+};
+
+export const editPot = async ({
+  potId,
+  name,
+  target,
+  themeId,
+}: EditPotProps): Promise<{ message: string }> =>
+  API.patch(`/pots/${potId}`, { name, target, themeId });
+
 export const deletePot = async ({
   potId,
 }: {
