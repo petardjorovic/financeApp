@@ -10,6 +10,7 @@ import transactionRoutes from "./transaction.routes.js";
 import budgetRoutes from "./budget.routes.js";
 import potsRoutes from "./pots.routes.js";
 import recurringBillsRoutes from "./recurringBill.routes.js";
+import overviewRoutes from "./overview.routes.js";
 
 const routes = Router();
 
@@ -30,5 +31,6 @@ routes.use("/themes", authenticate, themeRoutes);
 routes.use("/budgets", authenticate, budgetRoutes);
 routes.use("/pots", authenticate, potsRoutes);
 routes.use("/recurringBills", authenticate, recurringBillsRoutes);
+routes.use("/overview", authenticate, overviewRoutes);
 
 export default routes;
