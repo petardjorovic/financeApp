@@ -1,7 +1,12 @@
 import type { Pot } from "@/lib/types";
 import { Button } from "./ui/button";
+import { useState } from "react";
+import DepositPotForm from "./DepositPotForm";
+import WithdrawPotForm from "./WithdrawPotForm";
 
 function PotItem({ pot, children }: { pot: Pot; children: React.ReactNode }) {
+  const [isDepositOpen, setIsDepositOpen] = useState<boolean>(false);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState<boolean>(false);
   const progressValue = (pot.currentAmount / pot.target) * 100;
 
   return (
@@ -56,13 +61,32 @@ function PotItem({ pot, children }: { pot: Pot; children: React.ReactNode }) {
       </div>
       {/* BUTTONS */}
       <div className="flex items-center gap-4 w-full">
-        <Button className="rounded-[8px] h-[53px] p-4 bg-Beige-100 text-Grey-900 text-sm leading-[21px] font-semibold flex-1 cursor-pointer transition-colors duration-300 hover:bg-White hover:border hover:border-Grey-500">
+        <Button
+          onClick={() => setIsDepositOpen(true)}
+          className="rounded-[8px] h-[53px] p-4 bg-Beige-100 text-Grey-900 text-sm leading-[21px] font-semibold flex-1 cursor-pointer transition-colors duration-300 hover:bg-White hover:border hover:border-Grey-500"
+        >
           + Add Money
         </Button>
-        <Button className="rounded-[8px] h-[53px] p-4 bg-Beige-100 text-Grey-900 text-sm leading-[21px] font-semibold flex-1 cursor-pointer transition-colors duration-300 hover:bg-White hover:border hover:border-Grey-500">
+        <Button
+          onClick={() => setIsWithdrawOpen(true)}
+          className="rounded-[8px] h-[53px] p-4 bg-Beige-100 text-Grey-900 text-sm leading-[21px] font-semibold flex-1 cursor-pointer transition-colors duration-300 hover:bg-White hover:border hover:border-Grey-500"
+        >
           Withdraw
         </Button>
       </div>
+
+      {/* Deposit / Withdraw forms */}
+      <DepositPotForm
+        isDepositOpen={isDepositOpen}
+        setIsDepositOpen={setIsDepositOpen}
+        pot={pot}
+      />
+
+      <WithdrawPotForm
+        isWithdrawOpen={isWithdrawOpen}
+        setIsWithdrawOpen={setIsWithdrawOpen}
+        pot={pot}
+      />
     </div>
   );
 }

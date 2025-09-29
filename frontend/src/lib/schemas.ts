@@ -162,3 +162,12 @@ export const potSchema = z.object({
     .string()
     .regex(objectIdRegex, { message: "Please select a theme." }),
 });
+
+export const potDepositWithdrawSchema = z.object({
+  amount: z
+    .union([z.number(), z.string()])
+    .transform((val) => Number(val))
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "Amount must be a positive number.",
+    }),
+});
