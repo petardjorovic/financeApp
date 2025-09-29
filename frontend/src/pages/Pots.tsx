@@ -2,6 +2,7 @@ import AddPotForm from "@/components/AddPotForm";
 import PotItem from "@/components/PotItem";
 import PotMoreMenu from "@/components/PotMoreMenu";
 import { Button } from "@/components/ui/button";
+import { useCurrentBalance } from "@/queryHooks/useCurrentBalance";
 import { usePots } from "@/queryHooks/usePots";
 import { useThemes } from "@/queryHooks/useThemes";
 import { Loader2 } from "lucide-react";
@@ -11,8 +12,14 @@ function Pots() {
   const [isAddPotOpen, setIsAddPotOpen] = useState<boolean>(false);
   const { pots, isPending: isPotsLoading, isError: isPotsError } = usePots();
   const { isPending: isThemesLoading, isError: isThemesError } = useThemes();
-  const isLoadingAll = isPotsLoading || isThemesLoading;
-  const isErrorAll = isPotsError || isThemesError;
+  const {
+    currentBalance,
+    isPending: isCurrentBalanceLoading,
+    isError: isCurrentBalanceError,
+  } = useCurrentBalance();
+  const isLoadingAll =
+    isPotsLoading || isThemesLoading || isCurrentBalanceLoading;
+  const isErrorAll = isPotsError || isThemesError || isCurrentBalanceError;
 
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
@@ -40,7 +47,7 @@ function Pots() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {pots?.map((pot) => (
-            <PotItem key={pot._id} pot={pot}>
+            <PotItem key={pot._id} pot={pot} currentBalance={currentBalance}>
               <PotMoreMenu key={pot._id} pot={pot} pots={pots} />
             </PotItem>
           ))}

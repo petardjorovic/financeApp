@@ -78,8 +78,6 @@ export const depositPotHandler = catchErrors(async (req, res) => {
   // return response
   return res.status(OK).json({
     message: "Successfull deposit",
-    pot,
-    transaction,
   });
 });
 

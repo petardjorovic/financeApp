@@ -4,7 +4,15 @@ import { useState } from "react";
 import DepositPotForm from "./DepositPotForm";
 import WithdrawPotForm from "./WithdrawPotForm";
 
-function PotItem({ pot, children }: { pot: Pot; children: React.ReactNode }) {
+function PotItem({
+  pot,
+  children,
+  currentBalance,
+}: {
+  pot: Pot;
+  children: React.ReactNode;
+  currentBalance: number | undefined;
+}) {
   const [isDepositOpen, setIsDepositOpen] = useState<boolean>(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState<boolean>(false);
   const progressValue = (pot.currentAmount / pot.target) * 100;
@@ -80,6 +88,7 @@ function PotItem({ pot, children }: { pot: Pot; children: React.ReactNode }) {
         isDepositOpen={isDepositOpen}
         setIsDepositOpen={setIsDepositOpen}
         pot={pot}
+        currentBalance={currentBalance}
       />
 
       <WithdrawPotForm

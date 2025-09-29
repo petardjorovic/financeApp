@@ -1,6 +1,6 @@
 import { potDepositWithdrawSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
@@ -21,34 +21,77 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import type z from "zod";
 import type { Pot } from "@/lib/types";
+import { useDepositPot } from "@/queryHooks/useDepositPot";
+import { Loader2Icon } from "lucide-react";
+import { useEffect } from "react";
 
 type Props = {
   isDepositOpen: boolean;
   setIsDepositOpen: React.Dispatch<React.SetStateAction<boolean>>;
   pot: Pot;
+  currentBalance: number | undefined;
 };
 
 type depositPotFormValues = z.infer<typeof potDepositWithdrawSchema>;
 
-function DepositPotForm({ isDepositOpen, setIsDepositOpen, pot }: Props) {
+function DepositPotForm({
+  isDepositOpen,
+  setIsDepositOpen,
+  pot,
+  currentBalance,
+}: Props) {
+  const { addPotDeposit, isPending: isAddingDeposit } =
+    useDepositPot(setIsDepositOpen);
   const progressValue = (pot.currentAmount / pot.target) * 100;
   const depositPotForm = useForm({
-    resolver: zodResolver(potDepositWithdrawSchema),
+    resolver: zodResolver(
+      potDepositWithdrawSchema.refine(
+        (data) => data.amount <= (currentBalance ?? 0),
+        {
+          message: `Insufficient funds. Your current balance is $${currentBalance?.toFixed(
+            2
+          )}`,
+          path: ["amount"],
+        }
+      )
+    ),
     defaultValues: {
       amount: "",
     },
   });
+  const { control } = depositPotForm;
+  const currentAmount = useWatch({ control, name: "amount" });
+
+  const getDepositWidth = (
+    progressValue: number,
+    depositAmount: number,
+    target: number
+  ) => {
+    const depositPercent = (depositAmount / target) * 100;
+    if (depositPercent + progressValue > 100) {
+      return 100 - progressValue;
+    }
+
+    return depositPercent;
+  };
 
   const onSubmit = (values: depositPotFormValues) => {
-    console.log(values);
+    addPotDeposit({ potId: pot._id, amount: values.amount });
   };
+
+  useEffect(() => {
+    if (!isDepositOpen) {
+      depositPotForm.reset({
+        amount: "",
+      });
+    }
+  }, [depositPotForm, isDepositOpen]);
 
   return (
     <Dialog
       open={isDepositOpen}
       onOpenChange={(open) => {
-        // if (!isEditingPot) setIsDepositOpen(open);
-        setIsDepositOpen(open);
+        if (!isAddingDeposit) setIsDepositOpen(open);
       }}
     >
       <DialogContent
@@ -80,25 +123,50 @@ function DepositPotForm({ isDepositOpen, setIsDepositOpen, pot }: Props) {
             </span>
             <span className="text-2xl leading-[30px] text-Grey-900 sm:text-[32px] sm:leading-[38px] font-bold">
               $
-              {pot.currentAmount > 0
+              {currentAmount
+                ? (pot.currentAmount + +currentAmount).toFixed(2)
+                : pot.currentAmount > 0
                 ? pot.currentAmount.toFixed(2)
                 : pot.currentAmount}
             </span>
           </div>
           <div className="h-[39px] w-full space-y-[13px]">
             {/* Progress bar */}
-            <div className="w-full rounded-[4px] bg-Beige-100 overflow-hidden h-2">
+            <div className="w-full rounded-[4px] flex gap-[2px] items-center bg-Beige-100 overflow-hidden h-2">
               <div
-                className="rounded-[4px] h-full transition-[width] duration-500 ease-in-out bg-Grey-900"
+                className={`rounded-l-[4px] h-full transition-[width] duration-500 ease-in-out bg-Grey-900`}
                 style={{
-                  //   backgroundColor: `${pot.themeId.color}`,
                   width: `${progressValue}%`,
                 }}
               ></div>
+              {currentAmount && (
+                <div
+                  className={`rounded-r-[4px] h-full transition-[width] duration-500 ease-in-out bg-Green ${
+                    pot.currentAmount <= 0 ? "rounded-l-[4px]" : ""
+                  }`}
+                  style={{
+                    width: `${getDepositWidth(
+                      progressValue,
+                      +currentAmount,
+                      pot.target
+                    )}%`,
+                  }}
+                ></div>
+              )}
             </div>
             <div className="h-[18px] w-full flex items-center justify-between">
-              <span className="text-Green text-xs leading-[18px] font-semibold">
-                {progressValue.toFixed(2)}%
+              <span
+                className={`text-xs leading-[18px] font-semibold ${
+                  currentAmount ? "text-Green" : "text-Grey-900"
+                }`}
+              >
+                {currentAmount
+                  ? (
+                      ((pot.currentAmount + +currentAmount) / pot.target) *
+                      100
+                    ).toFixed(2)
+                  : progressValue.toFixed(2)}
+                %
               </span>
               <span className="text-Grey-500 text-xs leading-[18px]">
                 Target of ${pot.target.toFixed(2)}
@@ -142,14 +210,14 @@ function DepositPotForm({ isDepositOpen, setIsDepositOpen, pot }: Props) {
 
             <Button
               type="submit"
-              //   disabled={isEditingPot}
+              disabled={isAddingDeposit}
               className="w-full mt-5 h-[53px] rounded-[8px] bg-Grey-900 text-White p-4 text-sm font-semibold cursor-pointer"
             >
-              {/* {isEditingPot ? (
+              {isAddingDeposit ? (
                 <Loader2Icon className=" h-4 w-4 animate-spin" />
-              ) : ( */}
-              Confirm Addition
-              {/* )} */}
+              ) : (
+                "Confirm Addition"
+              )}
             </Button>
           </form>
         </Form>

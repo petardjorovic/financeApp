@@ -193,6 +193,22 @@ export const deletePot = async ({
   potId: string;
 }): Promise<{ message: string }> => API.delete(`/pots/${potId}`);
 
+export type DepositPotProps = {
+  potId: string;
+  amount: number;
+};
+
+export const depositPot = async ({
+  potId,
+  amount,
+}: DepositPotProps): Promise<{ message: string }> =>
+  API.post(`/pots/${potId}/deposit`, { amount });
+
 //* RECURRING BILLS
 export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
   API.get("/recurringBills?raw=true");
+
+//* OVERVIEW
+export const getCurrentBalance = async (): Promise<{
+  currentBalance: number;
+}> => API.get("/overview/currentBalance");
