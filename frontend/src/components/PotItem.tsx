@@ -59,7 +59,7 @@ function PotItem({
           </div>
           <div className="h-[18px] w-full flex items-center justify-between">
             <span className="text-Grey-500 text-xs leading-[18px] font-semibold">
-              {progressValue.toFixed(2)}%
+              {progressValue > 0 ? progressValue.toFixed(2) : progressValue}%
             </span>
             <span className="text-Grey-500 text-xs leading-[18px]">
               Target of ${pot.target.toFixed(2)}
@@ -77,6 +77,7 @@ function PotItem({
         </Button>
         <Button
           onClick={() => setIsWithdrawOpen(true)}
+          // disabled={pot.currentAmount <= 0}
           className="rounded-[8px] h-[53px] p-4 bg-Beige-100 text-Grey-900 text-sm leading-[21px] font-semibold flex-1 cursor-pointer transition-colors duration-300 hover:bg-White hover:border hover:border-Grey-500"
         >
           Withdraw

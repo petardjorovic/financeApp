@@ -1,6 +1,6 @@
-import { potDepositWithdrawSchema } from "@/lib/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { IoIosCloseCircleOutline } from "react-icons/io";
 import {
   Form,
   FormControl,
@@ -19,11 +18,12 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import type z from "zod";
-import type { Pot } from "@/lib/types";
+import { potDepositWithdrawSchema } from "@/lib/schemas";
 import { useDepositPot } from "@/queryHooks/useDepositPot";
 import { Loader2Icon } from "lucide-react";
-import { useEffect } from "react";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import type z from "zod";
+import type { Pot } from "@/lib/types";
 
 type Props = {
   isDepositOpen: boolean;
@@ -110,7 +110,7 @@ function DepositPotForm({
               />
             </div>
           </DialogTitle>
-          <DialogDescription className="text-sm leading-[21px] text-Grey-500 py-0 my-0">
+          <DialogDescription className="text-sm leading-[21px] text-Grey-500 py-0 my-0 text-left">
             Add money to your pot to keep it separete from your main balance. As
             soon as you add this money, it will be deducted from your current
             balance.
@@ -123,7 +123,7 @@ function DepositPotForm({
             </span>
             <span className="text-2xl leading-[30px] text-Grey-900 sm:text-[32px] sm:leading-[38px] font-bold">
               $
-              {currentAmount
+              {currentAmount && +currentAmount > 0
                 ? (pot.currentAmount + +currentAmount).toFixed(2)
                 : pot.currentAmount > 0
                 ? pot.currentAmount.toFixed(2)
@@ -157,15 +157,19 @@ function DepositPotForm({
             <div className="h-[18px] w-full flex items-center justify-between">
               <span
                 className={`text-xs leading-[18px] font-semibold ${
-                  currentAmount ? "text-Green" : "text-Grey-900"
+                  currentAmount && +currentAmount > 0
+                    ? "text-Green"
+                    : "text-Grey-900"
                 }`}
               >
-                {currentAmount
+                {currentAmount && +currentAmount > 0
                   ? (
                       ((pot.currentAmount + +currentAmount) / pot.target) *
                       100
                     ).toFixed(2)
-                  : progressValue.toFixed(2)}
+                  : progressValue > 0
+                  ? progressValue.toFixed(2)
+                  : progressValue}
                 %
               </span>
               <span className="text-Grey-500 text-xs leading-[18px]">
@@ -200,6 +204,7 @@ function DepositPotForm({
                         className="pr-5 pl-10 py-3 h-[45px] border border-Grey-300 cursor-pointer"
                         placeholder="e.g. 200"
                         required
+                        min={0}
                       />
                     </div>
                   </FormControl>

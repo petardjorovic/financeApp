@@ -95,7 +95,5 @@ export const withdrawPotHandler = catchErrors(async (req, res) => {
 
   return res.status(OK).json({
     message: "Successfull withdraw",
-    pot,
-    transaction,
   });
 });

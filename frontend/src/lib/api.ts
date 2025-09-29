@@ -204,6 +204,17 @@ export const depositPot = async ({
 }: DepositPotProps): Promise<{ message: string }> =>
   API.post(`/pots/${potId}/deposit`, { amount });
 
+export type WithdrawPotProps = {
+  potId: string;
+  amount: number;
+};
+
+export const withdrawPot = async ({
+  potId,
+  amount,
+}: WithdrawPotProps): Promise<{ message: string }> =>
+  API.post(`/pots/${potId}/withdraw`, { amount });
+
 //* RECURRING BILLS
 export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
   API.get("/recurringBills?raw=true");

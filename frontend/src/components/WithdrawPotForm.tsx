@@ -2,7 +2,7 @@ import { potDepositWithdrawSchema } from "@/lib/schemas";
 import type { Pot } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +21,9 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useEffect } from "react";
+import { useWithdrawPot } from "@/queryHooks/useWithdrawPot";
+import { Loader2Icon } from "lucide-react";
 
 type Props = {
   isWithdrawOpen: boolean;
@@ -31,23 +34,42 @@ type Props = {
 type withdrawPotFormValues = z.infer<typeof potDepositWithdrawSchema>;
 
 function WithdrawPotForm({ isWithdrawOpen, setIsWithdrawOpen, pot }: Props) {
+  const { potWithdraw, isPending: isWithdrawingPot } =
+    useWithdrawPot(setIsWithdrawOpen);
   const progressValue = (pot.currentAmount / pot.target) * 100;
   const withdrawPotForm = useForm({
-    resolver: zodResolver(potDepositWithdrawSchema),
+    resolver: zodResolver(
+      potDepositWithdrawSchema.refine(
+        (data) => data.amount <= pot.currentAmount,
+        {
+          message: `You cannot withdraw more than $${pot.currentAmount}`,
+          path: ["amount"],
+        }
+      )
+    ),
     defaultValues: {
       amount: "",
     },
   });
+  const { control } = withdrawPotForm;
+  const currentAmount = useWatch({ control, name: "amount" });
 
   const onSubmit = (values: withdrawPotFormValues) => {
-    console.log(values);
+    potWithdraw({ potId: pot._id, amount: values.amount });
   };
+
+  useEffect(() => {
+    if (!isWithdrawOpen) {
+      withdrawPotForm.reset({
+        amount: "",
+      });
+    }
+  }, [isWithdrawOpen, withdrawPotForm]);
   return (
     <Dialog
       open={isWithdrawOpen}
       onOpenChange={(open) => {
-        // if (!isEditingPot) setIsDepositOpen(open);
-        setIsWithdrawOpen(open);
+        if (!isWithdrawingPot) setIsWithdrawOpen(open);
       }}
     >
       <DialogContent
@@ -66,8 +88,8 @@ function WithdrawPotForm({ isWithdrawOpen, setIsWithdrawOpen, pot }: Props) {
               />
             </div>
           </DialogTitle>
-          <DialogDescription className="text-sm leading-[21px] text-Grey-500 py-0 my-0">
-            AWithdraw from your pot to put money back in your main balance. This
+          <DialogDescription className="text-sm leading-[21px] text-Grey-500 py-0 my-0 text-left">
+            Withdraw from your pot to put money back in your main balance. This
             will reduce the amount you have in this pot.
           </DialogDescription>
         </DialogHeader>
@@ -78,25 +100,68 @@ function WithdrawPotForm({ isWithdrawOpen, setIsWithdrawOpen, pot }: Props) {
             </span>
             <span className="text-2xl leading-[30px] text-Grey-900 sm:text-[32px] sm:leading-[38px] font-bold">
               $
-              {pot.currentAmount > 0
+              {currentAmount && +currentAmount > 0
+                ? pot.currentAmount - +currentAmount > 0
+                  ? (pot.currentAmount - +currentAmount).toFixed(2)
+                  : 0
+                : pot.currentAmount > 0
                 ? pot.currentAmount.toFixed(2)
                 : pot.currentAmount}
             </span>
           </div>
           <div className="h-[39px] w-full space-y-[13px]">
             {/* Progress bar */}
-            <div className="w-full rounded-[4px] bg-Beige-100 overflow-hidden h-2">
+            <div className="w-full rounded-[4px] flex gap-[2px] items-center bg-Beige-100 overflow-hidden h-2">
+              {/* prvi bar */}
               <div
-                className="rounded-[4px] h-full transition-[width] duration-500 ease-in-out bg-Grey-900"
+                className="rounded-l-[4px] h-full transition-[width] duration-500 ease-in-out bg-Grey-900"
                 style={{
-                  //   backgroundColor: `${pot.themeId.color}`,
-                  width: `${progressValue}%`,
+                  width: `${
+                    currentAmount && +currentAmount > 0
+                      ? progressValue - (+currentAmount / pot.target) * 100 > 0
+                        ? progressValue - (+currentAmount / pot.target) * 100
+                        : 0
+                      : progressValue
+                  }%`,
+                }}
+              ></div>
+              {/* drugi bar */}
+              <div
+                className={`rounded-r-[4px] h-full transition-[width] duration-500 ease-in-out bg-Red ${
+                  progressValue - (+currentAmount / pot.target) * 100 <= 0
+                    ? "rounded-l-[4px]"
+                    : ""
+                }`}
+                style={{
+                  width: `${
+                    +currentAmount > pot.currentAmount
+                      ? progressValue
+                      : (+currentAmount / pot.target) * 100
+                  }%`,
                 }}
               ></div>
             </div>
             <div className="h-[18px] w-full flex items-center justify-between">
-              <span className="text-Green text-xs leading-[18px] font-semibold">
-                {progressValue.toFixed(2)}%
+              <span
+                className={`${
+                  currentAmount && +currentAmount > 0
+                    ? +currentAmount <= pot.currentAmount
+                      ? "text-Red"
+                      : "text-Grey-900"
+                    : "text-Grey-900"
+                } text-xs leading-[18px] font-semibold`}
+              >
+                {currentAmount && +currentAmount > 0
+                  ? +currentAmount < pot.currentAmount
+                    ? (
+                        progressValue -
+                        (+currentAmount / pot.target) * 100
+                      ).toFixed(2)
+                    : 0
+                  : progressValue > 0
+                  ? progressValue.toFixed(2)
+                  : progressValue}
+                %
               </span>
               <span className="text-Grey-500 text-xs leading-[18px]">
                 Target of ${pot.target.toFixed(2)}
@@ -126,6 +191,7 @@ function WithdrawPotForm({ isWithdrawOpen, setIsWithdrawOpen, pot }: Props) {
                       <Input
                         type="number"
                         step="0.01"
+                        min={0}
                         {...field}
                         className="pr-5 pl-10 py-3 h-[45px] border border-Grey-300 cursor-pointer"
                         placeholder="e.g. 200"
@@ -140,14 +206,14 @@ function WithdrawPotForm({ isWithdrawOpen, setIsWithdrawOpen, pot }: Props) {
 
             <Button
               type="submit"
-              //   disabled={isEditingPot}
+              disabled={isWithdrawingPot}
               className="w-full mt-5 h-[53px] rounded-[8px] bg-Grey-900 text-White p-4 text-sm font-semibold cursor-pointer"
             >
-              {/* {isEditingPot ? (
+              {isWithdrawingPot ? (
                 <Loader2Icon className=" h-4 w-4 animate-spin" />
-              ) : ( */}
-              Confirm Withdrawal
-              {/* )} */}
+              ) : (
+                "Confirm Withdrawal"
+              )}
             </Button>
           </form>
         </Form>
