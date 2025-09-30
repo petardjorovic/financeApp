@@ -46,8 +46,8 @@ function PotItem({
               : pot.currentAmount}
           </span>
         </div>
+        {/* Progress bar */}
         <div className="h-[39px] w-full space-y-[13px]">
-          {/* Progress bar */}
           <div className="w-full rounded-[4px] bg-Beige-100 overflow-hidden h-2">
             <div
               className="rounded-[4px] h-full transition-[width] duration-500 ease-in-out"

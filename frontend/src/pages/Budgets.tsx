@@ -46,9 +46,9 @@ function Budgets() {
         <div className="flex flex-col lg:flex-row w-full gap-6">
           <p>Failed to load data.</p>
         </div>
-      ) : (
-        <div className="flex flex-col lg:flex-row w-full gap-6">
-          {budgets && <BudgetChart budgets={budgets} />}
+      ) : budgets.length > 0 ? (
+        <div className="flex flex-col lg:flex-row w-full lg:items-start gap-6">
+          <BudgetChart budgets={budgets} />
           <div className="space-y-6 flex flex-1 flex-col">
             {budgets?.map((budget) => (
               <BudgetItem key={budget._id} budget={budget}>
@@ -61,6 +61,11 @@ function Budgets() {
             ))}
           </div>
         </div>
+      ) : (
+        <p className="text-center">
+          No Budgets to display. Click '+ Add New Budget' button to add your
+          first one.
+        </p>
       )}
 
       <AddBudgetForm

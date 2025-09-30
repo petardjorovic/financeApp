@@ -10,7 +10,7 @@ export const useDeletePot = (
   const { mutate: removePot, ...rest } = useMutation<
     { message: string },
     Error,
-    { potId: string }
+    { id: string }
   >({
     mutationFn: deletePot,
     onSuccess: (data) => {

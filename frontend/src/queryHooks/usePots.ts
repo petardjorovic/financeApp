@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 export const POTS = "pots";
 
 export const usePots = () => {
-  const { data: pots, ...rest } = useQuery<Pot[], Error>({
+  const { data: pots = [], ...rest } = useQuery<Pot[], Error>({
     queryKey: [POTS],
     queryFn: getPots,
   });

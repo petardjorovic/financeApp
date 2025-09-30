@@ -1,5 +1,3 @@
-import type { Pot } from "@/lib/types";
-import { Loader2Icon, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -7,19 +5,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "./ui/alert-dialog";
-import { IoIosCloseCircleOutline } from "react-icons/io";
-import { useDeletePot } from "@/queryHooks/useDeletePot";
 import EditPotForm from "./EditPotForm";
+import DeleteModal from "./DeleteModal";
+import { useDeletePot } from "@/queryHooks/useDeletePot";
+import type { Pot } from "@/lib/types";
+import { MoreHorizontal } from "lucide-react";
 
 type Props = {
   pot: Pot;
@@ -51,52 +41,17 @@ function PotMoreMenu({ pot, pots }: Props) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* DELETE BUDGET MODAL */}
-      <AlertDialog
-        open={isOpenDelete}
-        onOpenChange={(open) => {
-          if (!isDeletingPot) setIsOpenDelete(open);
-        }}
-      >
-        <AlertDialogContent className="h-auto px-5 py-6 w-[560px] sm:h-[278px] sm:px-8 sm:py-8 rounded-[12px]">
-          <AlertDialogHeader className="">
-            <AlertDialogTitle>
-              <div className="flex items-center justify-between gap-1">
-                <span className="text-[18px] leading-[22px] sm:text-[28px] sm:leading-[32px] tracking-[0px] font-bold">
-                  Delete "{pot.name}"?
-                </span>
-                <IoIosCloseCircleOutline
-                  className="fill-Grey-500 w-[25px] h-[25px]"
-                  onClick={() => setIsOpenDelete(false)}
-                />
-              </div>
-            </AlertDialogTitle>
+      {/* DELETE POT MODAL */}
+      <DeleteModal
+        isOpenModal={isOpenDelete}
+        setIsOpenModal={setIsOpenDelete}
+        id={pot._id}
+        label={pot.name}
+        isDeleting={isDeletingPot}
+        removeFunc={removePot}
+      />
 
-            <AlertDialogDescription className="text-sm leading-[18px] tracking-[0px] text-Grey-500">
-              Are you sure you want to delete this pot? This action cannot be
-              reversed, and all the data inside it will be removed forever.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="">
-            <AlertDialogCancel className="text-sm leading-[21px] tracking-[0px] text-Grey-500 hover:bg-White hover:text-Grey-500 border-none p-[0px] shadow-none cursor-pointer">
-              No, Go Back
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-Red w-full h-[53] rounded-[8px] p-4 cursor-pointer hover:bg-Red text-sm leading-[21px] tracking-[0px] font-semibold"
-              onClick={() => removePot({ potId: pot._id })}
-              disabled={isDeletingPot}
-            >
-              {isDeletingPot ? (
-                <Loader2Icon className="h-4 w-4 animate-spin" />
-              ) : (
-                "Yes, Confirm Delete"
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* EFIT POT MODAL */}
+      {/* EDIT POT MODAL */}
       <EditPotForm
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}

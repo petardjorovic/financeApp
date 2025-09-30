@@ -6,7 +6,7 @@ export const BUDGETS = "budgets";
 
 export const useBudgets = () => {
   const {
-    data: budgets,
+    data: budgets = [],
     isLoading,
     ...rest
   } = useQuery<Budget[], Error>({

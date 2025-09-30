@@ -120,11 +120,10 @@ export const editTransaction = async (
 };
 
 export const deleteTransaction = async ({
-  transactionId,
+  id,
 }: {
-  transactionId: string;
-}): Promise<{ message: string }> =>
-  API.delete(`/transactions/${transactionId}`);
+  id: string;
+}): Promise<{ message: string }> => API.delete(`/transactions/${id}`);
 
 //* BUDGETS
 export const getBudgets = async (): Promise<Budget[]> => API.get("/budgets");
@@ -155,10 +154,10 @@ export const editBudget = async ({
   API.patch(`/budgets/${budgetId}`, { categoryId, limit, themeId });
 
 export const deleteBudget = async ({
-  budgetId,
+  id,
 }: {
-  budgetId: string;
-}): Promise<{ message: string }> => API.delete(`/budgets/${budgetId}`);
+  id: string;
+}): Promise<{ message: string }> => API.delete(`/budgets/${id}`);
 
 //* POTS
 export const getPots = async (): Promise<Pot[]> => API.get("/pots");
@@ -188,10 +187,10 @@ export const editPot = async ({
   API.patch(`/pots/${potId}`, { name, target, themeId });
 
 export const deletePot = async ({
-  potId,
+  id,
 }: {
-  potId: string;
-}): Promise<{ message: string }> => API.delete(`/pots/${potId}`);
+  id: string;
+}): Promise<{ message: string }> => API.delete(`/pots/${id}`);
 
 export type DepositPotProps = {
   potId: string;

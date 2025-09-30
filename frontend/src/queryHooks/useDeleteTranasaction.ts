@@ -11,8 +11,8 @@ export const useDeleteTransaction = (
     mutate: delTransaction,
     isPending: isDeleting,
     ...rest
-  } = useMutation<{ message: string }, Error, { transactionId: string }>({
-    mutationFn: (transactionId) => deleteTransaction(transactionId),
+  } = useMutation<{ message: string }, Error, { id: string }>({
+    mutationFn: deleteTransaction,
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: [TRANSACTIONS] });

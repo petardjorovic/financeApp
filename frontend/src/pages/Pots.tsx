@@ -44,7 +44,7 @@ function Pots() {
         <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
           <p>Failed to load data.</p>
         </div>
-      ) : (
+      ) : pots.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {pots?.map((pot) => (
             <PotItem key={pot._id} pot={pot} currentBalance={currentBalance}>
@@ -52,6 +52,11 @@ function Pots() {
             </PotItem>
           ))}
         </div>
+      ) : (
+        <p className="text-center">
+          No Pots to display. Click '+ Add New Pot' button to add your first
+          one.
+        </p>
       )}
 
       <AddPotForm

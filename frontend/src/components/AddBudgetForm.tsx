@@ -79,7 +79,7 @@ function AddBudgetForm({
                 Add New Budget
               </span>
               <IoIosCloseCircleOutline
-                className="fill-Grey-500 w-[25px] h-[25px]"
+                className="fill-Grey-500 w-[25px] h-[25px] cursor-pointer"
                 onClick={() => setIsAddBudgetOpen(false)}
               />
             </div>

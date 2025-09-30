@@ -60,7 +60,7 @@ function Transactions() {
             <p>Failed to load data.</p>
           </div>
         </>
-      ) : (
+      ) : data?.transactions && data.transactions.length > 0 ? (
         <>
           <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
             {/* Table operations */}
@@ -73,16 +73,19 @@ function Transactions() {
             </div>
 
             {/* Transaction table */}
-            {data?.transactions.length ? (
+            {data?.transactions && (
               <TransactionaTable transactions={data.transactions} />
-            ) : (
-              <p className="text-center">There are no transactions</p>
             )}
 
             {/* Pagination */}
             <Pagination totalPages={data?.pages} />
           </div>
         </>
+      ) : (
+        <p className="text-center">
+          No Transactions to display. Click '+ Add Transaction' button to add
+          your first one.
+        </p>
       )}
     </main>
   );

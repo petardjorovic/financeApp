@@ -11,7 +11,7 @@ export const useDeleteBudget = (
     mutate: delBudget,
     isPending: isDeletingBudget,
     ...rest
-  } = useMutation<{ message: string }, Error, { budgetId: string }>({
+  } = useMutation<{ message: string }, Error, { id: string }>({
     mutationFn: deleteBudget,
     onSuccess: (data) => {
       toast.success(data.message);

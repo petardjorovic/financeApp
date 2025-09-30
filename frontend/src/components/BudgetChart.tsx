@@ -21,7 +21,7 @@ function BudgetChart({ budgets }: { budgets: Budget[] }) {
     budgets?.reduce((total, curr) => total + curr.limit, 0) ?? 0;
 
   return (
-    <div className="bg-White rounded-[12px] px-5 py-6 md:px-8 md:py-8 flex items-center flex-col md:flex-row lg:flex-col md:justify-center h-[583px] md:h-[344px] lg:h-[599px] gap-8 lg:w-[428px]">
+    <div className="bg-White rounded-[12px] px-5 py-6 md:px-8 md:py-8 flex items-center flex-col md:flex-row lg:flex-col md:justify-center h-auto gap-8 lg:w-[428px]">
       {/* chart */}
       <div className="flex items-center justify-center">
         <ResponsiveContainer width={250} height={250}>

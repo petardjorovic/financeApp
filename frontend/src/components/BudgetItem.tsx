@@ -97,33 +97,39 @@ function BudgetItem({
           </span>
         </div>
         {/* Transactions */}
-        <div className="w-full">
-          {budget.latestSpending.map((t) => (
-            <div
-              key={t._id}
-              className="flex items-center justify-between w-full h-[64px] first:h-[52px] last:h-[52px] not-first:pt-3 not-last:pb-3 not-last:border-b border-b-Grey-[#696868]"
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={expense}
-                  alt="expense"
-                  className="w-8 h-8 rounded-full bg-Red object-cover hidden md:block"
-                />
-                <span className="text-sm leading-[21px] text-Grey-900 font-semibold">
-                  {t.account}
-                </span>
+        {budget.latestSpending.length > 0 ? (
+          <div className="w-full">
+            {budget.latestSpending.map((t) => (
+              <div
+                key={t._id}
+                className="flex items-center justify-between w-full h-[64px] first:h-[52px] last:h-[52px] not-first:pt-3 not-last:pb-3 not-last:border-b border-b-Grey-[#696868]"
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    src={expense}
+                    alt="expense"
+                    className="w-8 h-8 rounded-full bg-Red object-cover hidden md:block"
+                  />
+                  <span className="text-sm leading-[21px] text-Grey-900 font-semibold">
+                    {t.account}
+                  </span>
+                </div>
+                <div className="h-full flex flex-col gap-y-1">
+                  <span className="text-xs text-Grey-900 leading-[18px] font-semibold text-right">
+                    -${t.amount}.00
+                  </span>
+                  <span className="text-xs text-Grey-500 leading-[18px] text-right">
+                    {formatDate(t.date)}
+                  </span>
+                </div>
               </div>
-              <div className="h-full flex flex-col gap-y-1">
-                <span className="text-xs text-Grey-900 leading-[18px] font-semibold text-right">
-                  -${t.amount}.00
-                </span>
-                <span className="text-xs text-Grey-500 leading-[18px] text-right">
-                  {formatDate(t.date)}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-xs text-Grey-900">
+            There are no transactions for this budget category yet.
+          </p>
+        )}
       </div>
     </div>
   );
