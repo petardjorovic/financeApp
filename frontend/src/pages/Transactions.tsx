@@ -10,7 +10,6 @@ import { useTransactions } from "@/queryHooks/useTransactions";
 import { useCategories } from "@/queryHooks/useCategories";
 import { useTransFilters } from "@/contexts/TransFilterContext";
 import { Loader2 } from "lucide-react";
-import transactionIcon from "../assets/images/icon-nav-transactions-white.svg";
 
 function Transactions() {
   const navigate = useNavigate();
@@ -44,9 +43,7 @@ function Transactions() {
           className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] h-[53px] hover:bg-Grey-500 transition-colors duration-300 cursor-pointer"
           onClick={() => navigate("/transaction/add")}
         >
-          +{" "}
-          <img src={transactionIcon} alt="transactions" className="sm:hidden" />{" "}
-          <span className="hidden sm:inline-block">Add Transaction</span>
+          Add Transaction
         </Button>
       </div>
       {/* Transaction content */}
