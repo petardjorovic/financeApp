@@ -14,10 +14,10 @@ const getSortByTerm = (sort: string) => {
       sortBy = { name: -1 };
       break;
     case "Highest":
-      sortBy = { amount: -1 };
+      sortBy = { paidAmountThisMonth: -1 };
       break;
     case "Lowest":
-      sortBy = { amount: 1 };
+      sortBy = { paidAmountThisMonth: 1 };
       break;
     default:
       sortBy = { dueDate: -1 };

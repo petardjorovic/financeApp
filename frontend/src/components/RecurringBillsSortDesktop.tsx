@@ -6,13 +6,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useTransFilters } from "@/contexts/TransFilterContext";
+import { useRecurringBillsFilters } from "@/contexts/RecurringBillsFilterContext";
 import arrowDown from "../assets/images/arrow-down.svg";
 
 const sortOptions = ["Latest", "Oldest", "A-Z", "Z-A", "Highest", "Lowest"];
 
-function DesktopSortBySelect() {
-  const { sortBy, setSortByTerm } = useTransFilters();
+function RecurringBillsSortDesktop() {
+  const { sortBy, setSortByTerm } = useRecurringBillsFilters();
 
   return (
     <>
@@ -50,4 +50,4 @@ function DesktopSortBySelect() {
   );
 }
 
-export default DesktopSortBySelect;
+export default RecurringBillsSortDesktop;

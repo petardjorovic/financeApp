@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { RecurringBill } from "@/lib/types";
+import type { RawRecurringBill } from "@/lib/types";
 
 type EditFormValues = {
   type: "income" | "expense";
@@ -32,7 +32,7 @@ function RecurringBillSelect({
   recurringBills,
 }: {
   form: ReturnType<typeof useForm<EditFormValues>>;
-  recurringBills?: RecurringBill[];
+  recurringBills?: RawRecurringBill[];
 }) {
   const { control, setValue } = form;
 

@@ -7,12 +7,12 @@ import {
   SelectTriggerIcon,
 } from "./ui/select";
 import sortByIcon from "../assets/images/sortBy.svg";
-import { useTransFilters } from "@/contexts/TransFilterContext";
+import { useRecurringBillsFilters } from "@/contexts/RecurringBillsFilterContext";
 
 const sortOptions = ["Latest", "Oldest", "A-Z", "Z-A", "Highest", "Lowest"];
 
-function MobileSortBySelect() {
-  const { sortBy, setSortByTerm } = useTransFilters();
+function RecurringBillsSortMobile() {
+  const { sortBy, setSortByTerm } = useRecurringBillsFilters();
 
   return (
     <>
@@ -52,4 +52,4 @@ function MobileSortBySelect() {
   );
 }
 
-export default MobileSortBySelect;
+export default RecurringBillsSortMobile;

@@ -10,6 +10,7 @@ import queryClient from "./config/queryClient.ts";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import { TransFiltersProvider } from "./contexts/TransFiltersProvider.tsx";
+import RecurringBillsFiltersProvider from "./contexts/RecurringBillsFiltersProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,7 +22,9 @@ createRoot(document.getElementById("root")!).render(
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <TransFiltersProvider>
-          <App />
+          <RecurringBillsFiltersProvider>
+            <App />
+          </RecurringBillsFiltersProvider>
         </TransFiltersProvider>
         <Toaster
           position="top-center"

@@ -3,6 +3,7 @@ import type {
   Budget,
   Category,
   Pot,
+  RawRecurringBill,
   RecurringBill,
   Theme,
   Transaction,
@@ -215,8 +216,21 @@ export const withdrawPot = async ({
   API.post(`/pots/${potId}/withdraw`, { amount });
 
 //* RECURRING BILLS
-export const getRawRecurringBills = async (): Promise<RecurringBill[]> =>
+export const getRawRecurringBills = async (): Promise<RawRecurringBill[]> =>
   API.get("/recurringBills?raw=true");
+
+export type GetRecurringBillsProps = {
+  sortBy?: string;
+  search?: string;
+};
+
+export const getRecurringBills = async ({
+  sortBy,
+  search,
+}: GetRecurringBillsProps): Promise<RecurringBill[]> => {
+  const searchTerm = search ? `&search=${search}` : "";
+  return API.get(`/recurringBills?sort=${sortBy}${searchTerm}`);
+};
 
 //* OVERVIEW
 export const getCurrentBalance = async (): Promise<{

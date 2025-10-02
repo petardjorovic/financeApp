@@ -32,7 +32,9 @@ function App() {
         />
         <Route path="budgets" element={<Budgets />} />
         <Route path="pots" element={<Pots />} />
+
         <Route path="recurringbills" element={<RecurringBills />} />
+
         <Route path="profile" element={<Profile />} />
       </Route>
       <Route path="/login" element={<Login />} />

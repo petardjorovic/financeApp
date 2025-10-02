@@ -1,14 +1,16 @@
 import { getRawRecurringBills } from "@/lib/api";
-import type { RecurringBill } from "@/lib/types";
+import type { RawRecurringBill } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
+
+export const RAW_RECURRING_BILLS = "rawRecurringBills";
 
 export const useRawRecurringBills = (isRecurring: string) => {
   const {
     data: recurringBills,
     isLoading: isRecuringLoading,
     ...rest
-  } = useQuery<RecurringBill[], Error>({
-    queryKey: ["rawRecurringBills", isRecurring],
+  } = useQuery<RawRecurringBill[], Error>({
+    queryKey: [RAW_RECURRING_BILLS, isRecurring],
     queryFn: getRawRecurringBills,
     enabled: isRecurring === "true",
   });

@@ -57,14 +57,49 @@ export const getRecurringBills = async ({
         },
       },
       {
+        $lookup: {
+          from: "transactions",
+          let: { billId: "$_id", userId: "$userId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$userId", "$$userId"] },
+                    { $eq: ["$recurringBillId", "$$billId"] },
+                    { $lt: ["$date", start] }, // samo pre pocetka tekuceg meseca
+                  ],
+                },
+              },
+            },
+            { $sort: { date: -1 } }, // poslednja pre ovog meseca
+            { $limit: 1 },
+            { $project: { amount: 1, date: 1, _id: 0 } },
+          ],
+          as: "lastTransactionBeforeThisMonth",
+        },
+      },
+      {
         $addFields: {
           isPaidThisMonth: { $gt: [{ $size: "$paidData" }, 0] },
           paidAmountThisMonth: {
             $ifNull: [{ $arrayElemAt: ["$paidData.totalPaid", 0] }, 0],
           },
+          lastTransactionAmount: {
+            $ifNull: [
+              { $arrayElemAt: ["$lastTransactionBeforeThisMonth.amount", 0] },
+              0,
+            ],
+          },
+          lastTransactionDate: {
+            $ifNull: [
+              { $arrayElemAt: ["$lastTransactionBeforeThisMonth.date", 0] },
+              null,
+            ],
+          },
         },
       },
-      { $project: { paidData: 0 } },
+      { $project: { paidData: 0, lastTransactionBeforeThisMonth: 0 } },
       { $sort: sortStage },
     ];
 

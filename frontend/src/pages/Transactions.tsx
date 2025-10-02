@@ -5,7 +5,7 @@ import SearchInput from "@/components/SearchInput";
 import SortByTransactions from "@/components/SortByTransactions";
 import CategoryFilter from "@/components/CategoryFilter";
 import Pagination from "@/components/Pagination";
-import { Button } from "@/components/ui/button";
+import PageHeader from "@/components/PageHeader";
 import { useTransactions } from "@/queryHooks/useTransactions";
 import { useCategories } from "@/queryHooks/useCategories";
 import { useTransFilters } from "@/contexts/TransFilterContext";
@@ -35,17 +35,11 @@ function Transactions() {
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
       {/* Header */}
-      <div className="w-full h-[56px] flex items-center justify-between">
-        <h1 className="text-[32px] leading-[38px] font-bold text-Grey-900">
-          Transactions
-        </h1>
-        <Button
-          className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] h-[53px] hover:bg-Grey-500 transition-colors duration-300 cursor-pointer"
-          onClick={() => navigate("/transaction/add")}
-        >
-          Add Transaction
-        </Button>
-      </div>
+      <PageHeader
+        label="Transactions"
+        buttonLabel="Add Transaction"
+        onButtonClick={() => navigate("/transaction/add")}
+      />
       {/* Transaction content */}
       {isLoadingAll ? (
         <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 items-center justify-center">
@@ -80,8 +74,8 @@ function Transactions() {
         </>
       ) : (
         <p className="text-center">
-          No Transactions to display. Click '+ Add Transaction' button to add
-          your first one.
+          No Transactions to display. Click 'Add Transaction' button to add your
+          first one.
         </p>
       )}
     </main>

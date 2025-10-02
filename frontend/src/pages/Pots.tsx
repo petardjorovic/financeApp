@@ -1,12 +1,12 @@
+import { useState } from "react";
 import AddPotForm from "@/components/AddPotForm";
+import PageHeader from "@/components/PageHeader";
 import PotItem from "@/components/PotItem";
 import PotMoreMenu from "@/components/PotMoreMenu";
-import { Button } from "@/components/ui/button";
 import { useCurrentBalance } from "@/queryHooks/useCurrentBalance";
 import { usePots } from "@/queryHooks/usePots";
 import { useThemes } from "@/queryHooks/useThemes";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
 
 function Pots() {
   const [isAddPotOpen, setIsAddPotOpen] = useState<boolean>(false);
@@ -24,17 +24,11 @@ function Pots() {
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
       {/* Header */}
-      <div className="w-full h-[56px] flex items-center justify-between">
-        <h1 className="text-[32px] leading-[38px] font-bold text-Grey-900">
-          Pots
-        </h1>
-        <Button
-          onClick={() => setIsAddPotOpen(true)}
-          className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[53px] hover:bg-Grey-500 transition-colors duration-300"
-        >
-          Add Pot
-        </Button>
-      </div>
+      <PageHeader
+        label="Pots"
+        buttonLabel="Add Pot"
+        onButtonClick={() => setIsAddPotOpen(true)}
+      />
       {/* Pots items  */}
       {isLoadingAll ? (
         <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 items-center justify-center">
@@ -54,8 +48,7 @@ function Pots() {
         </div>
       ) : (
         <p className="text-center">
-          No Pots to display. Click '+ Add New Pot' button to add your first
-          one.
+          No Pots to display. Click 'Add Pot' button to add your first one.
         </p>
       )}
 

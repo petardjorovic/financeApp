@@ -31,7 +31,7 @@ export type Category = {
   type: "income" | "expense";
 };
 
-export type RecurringBill = {
+export type RawRecurringBill = {
   _id: string;
   userId: string;
   name: string;
@@ -40,8 +40,13 @@ export type RecurringBill = {
   createdAt: string;
   updatedAt: string;
   __v: number;
+};
+
+export type RecurringBill = RawRecurringBill & {
   isPaidThisMonth: boolean;
   paidAmountThisMonth: number;
+  lastTransactionAmount: number;
+  lastTransactionDate: string;
 };
 
 export type Budget = {

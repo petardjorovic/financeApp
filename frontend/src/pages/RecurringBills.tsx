@@ -1,28 +1,65 @@
+import PageHeader from "@/components/PageHeader";
+import RecurringBillsSearchInput from "@/components/RecurringBillsSearchInput";
 import RecurringBillsSummary from "@/components/RecurringBillsSummary";
+import RecurringBillsTable from "@/components/RecurringBillsTable";
+import SortByRecurringBills from "@/components/SortByRecurringBills";
 import TotalRecurringBills from "@/components/TotalRecurringBills";
-import { Button } from "@/components/ui/button";
+import { useRecurringBills } from "@/queryHooks/useRecurringBills";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 function RecurringBills() {
+  const [isOpenAddBill, setIsOpenAddBill] = useState<boolean>(false);
+  const {
+    recurringBills,
+    isPending: isRecurringBillsLoading,
+    isError: isRecurringBillsError,
+  } = useRecurringBills();
+  const totalPreviousBills = recurringBills
+    .map((bill) => bill.lastTransactionAmount)
+    .reduce((total, currentItem) => total + currentItem, 0);
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
       {/* Header */}
-      <div className="w-full h-[56px] flex items-center justify-between">
-        <h1 className="text-[28px] leading-[32px] sm:text-[32px] sm:leading-[38px] font-bold text-Grey-900">
-          Recurring Bills
-        </h1>
-        <Button className="bg-Grey-900 text-White rounded-[8px] p-3 sm:p-4 text-xs leading-[18px] sm:text-sm sm:font-semibold sm:leading-[21px] sm:h-[53px] hover:bg-Grey-500 transition-colors duration-300 cursor-pointer">
-          Add Recurring Bill
-        </Button>
-      </div>
-      <div className="flex flex-col lg:flex-row w-full">
-        {/* Left side */}
-        <div className="flex flex-col sm:flex-row lg:flex-col gap-3 sm:gap-6 w-full lg:w-[337px]">
-          <TotalRecurringBills />
-          <RecurringBillsSummary />
+      <PageHeader
+        label="Recurring Bills"
+        buttonLabel="Add Recurring Bill"
+        onButtonClick={() => setIsOpenAddBill(true)}
+      />
+      {/* RecurringBills content */}
+      {isRecurringBillsLoading ? (
+        <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 items-center justify-center">
+          <Loader2 className="animate-spin" />
         </div>
-        {/* Right side */}
-        <div></div>
-      </div>
+      ) : isRecurringBillsError ? (
+        <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
+          <p>Failed to load data.</p>
+        </div>
+      ) : recurringBills.length > 0 ? (
+        <div className="flex flex-col lg:flex-row w-full gap-6">
+          {/* Left side */}
+          <div className="flex flex-col sm:flex-row lg:flex-col gap-3 sm:gap-6 w-full lg:w-[337px]">
+            <TotalRecurringBills totalBills={totalPreviousBills} />
+            <RecurringBillsSummary />
+          </div>
+          {/* Right side */}
+          <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white rounded-[12px] flex flex-col gap-6 flex-1">
+            {/* Table operations */}
+            <div className="h-[45px] w-full flex gap-6 justify-between">
+              <RecurringBillsSearchInput />
+              <SortByRecurringBills />
+            </div>
+
+            {/* RecurringBills table */}
+            <RecurringBillsTable recurringBills={recurringBills} />
+          </div>
+        </div>
+      ) : (
+        <p className="text-center">
+          No Recurring Bills to display. Click 'Add Add Recurring Bill' button
+          to add your first one.
+        </p>
+      )}
     </main>
   );
 }
