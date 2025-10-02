@@ -1,6 +1,5 @@
 import type { RecurringBill } from "@/lib/types";
 import expense from "../assets/images/expense.png";
-import { MoreVertical } from "lucide-react";
 import { FaCircleCheck } from "react-icons/fa6";
 import { FaCircleExclamation } from "react-icons/fa6";
 import { getOrderDayAbbr } from "@/utils/getOrderDayAbbr";
@@ -11,13 +10,10 @@ function RecurringBillItemDesktop({
 }: {
   recurringBill: RecurringBill;
 }) {
-  const isDueSoon = (dueDate: number): boolean => {
-    return (
-      dueDate - new Date().getDate() < 5 &&
-      dueDate - new Date().getDate() > 0 &&
-      !recurringBill.isPaidThisMonth
-    );
-  };
+  const isDueSoon =
+    recurringBill.dueDate - new Date().getDate() < 5 &&
+    !recurringBill.isPaidThisMonth;
+
   return (
     <tr
       key={recurringBill._id}
@@ -46,7 +42,7 @@ function RecurringBillItemDesktop({
       >
         Monthly-{recurringBill.dueDate}
         {getOrderDayAbbr(recurringBill.dueDate)}
-        {isDueSoon(recurringBill.dueDate) ? (
+        {isDueSoon ? (
           <FaCircleExclamation
             color="#c94736"
             className="w-4 h-4 ml-2 inline"
@@ -61,9 +57,18 @@ function RecurringBillItemDesktop({
       {/* Amount */}
       <td className="px-4 py-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm leading-[21px] font-semibold text-Grey-900">
-            ${recurringBill.paidAmountThisMonth.toFixed(2)}
-          </span>
+          <p className="space-x-3">
+            <span className="text-sm leading-[21px] font-semibold text-Grey-900">
+              {recurringBill.paidAmountThisMonth > 0
+                ? "$" + recurringBill.paidAmountThisMonth.toFixed(2)
+                : "-"}
+            </span>
+            {!recurringBill.isPaidThisMonth && (
+              <span className="text-[10px] text-Grey-500">
+                ${recurringBill.lastTransactionAmount.toFixed(2)} (Last month)
+              </span>
+            )}
+          </p>
           <RecurringBillMoreMenu
             name={recurringBill.name}
             recurringBillId={recurringBill._id}

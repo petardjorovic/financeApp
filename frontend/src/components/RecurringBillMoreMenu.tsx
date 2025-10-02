@@ -5,6 +5,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import DeleteModal from "./DeleteModal";
+import { useDeleteRecurringBill } from "@/queryHooks/useDeleteRecurringBill";
 import { MoreVertical } from "lucide-react";
 
 type Props = {
@@ -14,6 +16,7 @@ type Props = {
 
 function RecurringBillMoreMenu({ recurringBillId, name }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { delRecurringBill, isPending } = useDeleteRecurringBill(setIsOpen);
 
   return (
     <>
@@ -35,14 +38,14 @@ function RecurringBillMoreMenu({ recurringBillId, name }: Props) {
       </DropdownMenu>
 
       {/* DELETE TRANSACTION MODAL */}
-      {/* <DeleteModal
+      <DeleteModal
         isOpenModal={isOpen}
         setIsOpenModal={setIsOpen}
         label={name}
         id={recurringBillId}
-        isDeleting={isDeleting}
-        removeFunc={delTransaction}
-      /> */}
+        isDeleting={isPending}
+        removeFunc={delRecurringBill}
+      />
     </>
   );
 }

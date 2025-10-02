@@ -232,6 +232,12 @@ export const getRecurringBills = async ({
   return API.get(`/recurringBills?sort=${sortBy}${searchTerm}`);
 };
 
+export const deleteRecurringBill = ({
+  id,
+}: {
+  id: string;
+}): Promise<{ message: string }> => API.delete(`/recurringBill${id}`);
+
 //* OVERVIEW
 export const getCurrentBalance = async (): Promise<{
   currentBalance: number;
