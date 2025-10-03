@@ -1,23 +1,29 @@
+import AddRecurringBillForm from "@/components/AddRecurringBillForm";
 import PageHeader from "@/components/PageHeader";
 import RecurringBillsSearchInput from "@/components/RecurringBillsSearchInput";
 import RecurringBillsSummary from "@/components/RecurringBillsSummary";
 import RecurringBillsTable from "@/components/RecurringBillsTable";
 import SortByRecurringBills from "@/components/SortByRecurringBills";
 import TotalRecurringBills from "@/components/TotalRecurringBills";
+import { useRecurringBillsFilters } from "@/contexts/RecurringBillsFilterContext";
 import { useRecurringBills } from "@/queryHooks/useRecurringBills";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function RecurringBills() {
   const [isOpenAddBill, setIsOpenAddBill] = useState<boolean>(false);
+  const { resetFilters } = useRecurringBillsFilters();
   const {
     recurringBills,
     isPending: isRecurringBillsLoading,
     isError: isRecurringBillsError,
   } = useRecurringBills();
-  const totalPreviousBills = recurringBills
-    .map((bill) => bill.lastTransactionAmount)
-    .reduce((total, currentItem) => total + currentItem, 0);
+
+  // resetuj filtere prilikom mount-a
+  useEffect(() => {
+    resetFilters();
+  }, [resetFilters]);
+
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
       {/* Header */}
@@ -39,8 +45,8 @@ function RecurringBills() {
         <div className="flex flex-col lg:flex-row w-full gap-6">
           {/* Left side */}
           <div className="flex flex-col sm:flex-row lg:flex-col gap-3 sm:gap-6 w-full lg:w-[337px]">
-            <TotalRecurringBills totalBills={totalPreviousBills} />
-            <RecurringBillsSummary />
+            <TotalRecurringBills recurringBills={recurringBills} />
+            <RecurringBillsSummary recurringBills={recurringBills} />
           </div>
           {/* Right side */}
           <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white rounded-[12px] flex flex-col gap-6 flex-1">
@@ -60,6 +66,11 @@ function RecurringBills() {
           to add your first one.
         </p>
       )}
+
+      <AddRecurringBillForm
+        isOpenAddBill={isOpenAddBill}
+        setIsOpenAddBill={setIsOpenAddBill}
+      />
     </main>
   );
 }

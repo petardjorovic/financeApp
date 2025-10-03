@@ -1,5 +1,6 @@
 import type { RecurringBill } from "@/lib/types";
 import RecurringBillItemDesktop from "./RecurringBillItemDesktop";
+import RecurringBillItemMobile from "./RecurringBillItemMobile";
 
 function RecurringBillsTable({
   recurringBills,
@@ -33,11 +34,11 @@ function RecurringBillsTable({
       </div>
 
       {/* SMALL SCREEN VIEW */}
-      {/* <div className="sm:hidden w-full">
+      <div className="sm:hidden w-full">
         {recurringBills.map((item) => (
-          <TransactionItemMobile transaction={item} key={item._id} />
+          <RecurringBillItemMobile recurringBill={item} key={item._id} />
         ))}
-      </div> */}
+      </div>
     </div>
   );
 }

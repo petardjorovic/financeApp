@@ -38,7 +38,7 @@ export const addRecurringBillHandler = catchErrors(async (req, res) => {
   // return response
   return res
     .status(CREATED)
-    .json({ message: "Recurring bill successfully added", recurringBill });
+    .json({ message: "Recurring bill successfully added" });
 });
 
 export const deleteRecurringBillHandler = catchErrors(async (req, res) => {

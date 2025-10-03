@@ -42,7 +42,7 @@ const deleteRecurringBillTransaction = async ({
     ).session(session);
 
     // Opcionalno, možeš da loguješ broj update-ovanih dokumenata
-    console.log(`${result.modifiedCount} transactions updated`);
+    // console.log(`${result.modifiedCount} transactions updated`);
 
     await session.commitTransaction();
   } catch (err) {
