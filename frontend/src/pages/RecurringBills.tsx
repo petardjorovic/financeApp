@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import AddRecurringBillForm from "@/components/AddRecurringBillForm";
 import PageHeader from "@/components/PageHeader";
 import RecurringBillsSearchInput from "@/components/RecurringBillsSearchInput";
@@ -8,7 +9,6 @@ import TotalRecurringBills from "@/components/TotalRecurringBills";
 import { useRecurringBillsFilters } from "@/contexts/RecurringBillsFilterContext";
 import { useRecurringBills } from "@/queryHooks/useRecurringBills";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 function RecurringBills() {
   const [isOpenAddBill, setIsOpenAddBill] = useState<boolean>(false);
@@ -70,6 +70,7 @@ function RecurringBills() {
       <AddRecurringBillForm
         isOpenAddBill={isOpenAddBill}
         setIsOpenAddBill={setIsOpenAddBill}
+        recurringBills={recurringBills}
       />
     </main>
   );

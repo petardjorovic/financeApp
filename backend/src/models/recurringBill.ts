@@ -19,7 +19,7 @@ const recurringBillSchema = new mongoose.Schema<RecurringBillDocument>(
       required: true,
       index: true,
     },
-    name: { type: String, required: true, trim: true, lowercase: true },
+    name: { type: String, required: true, trim: true }, //  lowercase: true
     dueDate: { type: Number, required: true },
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,

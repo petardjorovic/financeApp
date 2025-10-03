@@ -1,7 +1,7 @@
-import { recurringBillSchema } from "@/lib/schemas";
-import { useCategories } from "@/queryHooks/useCategories";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { recurringBillSchema } from "@/lib/schemas";
 import type z from "zod";
 import {
   Dialog,
@@ -18,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IoIosCloseCircleOutline } from "react-icons/io";
 import {
   Form,
   FormControl,
@@ -29,23 +28,38 @@ import {
 } from "./ui/form";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { useEffect } from "react";
+import { useCategories } from "@/queryHooks/useCategories";
 import { useAddRecurringBill } from "@/queryHooks/useAddRecurringBill";
 import { Loader2Icon } from "lucide-react";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import type { RecurringBill } from "@/lib/types";
 
 type Props = {
   isOpenAddBill: boolean;
   setIsOpenAddBill: React.Dispatch<React.SetStateAction<boolean>>;
+  recurringBills: RecurringBill[];
 };
 
 export type AddRecurringBillFormValues = z.infer<typeof recurringBillSchema>;
 
-function AddRecurringBillForm({ isOpenAddBill, setIsOpenAddBill }: Props) {
+function AddRecurringBillForm({
+  isOpenAddBill,
+  setIsOpenAddBill,
+  recurringBills,
+}: Props) {
   const { categories } = useCategories();
   const { addNewRecurringBill, isPending: isAddingNewBill } =
     useAddRecurringBill(setIsOpenAddBill);
+  const recurringBillsNames = recurringBills.map((bill) =>
+    bill.name.toLowerCase()
+  );
   const addRecurringBillForm = useForm({
-    resolver: zodResolver(recurringBillSchema),
+    resolver: zodResolver(
+      recurringBillSchema.refine(
+        (data) => !recurringBillsNames.includes(data.name.toLowerCase()),
+        { message: "Name already used", path: ["name"] }
+      )
+    ),
     defaultValues: {
       name: "",
       dueDate: "",
@@ -114,10 +128,6 @@ function AddRecurringBillForm({ isOpenAddBill, setIsOpenAddBill }: Props) {
                       maxLength={50}
                     />
                   </FormControl>
-                  {/* <FormDescription className="text-xs text-Grey-500 text-right">
-                        {30 - field.value.length > 0 ? 30 - field.value.length : 0}{" "}
-                        characters left
-                      </FormDescription> */}
                   <FormMessage className="w-full" />
                 </FormItem>
               )}

@@ -58,13 +58,21 @@ function RecurringBillItemDesktop({
       <td className="px-4 py-3">
         <div className="flex items-center justify-between">
           <p className="space-x-3">
-            <span className="text-sm leading-[21px] font-semibold text-Grey-900">
+            <span
+              className={`text-sm leading-[21px] font-semibold ${
+                isDueSoon ? "text-Red" : "text-Grey-900"
+              }`}
+            >
               {recurringBill.paidAmountThisMonth > 0
                 ? "$" + recurringBill.paidAmountThisMonth.toFixed(2)
                 : "-"}
             </span>
             {!recurringBill.isPaidThisMonth && (
-              <span className="text-[10px] text-Grey-500">
+              <span
+                className={`text-[10px]  ${
+                  isDueSoon ? "text-Red" : "text-Grey-500"
+                }`}
+              >
                 ${recurringBill.lastTransactionAmount.toFixed(2)} (Last month)
               </span>
             )}

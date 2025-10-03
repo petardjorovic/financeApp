@@ -51,13 +51,21 @@ function RecurringBillItemMobile({
       </div>
       <div className="flex gap-x-3 items-center">
         <div className="flex flex-col gap-y-1">
-          <span className="text-sm leading-[21px] font-semibold text-Grey-900 ">
+          <span
+            className={`text-sm leading-[21px] font-semibold text-Grey-900 ${
+              isDueSoon ? "text-Red" : "text-Grey-900"
+            }`}
+          >
             {recurringBill.paidAmountThisMonth > 0
               ? "$" + recurringBill.paidAmountThisMonth.toFixed(2)
               : "-"}
           </span>
           {!recurringBill.isPaidThisMonth && (
-            <span className="text-[10px] text-Grey-500 text-right">
+            <span
+              className={`text-[10px] text-right ${
+                isDueSoon ? "text-Red" : "text-Grey-500"
+              }`}
+            >
               ${recurringBill.lastTransactionAmount.toFixed(2)}
             </span>
           )}
