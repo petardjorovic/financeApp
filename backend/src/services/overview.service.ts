@@ -38,8 +38,6 @@ type PotDocument = {
   __v: number;
 };
 
-type BudgetsTotal = { _id: string; spentThisMonth: number };
-
 export const getOverviewData = async (userId: mongoose.Types.ObjectId) => {
   const start = startOfMonth();
   const end = endOfMonth();
@@ -208,10 +206,10 @@ export const getOverviewData = async (userId: mongoose.Types.ObjectId) => {
 
   const budgets = budgetsRaw.map((b) => ({
     ...b,
-    spentThisMonth: budgetsMap.get(b.categoryId._id.toString()) ?? 0,
+    spent: budgetsMap.get(b.categoryId._id.toString()) ?? 0,
   }));
 
-  const balance = balanceResult[0] ?? {
+  const totalBalance = balanceResult[0] ?? {
     income: 0,
     expense: 0,
     withdraw: 0,
@@ -219,7 +217,7 @@ export const getOverviewData = async (userId: mongoose.Types.ObjectId) => {
     currentBalance: 0,
   };
 
-  return { transactions, pots, budgets, recurringBills, result: balance };
+  return { transactions, pots, budgets, recurringBills, totalBalance };
 };
 
 export const getCurrentBalance = async (userId: mongoose.Types.ObjectId) => {

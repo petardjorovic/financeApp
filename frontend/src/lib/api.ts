@@ -2,6 +2,7 @@ import API from "@/config/apiClient";
 import type {
   Budget,
   Category,
+  Overview,
   Pot,
   RawRecurringBill,
   RecurringBill,
@@ -252,3 +253,6 @@ export const deleteRecurringBill = ({
 export const getCurrentBalance = async (): Promise<{
   currentBalance: number;
 }> => API.get("/overview/currentBalance");
+
+export const getOverViewData = async (): Promise<Overview> =>
+  API.get("/overview");

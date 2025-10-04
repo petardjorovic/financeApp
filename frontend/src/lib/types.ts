@@ -96,3 +96,18 @@ export type Pot = {
   updatedAt: string;
   __v: number;
 };
+
+export type Overview = {
+  transactions: Transaction[];
+  pots: Pot[];
+  budgets: Omit<Budget, "latestSpending">[];
+  recurringBills: RecurringBill[];
+  totalBalance: {
+    _id: string;
+    income: number;
+    withdraw: number;
+    expense: number;
+    deposit: number;
+    currentBalance: number;
+  };
+};

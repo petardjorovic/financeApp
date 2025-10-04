@@ -7,12 +7,12 @@ import catchErrors from "../utils/catchErrors.js";
 
 export const getOverviewDataHandler = catchErrors(async (req, res) => {
   // call service
-  const { transactions, pots, budgets, recurringBills, result } =
+  const { transactions, pots, budgets, recurringBills, totalBalance } =
     await getOverviewData(req.userId);
 
   return res
     .status(OK)
-    .json({ transactions, pots, budgets, recurringBills, result });
+    .json({ transactions, pots, budgets, recurringBills, totalBalance });
 });
 
 export const getCurrentBalanceHandler = catchErrors(async (req, res) => {
