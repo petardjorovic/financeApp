@@ -1,6 +1,18 @@
 import OverviewSummary from "@/components/OverviewSummary";
+import { useOverview } from "@/queryHooks/useOverview";
+import { Loader2 } from "lucide-react";
+import PotsOverviewCard from "@/components/PotsOverviewCard";
+import TransactionsOverviewCard from "@/components/TransactionsOverviewCard";
+import BudgetsOverviewCard from "@/components/BudgetsOverviewCard";
+import RecurringBillsOverviewCard from "@/components/RecurringBillsOverviewCard";
 
 function Overview() {
+  const {
+    overview,
+    isPending: isOverviewLoading,
+    isError: isOverviewError,
+  } = useOverview();
+
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
       {/* Header */}
@@ -9,27 +21,39 @@ function Overview() {
           Overview
         </h1>
       </div>
-      {/* Summary */}
-      <OverviewSummary />
-
-      {/* Content */}
-      <div className="flex flex-col lg:flex-row gap-6 w-full">
-        {/* Left side */}
-        <div>
-          {/* Pots */}
-          <div></div>
-          {/* Transactions */}
-          <div></div>
+      {isOverviewLoading ? (
+        <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 items-center justify-center">
+          <Loader2 className="animate-spin" />
         </div>
-
-        {/* Right side */}
-        <div>
-          {/* Budgets */}
-          <div></div>
-          {/* RecurringBills */}
-          <div></div>
+      ) : isOverviewError ? (
+        <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
+          <p>Failed to load data.</p>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Summary */}
+          <OverviewSummary totalBalance={overview?.totalBalance} />
+
+          {/* Content */}
+          <div className="flex flex-col lg:flex-row gap-6 w-full">
+            {/* Left side */}
+            <div className="flex flex-col gap-4 sm:gap-6 lg:flex-1">
+              {/* Pots */}
+              <PotsOverviewCard pots={overview?.pots} />
+              {/* Transactions */}
+              <TransactionsOverviewCard transactions={overview?.transactions} />
+            </div>
+
+            {/* Right side */}
+            <div className="flex flex-col gap-4 sm:gap-6 lg:min-w-[450px]">
+              {/* Budgets */}
+              <BudgetsOverviewCard budgets={overview?.budgets} />
+              {/* RecurringBills */}
+              <RecurringBillsOverviewCard />
+            </div>
+          </div>
+        </>
+      )}
     </main>
   );
 }
