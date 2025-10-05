@@ -45,28 +45,30 @@ function MainNavigation() {
       </div>
       <NavigationMenu collapse={collapse} />
       <div className="w-full h-[56px] px-8 py-4 flex justify-start items-center">
-        <div
-          className="flex justify-start items-center gap-x-4 cursor-pointer transition-all duration-300"
-          onClick={() => setCollapse((prev) => !prev)}
-        >
-          <img
-            src={collapse ? maximizeIcon : minimizeIcon}
-            alt="manMax-menu-icon"
-          />
-          <AnimatePresence>
-            {!collapse && (
-              <motion.p
-                className="text-base font-bold text-Grey-300"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.1 }}
-              >
-                Minimize Menu
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
+        {!isScreenLg && (
+          <div
+            className="flex justify-start items-center gap-x-4 cursor-pointer transition-all duration-300"
+            onClick={() => setCollapse((prev) => !prev)}
+          >
+            <img
+              src={collapse ? maximizeIcon : minimizeIcon}
+              alt="manMax-menu-icon"
+            />
+            <AnimatePresence>
+              {!collapse && (
+                <motion.p
+                  className="text-base font-bold text-Grey-300"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.1 }}
+                >
+                  Minimize Menu
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </div>
   );

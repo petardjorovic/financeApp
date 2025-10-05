@@ -11,6 +11,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import { TransFiltersProvider } from "./contexts/TransFiltersProvider.tsx";
 import RecurringBillsFiltersProvider from "./contexts/RecurringBillsFiltersProvider.tsx";
+import ScrollToTop from "./components/ScrollToTop.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
+        <ScrollToTop />
         <TransFiltersProvider>
           <RecurringBillsFiltersProvider>
             <App />

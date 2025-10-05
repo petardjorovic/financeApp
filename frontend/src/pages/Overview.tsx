@@ -37,7 +37,7 @@ function Overview() {
           {/* Content */}
           <div className="flex flex-col lg:flex-row gap-6 w-full">
             {/* Left side */}
-            <div className="flex flex-col gap-4 sm:gap-6 lg:flex-1">
+            <div className="flex flex-col gap-4 sm:gap-6 lg:w-[57.4%]">
               {/* Pots */}
               <PotsOverviewCard pots={overview?.pots} />
               {/* Transactions */}
@@ -45,11 +45,13 @@ function Overview() {
             </div>
 
             {/* Right side */}
-            <div className="flex flex-col gap-4 sm:gap-6 lg:min-w-[450px]">
+            <div className="flex flex-col gap-4 sm:gap-6 lg:w-[40.3%]">
               {/* Budgets */}
               <BudgetsOverviewCard budgets={overview?.budgets} />
               {/* RecurringBills */}
-              <RecurringBillsOverviewCard />
+              <RecurringBillsOverviewCard
+                recurringBills={overview?.recurringBills}
+              />
             </div>
           </div>
         </>

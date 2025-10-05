@@ -49,7 +49,7 @@ function RecurringBillsSummary({
               </span>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Estimated from last month's amounts</p>
+              <p>Estimated from previous month's amounts</p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -63,7 +63,7 @@ function RecurringBillsSummary({
               </span>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Estimated from last month's amounts</p>
+              <p>Estimated from previous month's amounts</p>
             </TooltipContent>
           </Tooltip>
         </div>
