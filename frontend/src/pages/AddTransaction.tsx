@@ -4,7 +4,9 @@ import AddRecurringTransactionForm from "@/components/AddRecurringTransactionFor
 import AddRegularTransactionForm from "@/components/AddRegularTransactionForm";
 
 function AddTransaction() {
-  const [isRecurringTx, setIsRecurringTx] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<"regular" | "recurring">(
+    "regular"
+  );
 
   return (
     <main className="px-4 py-6 sm:px-10 sm:py-8 flex flex-1 flex-col gap-8">
@@ -14,23 +16,25 @@ function AddTransaction() {
         </h1>
       </div>
       <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
-        <Tabs defaultValue="regular" className="w-full">
+        <Tabs
+          defaultValue={activeTab}
+          onValueChange={(v) => setActiveTab(v as "regular" | "recurring")}
+          className="w-full"
+        >
           <TabsList className="flex items-center justify-center bg-Beige-100 rounded-sm p-1 mx-auto h-auto">
             <TabsTrigger
               value="regular"
               className={`w-30 rounded-sm px-3 py-1 ${
-                !isRecurringTx ? "bg-White" : "cursor-pointer"
+                activeTab === "regular" ? "bg-White" : "cursor-pointer"
               }`}
-              onClick={() => setIsRecurringTx(false)}
             >
               Regular tx
             </TabsTrigger>
             <TabsTrigger
               value="recurring"
               className={`w-30 px-3 py-1 rounded-sm ${
-                isRecurringTx ? "bg-White" : "cursor-pointer"
+                activeTab === "recurring" ? "bg-White" : "cursor-pointer"
               }`}
-              onClick={() => setIsRecurringTx(true)}
             >
               Recurring tx
             </TabsTrigger>

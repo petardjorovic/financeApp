@@ -32,16 +32,29 @@ function MainNavigation() {
           !collapse ? "px-8 justify-start" : "justify-center"
         } py-10 flex items-center`}
       >
-        {collapse ? (
-          <img
-            // src={miniLogo}
-            src={pdfLogo}
-            alt="mini-logo"
-            className=""
-          />
-        ) : (
-          <img src={pdfinanceLogo} alt="logo" className="" />
-        )}
+        <AnimatePresence mode="wait">
+          {collapse ? (
+            <motion.img
+              key={"small"}
+              src={pdfLogo}
+              alt="mini-logo"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+          ) : (
+            <motion.img
+              key={"big"}
+              src={pdfinanceLogo}
+              alt="big-logo"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+          )}
+        </AnimatePresence>
       </div>
       <NavigationMenu collapse={collapse} />
       <div className="w-full h-[56px] px-8 py-4 flex justify-start items-center">

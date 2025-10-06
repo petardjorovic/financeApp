@@ -187,3 +187,9 @@ export const recurringBillSchema = z.object({
     .string()
     .regex(objectIdRegex, { message: "Please select a category." }),
 });
+
+export const profileSchema = z.object({
+  email: emailSchema,
+  fullName: z.string().min(2).max(255),
+  avatar: z.string,
+});
