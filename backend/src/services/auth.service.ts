@@ -74,21 +74,22 @@ export const createAccount = async (data: createAccountParams) => {
   // }
 
   // create session
-  const session = await SessionModel.create({
-    userId,
-    userAgent: data.userAgent,
-  });
+  // const session = await SessionModel.create({
+  //   userId,
+  //   userAgent: data.userAgent,
+  // });
 
-  // sign access token & refresh token
-  const refreshToken = signToken(
-    { sessionId: session._id },
-    refreshTokenSignOptions
-  );
+  // // sign access token & refresh token
+  // const refreshToken = signToken(
+  //   { sessionId: session._id },
+  //   refreshTokenSignOptions
+  // );
 
-  const accessToken = signToken({ userId, sessionId: session._id });
+  // const accessToken = signToken({ userId, sessionId: session._id });
 
   // return user & tokens
-  return { user: user.omitPassword(), accessToken, refreshToken };
+  // return { user: user.omitPassword(), accessToken, refreshToken };
+  return { user: user.omitPassword() };
 };
 
 type LoginUserParams = {

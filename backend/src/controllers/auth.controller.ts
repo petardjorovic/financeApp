@@ -33,15 +33,20 @@ export const registerHandler = catchErrors(async (req, res) => {
   });
 
   // call service
-  const { user, accessToken, refreshToken } = await createAccount(request);
+  // const { user, accessToken, refreshToken } = await createAccount(request);
+  const { user } = await createAccount(request);
 
   // return response
-  return sethAuthCookies({ res, accessToken, refreshToken })
-    .status(CREATED)
-    .json({
-      message:
-        "Registration successful! Please check your email to verify your account.",
-    });
+  // return sethAuthCookies({ res, accessToken, refreshToken })
+  //   .status(CREATED)
+  //   .json({
+  //     message:
+  //       "Registration successful! Please check your email to verify your account.",
+  //   });
+  return res.status(CREATED).json({
+    message:
+      "Registration successful! Please check your email to verify your account.",
+  });
 });
 
 export const loginHandler = catchErrors(async (req, res) => {

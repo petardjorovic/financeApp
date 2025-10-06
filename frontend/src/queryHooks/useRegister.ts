@@ -3,12 +3,10 @@ import { register } from "@/lib/api";
 import type { registerFormValues } from "@/components/RegisterForm";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
 
 type RegisterReturnType = { message: string };
 
 export const useRegister = () => {
-  const navigate = useNavigate();
   const {
     mutate: signUp,
     isPending,
@@ -19,11 +17,8 @@ export const useRegister = () => {
     registerFormValues
   >({
     mutationFn: register,
-    onSuccess: () => {
-      toast.success(
-        "Registration successful! Please check your email to verify your account."
-      );
-      navigate("/login");
+    onSuccess: (data) => {
+      toast.success(data.message);
     },
     onError: (err) => {
       toast.error(err.message || "SignUp failed");
