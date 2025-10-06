@@ -29,17 +29,14 @@ function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="w-12 h-12">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarImage src={user?.avatar} alt="@shadcn" />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-auto" align="start">
         <DropdownMenuLabel className="flex items-center gap-3 p-2">
           <Avatar className="h-10 w-10">
-            <AvatarImage
-              src="https://github.com/shadcn.png"
-              alt="User avatar"
-            />
+            <AvatarImage src={user?.avatar} alt="User avatar" />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col overflow-hidden">

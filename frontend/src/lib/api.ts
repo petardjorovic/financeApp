@@ -6,6 +6,7 @@ import type {
   Pot,
   RawRecurringBill,
   RecurringBill,
+  Session,
   Theme,
   Transaction,
   User,
@@ -256,3 +257,12 @@ export const getCurrentBalance = async (): Promise<{
 
 export const getOverViewData = async (): Promise<Overview> =>
   API.get("/overview");
+
+//* SESSIONS
+export const getSessions = async (): Promise<Session[]> => API.get("/sessions");
+
+export const deleteSession = async ({
+  id,
+}: {
+  id: string;
+}): Promise<{ message: string }> => API.delete(`/sessions/${id}`);

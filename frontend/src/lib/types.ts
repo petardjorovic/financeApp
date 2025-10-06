@@ -19,6 +19,7 @@ export type User = {
   _id: string;
   email: string;
   fullName: string;
+  avatar: string;
   verified: boolean;
   role: string;
   createdAt: Date;
@@ -110,4 +111,11 @@ export type Overview = {
     deposit: number;
     currentBalance: number;
   };
+};
+
+export type Session = {
+  _id: string;
+  userAgent: string;
+  createdAt: string;
+  isCurrent?: boolean;
 };

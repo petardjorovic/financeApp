@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SessionsTab from "@/components/SessionsTab";
+import UserInfo from "@/components/UserInfo";
 
 function Profile() {
   const [activeTab, setActiveTab] = useState<"userInfo" | "sessions">(
@@ -38,16 +40,12 @@ function Profile() {
         </TabsList>
         <TabsContent value="userInfo" className="mt-4">
           {/* USER INFO TAB */}
-          <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
-            User Info
-          </div>
+          <UserInfo />
         </TabsContent>
 
         {/* SESSIONS TAB */}
         <TabsContent value="sessions" className="mt-4">
-          <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
-            Sessions Info
-          </div>
+          <SessionsTab />
         </TabsContent>
       </Tabs>
     </main>

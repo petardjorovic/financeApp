@@ -35,6 +35,12 @@ createRoot(document.getElementById("root")!).render(
           toastOptions={{
             success: { duration: 5000 },
             error: { duration: 5000 },
+            style: {
+              fontSize: "16px",
+              maxWidth: "500px",
+              padding: "16px 24px",
+              color: "var(--color-grey-700)",
+            },
           }}
         />
       </BrowserRouter>
