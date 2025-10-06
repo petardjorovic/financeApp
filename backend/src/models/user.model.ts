@@ -7,6 +7,7 @@ export interface UserDocument
   email: string;
   password: string;
   fullName: string;
+  avatar: string;
   verified: boolean;
   role: string;
   createdAt: Date;
@@ -26,6 +27,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
     },
     password: { type: String, required: true },
     fullName: { type: String, required: true, trim: true },
+    avatar: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dhfzyyycz/image/upload/v1759766870/user_fylf06.png",
+    },
     verified: { type: Boolean, required: true, default: false },
     role: { type: String, default: "user" },
   },
