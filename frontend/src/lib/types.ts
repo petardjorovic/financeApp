@@ -111,6 +111,12 @@ export type Overview = {
     deposit: number;
     currentBalance: number;
   };
+  chartData: {
+    year: number;
+    month: number;
+    income: number;
+    expense: number;
+  }[];
 };
 
 export type Session = {
