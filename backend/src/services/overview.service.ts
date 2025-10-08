@@ -7,6 +7,8 @@ import { BudgetWithSpentRaw } from "../types/budget.type.js";
 import { endOfMonth, startOfMonth } from "../utils/date.js";
 import TransactionTypes from "../constants/TransactionTypes.js";
 import RecurringBillModel from "../models/recurringBill.js";
+import { getOverviewRange } from "../utils/getRangeOverview.js";
+import { getStartDate } from "../utils/getStartDate.js";
 
 type TransactionDocument = {
   _id: string;
@@ -48,193 +50,157 @@ export const getOverviewData = async (userId: mongoose.Types.ObjectId) => {
 
   const categoryIds = budgetsRaw.map((b) => b.categoryId._id);
 
-  const [
-    transactions,
-    pots,
-    budgetsTotal,
-    recurringBills,
-    balanceResult,
-    chartData,
-  ] = await Promise.all([
-    TransactionModel.find({ userId, type: { $in: ["income", "expense"] } })
-      .sort({ date: -1 })
-      .limit(5)
-      .lean<TransactionDocument[]>(),
-    PotModel.find({ userId })
-      .populate({
-        path: "themeId",
-        select: "name color",
-      })
-      .lean<PotDocument[]>(),
-    TransactionModel.aggregate([
-      {
-        $match: {
-          userId: new mongoose.Types.ObjectId(userId),
-          type: TransactionTypes.Expense,
-          categoryId: { $in: categoryIds },
+  const [transactions, pots, budgetsTotal, recurringBills, balanceResult] =
+    await Promise.all([
+      TransactionModel.find({ userId, type: { $in: ["income", "expense"] } })
+        .sort({ date: -1 })
+        .limit(5)
+        .lean<TransactionDocument[]>(),
+      PotModel.find({ userId })
+        .populate({
+          path: "themeId",
+          select: "name color",
+        })
+        .lean<PotDocument[]>(),
+      TransactionModel.aggregate([
+        {
+          $match: {
+            userId: new mongoose.Types.ObjectId(userId),
+            type: TransactionTypes.Expense,
+            categoryId: { $in: categoryIds },
+          },
         },
-      },
-      { $sort: { date: -1 } },
-      {
-        $group: {
-          _id: "$categoryId",
-          spentThisMonth: {
-            $sum: {
-              $cond: [
-                {
-                  $and: [{ $gte: ["$date", start] }, { $lte: ["$date", end] }],
+        { $sort: { date: -1 } },
+        {
+          $group: {
+            _id: "$categoryId",
+            spentThisMonth: {
+              $sum: {
+                $cond: [
+                  {
+                    $and: [
+                      { $gte: ["$date", start] },
+                      { $lte: ["$date", end] },
+                    ],
+                  },
+                  "$amount",
+                  0,
+                ],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            spentThisMonth: 1,
+          },
+        },
+      ]),
+      RecurringBillModel.aggregate([
+        {
+          $match: { userId: new mongoose.Types.ObjectId(userId) },
+        },
+        {
+          $lookup: {
+            from: "transactions",
+            let: { billId: "$_id", userId: "$userId" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$userId", "$$userId"] },
+                      { $eq: ["$recurringBillId", "$$billId"] },
+                      { $gte: ["$date", start] },
+                      { $lte: ["$date", end] },
+                    ],
+                  },
                 },
-                "$amount",
+              },
+              { $group: { _id: null, totalPaid: { $sum: "$amount" } } },
+            ],
+            as: "paidData",
+          },
+        },
+        {
+          $lookup: {
+            from: "transactions",
+            let: { billId: "$_id", userId: "$userId" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$userId", "$$userId"] },
+                      { $eq: ["$recurringBillId", "$$billId"] },
+                      { $lt: ["$date", start] }, // samo pre pocetka tekuceg meseca
+                    ],
+                  },
+                },
+              },
+              { $sort: { date: -1 } }, // poslednja pre ovog meseca
+              { $limit: 1 },
+              { $project: { amount: 1, date: 1, _id: 0 } },
+            ],
+            as: "lastTransactionBeforeThisMonth",
+          },
+        },
+        {
+          $addFields: {
+            isPaidThisMonth: { $gt: [{ $size: "$paidData" }, 0] },
+            paidAmountThisMonth: {
+              $ifNull: [{ $arrayElemAt: ["$paidData.totalPaid", 0] }, 0],
+            },
+            lastTransactionAmount: {
+              $ifNull: [
+                { $arrayElemAt: ["$lastTransactionBeforeThisMonth.amount", 0] },
                 0,
+              ],
+            },
+            lastTransactionDate: {
+              $ifNull: [
+                { $arrayElemAt: ["$lastTransactionBeforeThisMonth.date", 0] },
+                null,
               ],
             },
           },
         },
-      },
-      {
-        $project: {
-          spentThisMonth: 1,
+        { $project: { paidData: 0, lastTransactionBeforeThisMonth: 0 } },
+        { $sort: { dueDate: 1 } },
+      ]),
+      TransactionModel.aggregate([
+        {
+          $match: { userId: new mongoose.Types.ObjectId(userId) },
         },
-      },
-    ]),
-    RecurringBillModel.aggregate([
-      {
-        $match: { userId: new mongoose.Types.ObjectId(userId) },
-      },
-      {
-        $lookup: {
-          from: "transactions",
-          let: { billId: "$_id", userId: "$userId" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$userId", "$$userId"] },
-                    { $eq: ["$recurringBillId", "$$billId"] },
-                    { $gte: ["$date", start] },
-                    { $lte: ["$date", end] },
-                  ],
-                },
-              },
+        {
+          $group: {
+            _id: "$userId",
+            income: {
+              $sum: { $cond: [{ $eq: ["$type", "income"] }, "$amount", 0] },
             },
-            { $group: { _id: null, totalPaid: { $sum: "$amount" } } },
-          ],
-          as: "paidData",
-        },
-      },
-      {
-        $lookup: {
-          from: "transactions",
-          let: { billId: "$_id", userId: "$userId" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$userId", "$$userId"] },
-                    { $eq: ["$recurringBillId", "$$billId"] },
-                    { $lt: ["$date", start] }, // samo pre pocetka tekuceg meseca
-                  ],
-                },
-              },
+            withdraw: {
+              $sum: { $cond: [{ $eq: ["$type", "withdraw"] }, "$amount", 0] },
             },
-            { $sort: { date: -1 } }, // poslednja pre ovog meseca
-            { $limit: 1 },
-            { $project: { amount: 1, date: 1, _id: 0 } },
-          ],
-          as: "lastTransactionBeforeThisMonth",
-        },
-      },
-      {
-        $addFields: {
-          isPaidThisMonth: { $gt: [{ $size: "$paidData" }, 0] },
-          paidAmountThisMonth: {
-            $ifNull: [{ $arrayElemAt: ["$paidData.totalPaid", 0] }, 0],
-          },
-          lastTransactionAmount: {
-            $ifNull: [
-              { $arrayElemAt: ["$lastTransactionBeforeThisMonth.amount", 0] },
-              0,
-            ],
-          },
-          lastTransactionDate: {
-            $ifNull: [
-              { $arrayElemAt: ["$lastTransactionBeforeThisMonth.date", 0] },
-              null,
-            ],
+            expense: {
+              $sum: { $cond: [{ $eq: ["$type", "expense"] }, "$amount", 0] },
+            },
+            deposit: {
+              $sum: { $cond: [{ $eq: ["$type", "deposit"] }, "$amount", 0] },
+            },
           },
         },
-      },
-      { $project: { paidData: 0, lastTransactionBeforeThisMonth: 0 } },
-      { $sort: { dueDate: 1 } },
-    ]),
-    TransactionModel.aggregate([
-      {
-        $match: { userId: new mongoose.Types.ObjectId(userId) },
-      },
-      {
-        $group: {
-          _id: "$userId",
-          income: {
-            $sum: { $cond: [{ $eq: ["$type", "income"] }, "$amount", 0] },
-          },
-          withdraw: {
-            $sum: { $cond: [{ $eq: ["$type", "withdraw"] }, "$amount", 0] },
-          },
-          expense: {
-            $sum: { $cond: [{ $eq: ["$type", "expense"] }, "$amount", 0] },
-          },
-          deposit: {
-            $sum: { $cond: [{ $eq: ["$type", "deposit"] }, "$amount", 0] },
+        {
+          $addFields: {
+            currentBalance: {
+              $subtract: [
+                { $add: ["$income", "$withdraw"] },
+                { $add: ["$expense", "$deposit"] },
+              ],
+            },
           },
         },
-      },
-      {
-        $addFields: {
-          currentBalance: {
-            $subtract: [
-              { $add: ["$income", "$withdraw"] },
-              { $add: ["$expense", "$deposit"] },
-            ],
-          },
-        },
-      },
-    ]),
-    TransactionModel.aggregate([
-      {
-        $match: {
-          userId: new mongoose.Types.ObjectId(userId),
-          type: { $in: ["income", "expense"] },
-        },
-      },
-      {
-        $group: {
-          _id: {
-            year: { $year: "$date" },
-            month: { $month: "$date" },
-          },
-          income: {
-            $sum: { $cond: [{ $eq: ["$type", "income"] }, "$amount", 0] },
-          },
-          expense: {
-            $sum: { $cond: [{ $eq: ["$type", "expense"] }, "$amount", 0] },
-          },
-        },
-      },
-      { $sort: { "_id.year": 1, "_id.month": 1 } },
-      {
-        $project: {
-          _id: 0,
-          year: "$_id.year",
-          month: "$_id.month",
-          type: 1,
-          income: 1,
-          expense: 1,
-        },
-      },
-    ]),
-  ]);
+      ]),
+    ]);
 
   const budgetsMap = new Map(
     budgetsTotal.map((b) => [b._id.toString(), b.spentThisMonth])
@@ -259,7 +225,6 @@ export const getOverviewData = async (userId: mongoose.Types.ObjectId) => {
     budgets,
     recurringBills,
     totalBalance,
-    chartData,
   };
 };
 
@@ -294,4 +259,51 @@ export const getCurrentBalance = async (userId: mongoose.Types.ObjectId) => {
   const balance = currentBalance[0]?.balance ?? 0;
 
   return balance;
+};
+
+type GetIncomeExpenseChartDataProps = {
+  userId: mongoose.Types.ObjectId;
+  period: "daily" | "monthly" | "yearly";
+  range: "all" | "1m" | "6m";
+};
+
+export const getIncomeExpenseChartData = async ({
+  userId,
+  period,
+  range,
+}: GetIncomeExpenseChartDataProps) => {
+  const data = await TransactionModel.aggregate([
+    {
+      $match: {
+        userId: new mongoose.Types.ObjectId(userId),
+        type: { $in: ["income", "expense"] },
+        date: { $gte: getStartDate(range) },
+      },
+    },
+    {
+      $group: {
+        _id: getOverviewRange(period),
+        income: {
+          $sum: { $cond: [{ $eq: ["$type", "income"] }, "$amount", 0] },
+        },
+        expense: {
+          $sum: { $cond: [{ $eq: ["$type", "expense"] }, "$amount", 0] },
+        },
+      },
+    },
+    { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+    {
+      $project: {
+        _id: 0,
+        year: "$_id.year",
+        month: "$_id.month",
+        day: "$_id.day",
+        type: 1,
+        income: 1,
+        expense: 1,
+      },
+    },
+  ]);
+
+  return { data };
 };

@@ -3,6 +3,7 @@ import type {
   Budget,
   Category,
   Overview,
+  OverviewIncomeExpenseChart,
   Pot,
   RawRecurringBill,
   RecurringBill,
@@ -257,6 +258,17 @@ export const getCurrentBalance = async (): Promise<{
 
 export const getOverViewData = async (): Promise<Overview> =>
   API.get("/overview");
+
+type GetIncomeExpenseDataProps = {
+  period: string;
+  range: string;
+};
+
+export const getIncomeExpenseData = ({
+  period,
+  range,
+}: GetIncomeExpenseDataProps): Promise<OverviewIncomeExpenseChart[]> =>
+  API.get(`/overview/incomeExpenseData?period=${period}&range=${range}`);
 
 //* SESSIONS
 export const getSessions = async (): Promise<Session[]> => API.get("/sessions");

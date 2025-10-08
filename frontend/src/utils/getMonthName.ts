@@ -1,4 +1,6 @@
-export const getMonthName = (monthNumber: number) => {
+export const getMonthName = (monthNumber: number | undefined) => {
+  if (monthNumber === undefined)
+    throw new Error("monthNumber cannot be undefined");
   const months: string[] = [
     "Jan",
     "Feb",
@@ -14,5 +16,5 @@ export const getMonthName = (monthNumber: number) => {
     "Dec",
   ];
 
-  return months[monthNumber] || "";
+  return months[monthNumber - 1] || "";
 };

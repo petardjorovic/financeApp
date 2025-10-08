@@ -111,12 +111,6 @@ export type Overview = {
     deposit: number;
     currentBalance: number;
   };
-  chartData: {
-    year: number;
-    month: number;
-    income: number;
-    expense: number;
-  }[];
 };
 
 export type Session = {
@@ -124,4 +118,12 @@ export type Session = {
   userAgent: string;
   createdAt: string;
   isCurrent?: boolean;
+};
+
+export type OverviewIncomeExpenseChart = {
+  income: number;
+  expense: number;
+  year: number;
+  month?: number;
+  day?: number;
 };
