@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { getUserHandler } from "../controllers/user.controller.js";
+import {
+  editPasswordHandler,
+  getUserHandler,
+} from "../controllers/user.controller.js";
 
 const userRoutes = Router();
 
 // prefix /user
 
 userRoutes.get("/", getUserHandler);
+userRoutes.patch("/password/edit", editPasswordHandler);
 
 export default userRoutes;

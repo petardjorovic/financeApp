@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import VerificationCodeTypes from "../constants/verificationCodeTypes.js";
 import SessionModel from "../models/session.model.js";
 import UserModel from "../models/user.model.js";
@@ -291,20 +290,4 @@ export const resetPassword = async ({
   return {
     user: updatedUser.omitPassword(),
   };
-};
-
-type EditPasswordProps = {
-  userId: mongoose.Types.ObjectId;
-  password: string;
-};
-
-export const editPassword = async ({ userId, password }: EditPasswordProps) => {
-  // edit password if user exists
-  const existedUser = await UserModel.findById(userId);
-  appAssert(existedUser, NOT_FOUND, "User not found");
-  existedUser.password = password;
-  await existedUser.save();
-
-  // delete all users's sessions
-  await SessionModel.deleteMany({ userId });
 };

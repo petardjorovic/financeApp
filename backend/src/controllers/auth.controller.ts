@@ -2,7 +2,6 @@ import { CREATED, OK, UNAUTHORIZED } from "../constants/http.js";
 import catchErrors from "../utils/catchErrors.js";
 import {
   createAccount,
-  editPassword,
   loginUser,
   refreshUserAccessToken,
   resetPassword,
@@ -16,7 +15,6 @@ import {
   sethAuthCookies,
 } from "../utils/cookies.js";
 import {
-  editPasswordSchema,
   emailSchema,
   loginSchema,
   registerSchema,
@@ -141,15 +139,4 @@ export const resetPasswordHandler = catchErrors(async (req, res) => {
   return clearAuthCookies(res).status(OK).json({
     message: "Password reset successfully",
   });
-});
-
-export const editPasswordHandler = catchErrors(async (req, res) => {
-  // validate request
-  const request = editPasswordSchema.parse(req.body);
-
-  // call service
-  await editPassword({ userId: req.userId, password: request.password });
-
-  // return response
-  return res.status(OK).json({ message: "Password updated successfully." });
 });

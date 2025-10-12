@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  editPasswordHandler,
   loginHandler,
   logoutHandler,
   refreshHandler,
@@ -20,6 +19,5 @@ authRoutes.get("/refresh", refreshHandler);
 authRoutes.get("/email/verify/:code", verifyEmailHandler);
 authRoutes.post("/password/forgot", sendPasswordResetHandler);
 authRoutes.post("/password/reset", resetPasswordHandler);
-authRoutes.patch("/password/edit", editPasswordHandler);
 
 export default authRoutes;

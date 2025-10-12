@@ -1,7 +1,7 @@
 import { profileSchema, userPasswordSchema } from "@/lib/schemas";
 import { useAuth } from "@/queryHooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type z from "zod";
 import {
@@ -15,6 +15,7 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useEditPassword } from "@/queryHooks/useEditPassword";
 
 export type userFormValues = z.infer<typeof profileSchema>;
 export type userPasswordsValues = z.infer<typeof userPasswordSchema>;
@@ -22,6 +23,7 @@ export type userPasswordsValues = z.infer<typeof userPasswordSchema>;
 function UserInfo() {
   const [fileInputKey, setFileInputKey] = useState(0);
   const { user, isPending } = useAuth();
+  const { updatePassword, isPending: isPasswordUpdating } = useEditPassword();
   const userForm = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -44,7 +46,7 @@ function UserInfo() {
   };
 
   const onSubmitUserPassword = (values: userPasswordsValues) => {
-    console.log(values);
+    updatePassword(values);
   };
 
   return (
@@ -218,14 +220,14 @@ function UserInfo() {
                 </Button>
                 <Button
                   type="submit"
-                  // disabled={disabled}
+                  disabled={isPasswordUpdating}
                   className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[45px] w-40 sm:w-50"
                 >
-                  {/* {disabled ? (
-                      <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-                    ) : ( */}
-                  Update password
-                  {/* )} */}
+                  {isPasswordUpdating ? (
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    "Update password"
+                  )}
                 </Button>
               </div>
             </form>

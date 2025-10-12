@@ -53,6 +53,15 @@ export const resetPassword = async (
 
 export const getUser = async (): Promise<User> => API.get("/user");
 
+export type EditPasswordProps = {
+  password: string;
+  confirmPassword: string;
+};
+
+export const editPassword = async (
+  data: EditPasswordProps
+): Promise<{ message: string }> => API.patch("/user/password/edit", data);
+
 //* CATEGORIES
 export const getCategories = async (): Promise<Category[]> =>
   API.get("/categories");
