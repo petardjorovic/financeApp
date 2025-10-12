@@ -299,11 +299,12 @@ type EditPasswordProps = {
 };
 
 export const editPassword = async ({ userId, password }: EditPasswordProps) => {
+  // edit password if user exists
   const existedUser = await UserModel.findById(userId);
   appAssert(existedUser, NOT_FOUND, "User not found");
   existedUser.password = password;
-  existedUser.passwordChangeAt = new Date();
   await existedUser.save();
 
+  // delete all users's sessions
   await SessionModel.deleteMany({ userId });
 };

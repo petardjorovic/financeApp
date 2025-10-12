@@ -37,6 +37,6 @@ export const editPasswordSchema = z
     confirmPassword: z.string().min(6).max(255),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Password do not match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
