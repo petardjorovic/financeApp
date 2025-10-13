@@ -13,6 +13,8 @@ export const getUserHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(user.omitPassword());
 });
 
+export const editProfileHandler = catchErrors(async (req, res) => {});
+
 export const editPasswordHandler = catchErrors(async (req, res) => {
   // validate request
   const request = editPasswordSchema.parse(req.body);
