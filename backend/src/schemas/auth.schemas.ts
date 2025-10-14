@@ -30,13 +30,3 @@ export const resetPasswordSchema = z.object({
     .regex(/^[0-9a-fA-F]{24}$/, "Invalid Verification code"),
   password: passwordSchema,
 });
-
-export const editPasswordSchema = z
-  .object({
-    password: z.string().min(6).max(255),
-    confirmPassword: z.string().min(6).max(255),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });

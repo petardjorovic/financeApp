@@ -1,10 +1,13 @@
 import UserModel from "../models/user.model.js";
 import catchErrors from "../utils/catchErrors.js";
 import appAssert from "../utils/appAssert.js";
-import { NOT_FOUND, OK } from "../constants/http.js";
-import { editPasswordSchema } from "../schemas/auth.schemas.js";
-import { editPassword } from "../services/user.service.js";
+import { BAD_REQUEST, NOT_FOUND, OK } from "../constants/http.js";
+import { editPassword, editProfile } from "../services/user.service.js";
 import { clearAuthCookies } from "../utils/cookies.js";
+import {
+  editPasswordSchema,
+  editProfileSchema,
+} from "../schemas/user.schemas.js";
 
 export const getUserHandler = catchErrors(async (req, res) => {
   const user = await UserModel.findById(req.userId);
@@ -13,7 +16,25 @@ export const getUserHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(user.omitPassword());
 });
 
-export const editProfileHandler = catchErrors(async (req, res) => {});
+export const editProfileHandler = catchErrors(async (req, res) => {
+  // validate request
+  appAssert(
+    req.file && req.body.fullName,
+    BAD_REQUEST,
+    "No data provided for update"
+  );
+  const request = editProfileSchema.parse(req.body);
+
+  // call service
+  await editProfile({
+    userId: req.userId,
+    fullName: request.fullName,
+    file: req.file,
+  });
+
+  // return response
+  res.status(OK).json({ message: "Profile successfully updated" });
+});
 
 export const editPasswordHandler = catchErrors(async (req, res) => {
   // validate request
