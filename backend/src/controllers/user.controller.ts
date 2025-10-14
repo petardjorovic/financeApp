@@ -8,6 +8,11 @@ import {
   editPasswordSchema,
   editProfileSchema,
 } from "../schemas/user.schemas.js";
+import {
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_CLOUD_NAME,
+} from "../constants/env.js";
 
 export const getUserHandler = catchErrors(async (req, res) => {
   const user = await UserModel.findById(req.userId);
@@ -19,7 +24,7 @@ export const getUserHandler = catchErrors(async (req, res) => {
 export const editProfileHandler = catchErrors(async (req, res) => {
   // validate request
   appAssert(
-    req.file && req.body.fullName,
+    req.file || req.body.fullName,
     BAD_REQUEST,
     "No data provided for update"
   );

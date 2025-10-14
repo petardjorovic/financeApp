@@ -16,6 +16,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { useEditPassword } from "@/queryHooks/useEditPassword";
+import { useEditProfile } from "@/queryHooks/useEditProfile";
 
 export type userFormValues = z.infer<typeof profileSchema>;
 export type userPasswordsValues = z.infer<typeof userPasswordSchema>;
@@ -32,6 +33,7 @@ function UserInfo() {
       avatar: undefined,
     },
   });
+  const { updateProfile, isPending: isProfileUpdating } = useEditProfile();
 
   const userPasswordForm = useForm({
     resolver: zodResolver(userPasswordSchema),
@@ -42,7 +44,17 @@ function UserInfo() {
   });
 
   const onSubmitUserForm = (values: userFormValues) => {
-    console.log(values);
+    if (user?.fullName === values.fullName && !values.avatar) return;
+    const formData = new FormData();
+
+    if (values.fullName) formData.append("fullName", values.fullName);
+    if (values.avatar) formData.append("image", values.avatar);
+
+    updateProfile(formData, {
+      onSuccess: () => {
+        setFileInputKey((prev) => prev + 1);
+      },
+    });
   };
 
   const onSubmitUserPassword = (values: userPasswordsValues) => {
@@ -146,14 +158,14 @@ function UserInfo() {
                 </Button>
                 <Button
                   type="submit"
-                  // disabled={disabled}
+                  disabled={isProfileUpdating}
                   className="bg-Grey-900 text-White rounded-[8px] p-4 text-xs sm:text-sm font-semibold leading-[21px] cursor-pointer h-[45px] w-40 sm:w-50"
                 >
-                  {/* {disabled ? (
-                      <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-                    ) : ( */}
-                  Update account
-                  {/* )} */}
+                  {isProfileUpdating ? (
+                    <Loader2Icon className="animate-spin" />
+                  ) : (
+                    "Update account"
+                  )}
                 </Button>
               </div>
             </form>

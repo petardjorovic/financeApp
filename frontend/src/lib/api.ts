@@ -51,7 +51,12 @@ export const resetPassword = async (
   data: ResetPasswordParams
 ): Promise<{ message: string }> => API.post("/auth/password/reset", data);
 
+//* USER
 export const getUser = async (): Promise<User> => API.get("/user");
+
+export const editProfile = async (
+  formData: FormData
+): Promise<{ message: string }> => API.patch("/user/profile/edit", formData);
 
 export type EditPasswordProps = {
   password: string;

@@ -191,7 +191,24 @@ export const recurringBillSchema = z.object({
 export const profileSchema = z.object({
   email: emailSchema,
   fullName: z.string().min(2).max(255),
-  avatar: z.instanceof(File).optional(),
+  avatar: z
+    .instanceof(File)
+    .refine((file) => file.size <= 500 * 1024, "Max size 500KB")
+    .refine(
+      (file) =>
+        [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/gif",
+          "image/bmp",
+          "image/tiff",
+          "image/svg+xml",
+        ].includes(file.type),
+      "Unsupported file format"
+    )
+    .optional()
+    .or(z.literal(null)), // ✅ omogućava da avatar bude i null (kad nema slike)
 });
 
 export const userPasswordSchema = z

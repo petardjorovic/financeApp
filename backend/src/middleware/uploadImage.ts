@@ -1,9 +1,9 @@
 import multer, { FileFilterCallback } from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import { v2 as cloudinary } from "cloudinary";
 import { Request } from "express";
 import AppError from "../utils/AppError.js";
 import { BAD_REQUEST } from "../constants/http.js";
+import cloudinary from "../config/cloudinary.js";
 
 const fileFilter = (
   req: Request,
