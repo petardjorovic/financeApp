@@ -14,6 +14,7 @@ import activeTransactions from "../assets/images/active-icon-Transaction.svg";
 import activeRecurringBills from "../assets/images/active-icon-RecurringBills.svg";
 import activePots from "../assets/images/active-icon-Pots.svg";
 import activeProfile from "../assets/images/active-icon-user.svg";
+import { useAuth } from "@/queryHooks/useAuth";
 
 const navItems = [
   {
@@ -55,9 +56,28 @@ const navItems = [
 ];
 
 function NavigationMenu({ collapse }: { collapse: boolean }) {
+  const { user } = useAuth();
   const { signOut } = useLogout();
   return (
     <div className="w-full flex-1 flex flex-col gap-y-1">
+      <div
+        className={`flex items-center justify-start ${
+          collapse ? "w-[80px]" : "w-[276px]"
+        } flex-col h-[100px] pl-3 rounded-r-[16px] overflow-hidden`}
+      >
+        <img
+          src={user?.avatar}
+          alt="user_avatar"
+          className={`${
+            collapse ? "w-[40px] h-[40px]" : "w-[55px] h-[55px]"
+          } aspect-square rounded-full object-cover border-2 border-Grey-300`}
+        />
+        <p
+          className={`${collapse ? "hidden" : "block"} text-Grey-300 text-base`}
+        >
+          {user?.fullName}
+        </p>
+      </div>
       {navItems.map((item) => (
         <NavMenuItem
           key={item.label}
@@ -71,7 +91,7 @@ function NavigationMenu({ collapse }: { collapse: boolean }) {
       <div
         className={`${
           collapse ? "w-[80px]" : "w-[276px]"
-        } h-[56px] mt-6 flex justify-start items-center px-8 py-4 rounded-r-[16px] border-l-5 gap-x-4 border-l-Grey-900 cursor-pointer
+        } h-[56px] mt-4 flex justify-start items-center px-8 py-4 rounded-r-[16px] border-l-5 gap-x-4 border-l-Grey-900 cursor-pointer
       `}
         onClick={() => signOut()}
       >

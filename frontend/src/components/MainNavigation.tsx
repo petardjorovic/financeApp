@@ -24,7 +24,7 @@ function MainNavigation() {
 
   return (
     <div
-      className={`hidden md:flex flex-col bg-Grey-900 transition-all duration-300 h-screen rounded-r-[16px] gap-y-6`}
+      className={`hidden md:flex flex-col bg-Grey-900 transition-all duration-300 h-screen rounded-r-[16px]`}
       style={{ width: collapse ? "88px" : "300px" }}
     >
       <div
