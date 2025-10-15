@@ -12,7 +12,8 @@ type Params = {
 };
 
 const defaults: CookieOptions = {
-  sameSite: "strict",
+  // sameSite: "strict",
+  sameSite: "none",
   httpOnly: true,
   secure,
 };

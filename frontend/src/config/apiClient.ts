@@ -34,7 +34,8 @@ API.interceptors.response.use(
     ) {
       try {
         await TokenRefreshClient.get("/auth/refresh");
-        return TokenRefreshClient(error.config!); // this might be a problem because config could be undefined
+        // return TokenRefreshClient(error.config!); // this might be a problem because config could be undefined
+        return TokenRefreshClient({ ...error.config!, withCredentials: true }); // this might be a problem because config could be undefined
       } catch {
         queryClient.clear();
         navigate("/login", {
