@@ -26,7 +26,7 @@ import { getRawRecurringBills } from "@/lib/api";
 import { addRecurringTransactionSchema } from "@/lib/schemas";
 import { useAddTransaction } from "@/queryHooks/useAddTransaction";
 import { Loader2, Loader2Icon } from "lucide-react";
-import type { RecurringBill } from "@/lib/types";
+import type { RawRecurringBill } from "@/lib/types";
 
 type AddTransactionFormValues = z.infer<typeof addRecurringTransactionSchema>;
 
@@ -46,7 +46,7 @@ function AddRecurringTransactionForm() {
     },
   });
   const { data: recurringBills, isLoading: isRecuringLoading } = useQuery<
-    RecurringBill[],
+    RawRecurringBill[],
     Error
   >({
     queryKey: ["rawRecurringBills"],
