@@ -143,6 +143,22 @@ export const deleteTransaction = async ({
   id: string;
 }): Promise<{ message: string }> => API.delete(`/transactions/${id}`);
 
+export const downloadTransactionsCSV = async () => {
+  const response = await API.get("/transactions/export", {
+    responseType: "blob",
+  });
+
+  const blob = new Blob([response.data], { type: "text/csv" });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "transactions.csv"); // naziv fajla
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+};
+
 //* BUDGETS
 export const getBudgets = async (): Promise<Budget[]> => API.get("/budgets");
 

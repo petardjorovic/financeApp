@@ -19,7 +19,13 @@ TokenRefreshClient.interceptors.response.use((response) => response.data);
 const API: AxiosInstance = axios.create(options);
 
 API.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    // ✅ ako preuzimamo blob (npr. CSV fajl), ne menjaj strukturu
+    if (response.config.responseType === "blob") {
+      return response; // ostavi ceo response
+    }
+    return response.data;
+  },
   async (error: AxiosError<ApiErrorResponse>) => {
     // try to refresh the access token behind the scenes
     if (

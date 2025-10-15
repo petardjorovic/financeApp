@@ -6,6 +6,7 @@ import RecurringBillsOverviewCard from "@/components/RecurringBillsOverviewCard"
 import IncomeExpenseChart from "@/components/IncomeExpenseChart";
 import { useOverview } from "@/queryHooks/useOverview";
 import { Loader2 } from "lucide-react";
+import ExportTxButton from "@/components/ExportTxButton";
 
 function Overview() {
   const {
@@ -21,6 +22,7 @@ function Overview() {
         <h1 className="text-[26px] leading-[31px] sm:text-[32px] sm:leading-[38px] font-bold text-Grey-900">
           Overview
         </h1>
+        <ExportTxButton />
       </div>
       {isOverviewLoading ? (
         <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 items-center justify-center">
