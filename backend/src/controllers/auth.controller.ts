@@ -34,7 +34,8 @@ export const registerHandler = catchErrors(async (req, res) => {
 
   // call service
   // const { user, accessToken, refreshToken } = await createAccount(request);
-  const { user } = await createAccount(request);
+  // const { user } = await createAccount(request);
+  await createAccount(request);
 
   // return response
   // return sethAuthCookies({ res, accessToken, refreshToken })
@@ -120,7 +121,8 @@ export const sendPasswordResetHandler = catchErrors(async (req, res) => {
   const email = emailSchema.parse(req.body.email);
 
   // call service
-  const { emailId, url } = await sendPasswordResetEmail(email);
+  // const { emailId, url } = await sendPasswordResetEmail(email);
+  await sendPasswordResetEmail(email);
 
   // return response
   res.status(OK).json({
