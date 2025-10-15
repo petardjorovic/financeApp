@@ -56,7 +56,7 @@ export default class Email {
   }
 
   async send(subject: string, template: string) {
-    const html = pug.renderFile(`${__dirname}/../views/${template}.pug`, {
+    const html = pug.renderFile(`${__dirname}/../../views/${template}.pug`, {
       subject: subject,
       firstName: this.firstName,
       url: this.url,
