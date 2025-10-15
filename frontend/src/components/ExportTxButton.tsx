@@ -2,7 +2,7 @@ import { downloadTransactionsCSV } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2Icon } from "lucide-react";
 import { Button } from "./ui/button";
-import { IoMdDownload } from "react-icons/io";
+import { BsFiletypeCsv } from "react-icons/bs";
 
 function ExportTxButton() {
   const { mutate, isPending } = useMutation({
@@ -18,7 +18,7 @@ function ExportTxButton() {
         <Loader2Icon className="animate-spin" />
       ) : (
         <>
-          <IoMdDownload />
+          <BsFiletypeCsv />
           &nbsp;Transactions
         </>
       )}
