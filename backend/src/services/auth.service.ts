@@ -62,22 +62,13 @@ export const createAccount = async (data: createAccountParams) => {
 
   // send verification email
   const url = `${APP_ORIGIN}/email/verify/${verificationCode._id}`;
-  // const { error } = await sendMail({
-  //   to: user.email,
-  //   ...getVerifyEmailTemplate(url),
-  // });
+  const { error } = await sendMail({
+    to: user.email,
+    ...getVerifyEmailTemplate(url),
+  });
 
-  // if (error) {
-  //   console.log(error);
-  // }
-
-  try {
-    await new Email(
-      { email: user.email, firstName: user.fullName },
-      url
-    ).sendWelcome();
-  } catch (error) {
-    console.error(error, "register activation send email error");
+  if (error) {
+    console.log("Verification email failed:", error);
     await UserModel.findByIdAndDelete(userId);
     await VerificationCodeModel.findOneAndDelete({
       userId,
@@ -88,6 +79,24 @@ export const createAccount = async (data: createAccountParams) => {
       "An error occurred, please try again later."
     );
   }
+
+  // try {
+  //   await new Email(
+  //     { email: user.email, firstName: user.fullName },
+  //     url
+  //   ).sendWelcome();
+  // } catch (error) {
+  //   console.error(error, "register activation send email error");
+  //   await UserModel.findByIdAndDelete(userId);
+  //   await VerificationCodeModel.findOneAndDelete({
+  //     userId,
+  //     type: VerificationCodeTypes.EmailVerification,
+  //   });
+  //   return new AppError(
+  //     INTERNAL_SERVER_ERROR,
+  //     "An error occurred, please try again later."
+  //   );
+  // }
 
   // if (error) {
   //   return res.status(400).json({ error });
@@ -253,29 +262,29 @@ export const sendPasswordResetEmail = async (email: string) => {
       verificationCode._id
     }&exp=${expiresAt.getTime()}`;
 
-    // const { data, error } = await sendMail({
-    //   to: user.email,
-    //   ...getPasswordResetTemplate(url),
-    // });
-    // appAssert(
-    //   data,
-    //   INTERNAL_SERVER_ERROR,
-    //   `${error?.name} - ${error?.message}`
-    // );
+    const { data, error } = await sendMail({
+      to: user.email,
+      ...getPasswordResetTemplate(url),
+    });
+    appAssert(
+      data,
+      INTERNAL_SERVER_ERROR,
+      `${error?.name} - ${error?.message}`
+    );
 
-    // if (error) {
-    //   console.log(error);
-    // }
+    if (error) {
+      console.log(error);
+    }
 
-    await new Email(
-      { email: user.email, firstName: user.fullName },
-      url
-    ).sendResetPassword();
+    // await new Email(
+    //   { email: user.email, firstName: user.fullName },
+    //   url
+    // ).sendResetPassword();
 
     // return success
     return {
       url,
-      // emailId: data.id,
+      emailId: data.id,
     };
   } catch (error: any) {
     console.log("SendPasswordResetError:", error.message);
