@@ -37,5 +37,14 @@ export const sethAuthCookies = ({ res, accessToken, refreshToken }: Params) => {
 
 export const clearAuthCookies = (res: Response): Response =>
   res
-    .clearCookie("accessToken")
-    .clearCookie("refreshToken", { path: REFRESH_PATH });
+    .clearCookie("accessToken", {
+      httpOnly: true,
+      secure,
+      sameSite,
+    })
+    .clearCookie("refreshToken", {
+      path: REFRESH_PATH,
+      httpOnly: true,
+      secure,
+      sameSite,
+    });
