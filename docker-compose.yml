@@ -1,0 +1,64 @@
+name: pdfinance-app
+
+services:
+  mongo:
+    image: mongo:8.0.4
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+    command: ["--replSet", "rs0"]
+    networks:
+      - pdfinance-app
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./backend/.env
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - pdfinance-app
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - pdfinance-app
+    command: npm run dev -- --host
+    depends_on:
+      - api
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - pdfinance-app
+    depends_on:
+      - api
+      - frontend
+
+volumes:
+  mongo_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  pdfinance-app:
+    driver: bridge

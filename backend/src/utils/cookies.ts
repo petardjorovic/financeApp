@@ -2,7 +2,7 @@ import { CookieOptions, Response } from "express";
 import { NODE_ENV } from "../constants/env.js";
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "./date.js";
 
-const secure = NODE_ENV !== "development";
+// const secure = NODE_ENV !== "development";
 // const sameSite = NODE_ENV === "development" ? "strict" : "none";
 const REFRESH_PATH = "/auth/refresh";
 
@@ -15,7 +15,7 @@ type Params = {
 const defaults: CookieOptions = {
   sameSite: "strict",
   httpOnly: true,
-  secure,
+  secure: true,
 };
 
 export const getAccessTokenCookieOptions = (): CookieOptions => ({
