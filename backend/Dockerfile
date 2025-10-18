@@ -1,17 +1,27 @@
-# 1️⃣ Base image
-FROM node:22-bookworm-slim
+# DEVELOPMENT STAGE
+FROM node:22-bookworm-slim as development
 
-# 2️⃣ Set working directory
 WORKDIR /app
 
-# 3️⃣ Copy package files first (da cache radi ispravno)
 COPY package*.json ./
 
-# 4️⃣ Install dependencies
 RUN npm ci
 
-# 5️⃣ Copy ostatak koda
 COPY . .
 
-# 6️⃣ Pokreni dev server
+RUN npm run build
+
 CMD [ "npm", "run", "dev" ]
+
+# PRODUCTION STAGE
+FROM node:22-bookworm-slim as production
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci --only=production
+
+COPY --from=development /app/dist ./dist
+
+CMD [ "node", "dist/index.js" ]

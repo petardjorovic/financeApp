@@ -30,7 +30,6 @@ import {
   UNAUTHORIZED,
 } from "../constants/http.js";
 import { hashValue } from "../utils/bcrypt.js";
-import Email from "../utils/Email.js";
 import AppError from "../utils/AppError.js";
 
 export type createAccountParams = {
@@ -79,28 +78,6 @@ export const createAccount = async (data: createAccountParams) => {
       "An error occurred, please try again later."
     );
   }
-
-  // try {
-  //   await new Email(
-  //     { email: user.email, firstName: user.fullName },
-  //     url
-  //   ).sendWelcome();
-  // } catch (error) {
-  //   console.error(error, "register activation send email error");
-  //   await UserModel.findByIdAndDelete(userId);
-  //   await VerificationCodeModel.findOneAndDelete({
-  //     userId,
-  //     type: VerificationCodeTypes.EmailVerification,
-  //   });
-  //   return new AppError(
-  //     INTERNAL_SERVER_ERROR,
-  //     "An error occurred, please try again later."
-  //   );
-  // }
-
-  // if (error) {
-  //   return res.status(400).json({ error });
-  // }
 
   // create session
   // const session = await SessionModel.create({
@@ -275,11 +252,6 @@ export const sendPasswordResetEmail = async (email: string) => {
     if (error) {
       console.log(error);
     }
-
-    // await new Email(
-    //   { email: user.email, firstName: user.fullName },
-    //   url
-    // ).sendResetPassword();
 
     // return success
     return {
