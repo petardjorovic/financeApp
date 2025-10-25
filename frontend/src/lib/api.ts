@@ -33,6 +33,15 @@ type LoginParams = {
 export const login = async (data: LoginParams): Promise<{ message: string }> =>
   API.post("/auth/login", data);
 
+type GoogleLoginParams = {
+  credential: string;
+};
+
+export const googleLogin = async ({
+  credential,
+}: GoogleLoginParams): Promise<{ message: string }> =>
+  API.post("/auth/google", { credential });
+
 export const logout = async () => API.get("/auth/logout");
 
 export const verifyEmail = async (code: string): Promise<{ message: string }> =>

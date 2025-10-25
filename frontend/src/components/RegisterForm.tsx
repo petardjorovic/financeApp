@@ -20,6 +20,7 @@ import { useRegister } from "@/queryHooks/useRegister";
 import logoLarge from "../assets/images/logo-larges.svg";
 import eye from "../assets/images/eye.png";
 import eyeSlash from "../assets/images/Icon=eye-slash.png";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 export type registerFormValues = z.infer<typeof registerFormSchema>;
 
@@ -171,7 +172,7 @@ function RegisterForm() {
                 )}
               />
               <Button
-                className="w-full p-4 rounded-[8px] text-sm font-semibold h-[53px] mt-4 mb-8 bg-Grey-900"
+                className="w-full p-4 rounded-[8px] text-sm font-semibold h-[53px] mt-4 mb-6 bg-Grey-900"
                 type="submit"
                 disabled={isPending}
               >
@@ -181,6 +182,16 @@ function RegisterForm() {
                   "Create Account"
                 )}
               </Button>
+
+              {/* OR */}
+              <div className="flex items-center justify-between gap-5 uppercase text-sm w-full text-Grey-500">
+                <div className="h-[0.5px] bg-Grey-300 flex-1"></div>
+                <span className="w-[10%] text-center">OR</span>
+                <div className="h-[0.5px] bg-Grey-300 flex-1"></div>
+              </div>
+
+              {/* Google AUTH */}
+              <GoogleLoginButton />
               <p className="text-Grey-500 text-sm text-center">
                 Already have an account?{" "}
                 <span className="text-Grey-900 font-semibold underline">

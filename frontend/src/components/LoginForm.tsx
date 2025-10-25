@@ -19,6 +19,7 @@ import { loginFormSchema } from "@/lib/schemas";
 import logoLarge from "../assets/images/logo-larges.svg";
 import eye from "../assets/images/eye.png";
 import eyeSlash from "../assets/images/Icon=eye-slash.png";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
@@ -48,6 +49,7 @@ function LoginForm() {
           <h1 className="font-bold text-[32px] mb-[32px] text-Grey-900">
             Login
           </h1>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <FormField
@@ -116,7 +118,7 @@ function LoginForm() {
                 </Link>
               </div>
               <Button
-                className="w-full p-4 rounded-[8px] text-sm font-semibold h-[53px] mb-8 bg-Grey-900"
+                className="w-full p-4 rounded-[8px] text-sm font-semibold h-[53px] mb-6 bg-Grey-900"
                 type="submit"
                 disabled={isPending}
               >
@@ -128,6 +130,17 @@ function LoginForm() {
                   "Login"
                 )}
               </Button>
+
+              {/* OR */}
+              <div className="flex items-center justify-between gap-5 uppercase text-sm w-full text-Grey-500">
+                <div className="h-[0.5px] bg-Grey-300 flex-1"></div>
+                <span className="w-[10%] text-center">OR</span>
+                <div className="h-[0.5px] bg-Grey-300 flex-1"></div>
+              </div>
+
+              {/* Google AUTH */}
+              <GoogleLoginButton />
+
               <p className="text-Grey-500 text-sm text-center">
                 Need to create an account?{" "}
                 <span className="text-Grey-900 font-semibold underline">
