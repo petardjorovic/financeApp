@@ -26,8 +26,10 @@ function OverviewSummary({
           }`}
         >
           ${totalBalance?.currentBalance.toFixed(2)}{" "}
-          {totalBalance?.currentBalance && totalBalance.currentBalance < 0 && (
+          {totalBalance?.currentBalance && totalBalance.currentBalance < 0 ? (
             <FaCircleExclamation className="inline-block ml-2 w-4 h-4" />
+          ) : (
+            ""
           )}
         </p>
       </div>

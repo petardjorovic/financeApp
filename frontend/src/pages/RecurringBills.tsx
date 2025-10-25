@@ -12,7 +12,7 @@ import { Loader2 } from "lucide-react";
 
 function RecurringBills() {
   const [isOpenAddBill, setIsOpenAddBill] = useState<boolean>(false);
-  const { resetFilters } = useRecurringBillsFilters();
+  const { resetFilters, search } = useRecurringBillsFilters();
   const {
     recurringBills,
     isPending: isRecurringBillsLoading,
@@ -58,6 +58,26 @@ function RecurringBills() {
 
             {/* RecurringBills table */}
             <RecurringBillsTable recurringBills={recurringBills} />
+          </div>
+        </div>
+      ) : recurringBills.length === 0 && search ? (
+        <div className="flex flex-col lg:flex-row w-full gap-6">
+          {/* Left side */}
+          <div className="flex flex-col sm:flex-row lg:flex-col gap-3 sm:gap-6 w-full lg:w-[337px]">
+            <TotalRecurringBills recurringBills={recurringBills} />
+            <RecurringBillsSummary recurringBills={recurringBills} />
+          </div>
+          {/* Right side */}
+          <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white rounded-[12px] flex flex-col gap-6 flex-1">
+            {/* Table operations */}
+            <div className="h-[45px] w-full flex gap-6 justify-between">
+              <RecurringBillsSearchInput />
+              <SortByRecurringBills />
+            </div>
+
+            {/* RecurringBills table */}
+            <RecurringBillsTable recurringBills={recurringBills} />
+            <p className="text-center">No recurring bills match your search.</p>
           </div>
         </div>
       ) : (

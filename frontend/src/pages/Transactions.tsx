@@ -14,7 +14,7 @@ import { Loader2 } from "lucide-react";
 function Transactions() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { resetFilters } = useTransFilters();
+  const { resetFilters, search } = useTransFilters();
   const { isPending: isCategoriesLoading, isError: categoriesError } =
     useCategories();
   const {
@@ -67,6 +67,29 @@ function Transactions() {
             {data?.transactions && (
               <TransactionaTable transactions={data.transactions} />
             )}
+
+            {/* Pagination */}
+            <Pagination totalPages={data?.pages} />
+          </div>
+        </>
+      ) : data?.transactions.length === 0 && search ? (
+        <>
+          <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
+            {/* Table operations */}
+            <div className="h-[45px] w-full flex justify-between">
+              <SearchInput />
+              <div className="h-full flex items-center gap-6">
+                <SortByTransactions />
+                <CategoryFilter />
+              </div>
+            </div>
+
+            {/* Transaction table */}
+            {data?.transactions && (
+              <TransactionaTable transactions={data.transactions} />
+            )}
+
+            <p className="text-center">No transactions match your search.</p>
 
             {/* Pagination */}
             <Pagination totalPages={data?.pages} />

@@ -19,7 +19,7 @@ function GoogleLoginButton() {
       }}
       text={pathname === "/login" ? "continue_with" : "signup_with"}
       logo_alignment="center"
-      useOneTap
+      // useOneTap
     />
   );
 }
