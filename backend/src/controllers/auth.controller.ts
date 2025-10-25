@@ -2,6 +2,7 @@ import { CREATED, OK, UNAUTHORIZED } from "../constants/http.js";
 import catchErrors from "../utils/catchErrors.js";
 import {
   createAccount,
+  loginGoogleUser,
   loginUser,
   refreshUserAccessToken,
   resetPassword,
@@ -16,6 +17,7 @@ import {
 } from "../utils/cookies.js";
 import {
   emailSchema,
+  googleLoginSchema,
   loginSchema,
   registerSchema,
   resetPasswordSchema,
@@ -59,6 +61,22 @@ export const loginHandler = catchErrors(async (req, res) => {
 
   // call service
   const { user, accessToken, refreshToken } = await loginUser(request);
+
+  // return response
+  return sethAuthCookies({ res, accessToken, refreshToken }).status(OK).json({
+    message: "Login successfully",
+  });
+});
+
+export const googleLoginHandler = catchErrors(async (req, res) => {
+  // validate request
+  const request = googleLoginSchema.parse({
+    ...req.body,
+    userAgent: req.headers["user-agent"],
+  });
+
+  // call service
+  const { user, accessToken, refreshToken } = await loginGoogleUser(request);
 
   // return response
   return sethAuthCookies({ res, accessToken, refreshToken }).status(OK).json({

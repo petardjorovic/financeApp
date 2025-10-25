@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  googleLoginHandler,
   loginHandler,
   logoutHandler,
   refreshHandler,
@@ -14,6 +15,7 @@ const authRoutes = Router();
 // prefix /auth
 authRoutes.post("/register", registerHandler);
 authRoutes.post("/login", loginHandler);
+authRoutes.post("/google", googleLoginHandler);
 authRoutes.get("/logout", logoutHandler);
 authRoutes.get("/refresh", refreshHandler);
 authRoutes.get("/email/verify/:code", verifyEmailHandler);

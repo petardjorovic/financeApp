@@ -9,6 +9,11 @@ export const loginSchema = z.object({
   userAgent: z.string().optional(),
 });
 
+export const googleLoginSchema = z.object({
+  credential: z.string().nonempty(),
+  userAgent: z.string().optional(),
+});
+
 export const registerSchema = loginSchema
   .extend({
     confirmPassword: passwordSchema,

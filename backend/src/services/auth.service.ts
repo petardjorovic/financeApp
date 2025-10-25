@@ -15,7 +15,7 @@ import {
   signToken,
   verifyToken,
 } from "../utils/jwt.js";
-import { APP_ORIGIN } from "../constants/env.js";
+import { APP_ORIGIN, GOOGLE_CLIENT_ID } from "../constants/env.js";
 import {
   getPasswordResetTemplate,
   getVerifyEmailTemplate,
@@ -30,8 +30,8 @@ import {
   UNAUTHORIZED,
 } from "../constants/http.js";
 import { hashValue } from "../utils/bcrypt.js";
-import Email from "../utils/Email.js";
 import AppError from "../utils/AppError.js";
+import { OAuth2Client } from "google-auth-library";
 
 export type createAccountParams = {
   email: string;
@@ -80,28 +80,6 @@ export const createAccount = async (data: createAccountParams) => {
     );
   }
 
-  // try {
-  //   await new Email(
-  //     { email: user.email, firstName: user.fullName },
-  //     url
-  //   ).sendWelcome();
-  // } catch (error) {
-  //   console.error(error, "register activation send email error");
-  //   await UserModel.findByIdAndDelete(userId);
-  //   await VerificationCodeModel.findOneAndDelete({
-  //     userId,
-  //     type: VerificationCodeTypes.EmailVerification,
-  //   });
-  //   return new AppError(
-  //     INTERNAL_SERVER_ERROR,
-  //     "An error occurred, please try again later."
-  //   );
-  // }
-
-  // if (error) {
-  //   return res.status(400).json({ error });
-  // }
-
   // create session
   // const session = await SessionModel.create({
   //   userId,
@@ -135,6 +113,7 @@ export const loginUser = async ({
   // get the user by email
   const user = await UserModel.findOne({ email });
   appAssert(user, UNAUTHORIZED, "Invalid email or password");
+  appAssert(user.password, UNAUTHORIZED, "Please login via Google"); // jel ovo dovoljno?
 
   // check weather user is verified
   appAssert(user.verified, UNAUTHORIZED, "Please verify your email to log in");
@@ -144,6 +123,71 @@ export const loginUser = async ({
   appAssert(isPasswordValid, UNAUTHORIZED, "Invalid email or password");
 
   // create session
+  const userId = user._id;
+  const session = await SessionModel.create({
+    userId,
+    userAgent,
+  });
+
+  const sessionInfo = {
+    sessionId: session._id,
+  };
+
+  // sign access & refresh token
+  const refreshToken = signToken(sessionInfo, refreshTokenSignOptions);
+
+  const accessToken = signToken({ ...sessionInfo, userId });
+
+  // return user & tokens
+  return {
+    user: user.omitPassword(),
+    accessToken,
+    refreshToken,
+  };
+};
+
+type LoginGoogleUserParams = {
+  credential: string;
+  userAgent?: string | undefined;
+};
+
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+export const loginGoogleUser = async ({
+  credential,
+  userAgent,
+}: LoginGoogleUserParams) => {
+  // 1️⃣ Verifikuj Google token
+  const ticket = await client.verifyIdToken({
+    idToken: credential,
+    audience: GOOGLE_CLIENT_ID,
+  });
+
+  const payload = ticket.getPayload();
+  appAssert(payload?.email, UNAUTHORIZED, "Invalid google token");
+
+  const { email, sub: googleId, name: fullName, picture: avatar } = payload;
+
+  // 2️⃣ Nadji ili kreiraj usera
+  let user = await UserModel.findOne({ email });
+
+  if (user) {
+    if (!user.googleId) {
+      user.googleId = googleId;
+      user.verified = true;
+      await user.save();
+    }
+  } else {
+    user = await UserModel.create({
+      email,
+      fullName,
+      avatar,
+      googleId,
+      verified: true,
+    });
+  }
+
+  // 3️⃣ Kreiraj session i JWT token
   const userId = user._id;
   const session = await SessionModel.create({
     userId,
@@ -237,6 +281,13 @@ export const sendPasswordResetEmail = async (email: string) => {
     const user = await UserModel.findOne({ email });
     appAssert(user, NOT_FOUND, "User not found");
 
+    // ❌ Google-only user ne može resetovati password
+    appAssert(
+      user.password,
+      UNAUTHORIZED,
+      "This account uses Google login. Please login via Google."
+    );
+
     // check email rate limit
     const fiveMinAgo = fiveMinutesAgo();
     const count = await VerificationCodeModel.countDocuments({
@@ -275,11 +326,6 @@ export const sendPasswordResetEmail = async (email: string) => {
     if (error) {
       console.log(error);
     }
-
-    // await new Email(
-    //   { email: user.email, firstName: user.fullName },
-    //   url
-    // ).sendResetPassword();
 
     // return success
     return {
