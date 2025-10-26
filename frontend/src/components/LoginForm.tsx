@@ -139,7 +139,9 @@ function LoginForm() {
               </div>
 
               {/* Google AUTH */}
-              <GoogleLoginButton />
+              <div className="w-full">
+                <GoogleLoginButton />
+              </div>
 
               <p className="text-Grey-500 text-sm text-center">
                 Need to create an account?{" "}
