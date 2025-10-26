@@ -72,7 +72,8 @@ function Transactions() {
             <Pagination totalPages={data?.pages} />
           </div>
         </>
-      ) : data?.transactions.length === 0 && (search || filter) ? (
+      ) : data?.transactions.length === 0 &&
+        (search || filter !== "All Transactions") ? (
         <>
           <div className="px-5 py-6 sm:px-8 sm:py-8 bg-white w-full rounded-[12px] flex flex-1 flex-col gap-y-6">
             {/* Table operations */}
