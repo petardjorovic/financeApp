@@ -139,7 +139,7 @@ function LoginForm() {
               </div>
 
               {/* Google AUTH */}
-              <div className="w-full">
+              <div className="w-full flex justify-center items-center p-0">
                 <GoogleLoginButton />
               </div>
 

@@ -191,7 +191,9 @@ function RegisterForm() {
               </div>
 
               {/* Google AUTH */}
-              <GoogleLoginButton />
+              <div className="w-full flex justify-center items-center p-0">
+                <GoogleLoginButton />
+              </div>
               <p className="text-Grey-500 text-sm text-center">
                 Already have an account?{" "}
                 <span className="text-Grey-900 font-semibold underline">
