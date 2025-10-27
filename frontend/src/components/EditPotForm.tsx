@@ -58,9 +58,13 @@ function EditPotForm({ isOpenEdit, setIsOpenEdit, pot, pots }: Props) {
   // reset form when close edit pot modal
   useEffect(() => {
     if (!isOpenEdit) {
-      editPotForm.reset();
+      editPotForm.reset({
+        name: pot.name,
+        target: pot.target.toFixed(2),
+        themeId: pot.themeId._id,
+      });
     }
-  }, [editPotForm, isOpenEdit]);
+  }, [editPotForm, isOpenEdit, pot.name, pot.target, pot.themeId]);
 
   return (
     <Dialog
