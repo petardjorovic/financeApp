@@ -38,7 +38,7 @@ function Transactions() {
       <PageHeader
         label="Transactions"
         buttonLabel="Add Transaction"
-        onButtonClick={() => navigate("/transaction/add")}
+        onButtonClick={() => navigate("/app/transaction/add")}
       />
       {/* Transaction content */}
       {isLoadingAll ? (

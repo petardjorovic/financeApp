@@ -18,7 +18,7 @@ function BudgetItem({
 
   const goToTransactions = () => {
     setFilterTerm(budget.categoryId.name);
-    navigate("/transactions", { state: { fromBudget: true } });
+    navigate("/app/transactions", { state: { fromBudget: true } });
   };
 
   return (

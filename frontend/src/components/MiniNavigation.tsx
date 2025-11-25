@@ -12,31 +12,31 @@ import activeRecurringBills from "../assets/images/active-icon-RecurringBills.sv
 
 const navItems = [
   {
-    to: "/",
+    to: "/app",
     icon: iconOverview,
     label: "Overview",
     activeIcon: activeOverview,
   },
   {
-    to: "/transactions",
+    to: "/app/transactions",
     icon: iconTransactions,
     label: "Transactions",
     activeIcon: activeTransactions,
   },
   {
-    to: "/budgets",
+    to: "/app/budgets",
     icon: iconBudgets,
     label: "Budgets",
     activeIcon: activeBudgets,
   },
   {
-    to: "/pots",
+    to: "/app/pots",
     icon: iconPots,
     label: "Pots",
     activeIcon: activePots,
   },
   {
-    to: "/recurringbills",
+    to: "/app/recurringbills",
     icon: iconRecurringBills,
     label: "Recurring Bills",
     activeIcon: activeRecurringBills,

@@ -2,6 +2,8 @@ import { lazy, Suspense } from "react";
 import { useNavigate, Route, Routes } from "react-router-dom";
 import { setNavigate } from "./lib/navigation.ts";
 import LoadingSpinnerFull from "./components/LoadingSpinnerFull.tsx";
+import Home from "./pages/Home.tsx";
+import GuestRoute from "./components/GuestRoute.tsx";
 
 const Login = lazy(() => import("./pages/Login.tsx"));
 const Register = lazy(() => import("./pages/Register.tsx"));
@@ -26,7 +28,8 @@ function App() {
   return (
     <Suspense fallback={<LoadingSpinnerFull />}>
       <Routes>
-        <Route path="/" element={<AppContainer />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/app" element={<AppContainer />}>
           <Route index element={<Overview />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="transaction/add" element={<AddTransaction />} />
@@ -42,12 +45,46 @@ function App() {
           <Route path="profile" element={<Profile />} />
         </Route>
 
-        <Route path="/login" element={<Login />} />
-
-        <Route path="/register" element={<Register />} />
-        <Route path="/password/forgot" element={<ForgotPassword />} />
-        <Route path="/password/reset" element={<ResetPassword />} />
-        <Route path="/email/verify/:code" element={<VerifyEmail />} />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestRoute>
+              <Register />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/password/forgot"
+          element={
+            <GuestRoute>
+              <ForgotPassword />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/password/reset"
+          element={
+            <GuestRoute>
+              <ResetPassword />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/email/verify/:code"
+          element={
+            <GuestRoute>
+              <VerifyEmail />
+            </GuestRoute>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Suspense>

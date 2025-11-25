@@ -31,7 +31,7 @@ function TransactionMoreMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
-            onClick={() => navigate(`/transaction/${transactionId}/edit`)}
+            onClick={() => navigate(`/app/transaction/${transactionId}/edit`)}
           >
             Edit Transaction
           </DropdownMenuItem>

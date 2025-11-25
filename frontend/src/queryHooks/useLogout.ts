@@ -10,7 +10,7 @@ export const useLogout = () => {
     mutationFn: logout,
     onSettled: () => {
       queryClient.clear();
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     },
   });
 

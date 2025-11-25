@@ -58,7 +58,7 @@ function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => navigate("/profile")}>
+          <DropdownMenuItem onClick={() => navigate("/app/profile")}>
             <User2Icon /> Profile
           </DropdownMenuItem>
         </DropdownMenuGroup>
