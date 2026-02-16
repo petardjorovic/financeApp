@@ -1,0 +1,63 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build backend image
+        run: |
+          docker build -t \
+            -t ${{ secrets.DOCKER_USERNAME }}/pdfinance-backend:latest \
+            ./backend
+
+      - name: Push backend image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/pdfinance-backend:latest
+
+      - name: Build frontend image
+        run: |
+          docker build \
+            --build-arg VITE_API_URL=https://api.${{ secrets.DOMAIN_NAME }} \
+            --build-arg VITE_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/pdfinance-frontend:latest \
+            ./frontend
+
+      - name: Push frontend image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/pdfinance-frontend:latest
+
+      - name: Build caddy image
+        run: |
+          docker build \
+            -t ${{ secrets.DOCKER_USERNAME }}/pdfinance-caddy:latest \
+            ./caddy
+
+      - name: Push caddy image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/pdfinance-caddy:latest
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /root/var/www/financeProd
+            docker-compose pull
+            docker-compose up -d

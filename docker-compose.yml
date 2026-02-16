@@ -1,0 +1,56 @@
+services:
+  mongo:
+    image: mongo:8.0.4
+    volumes:
+      - mongo_data:/data/db
+    command: ["--replSet", "rs0"]
+    networks:
+      - pdfinance-app
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: petardjorovic/pdfinance-backend:latest
+    env_file: ./backend/.env
+    restart: unless-stopped
+    networks:
+      - pdfinance-app
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  frontend:
+    image: petardjorovic/pdfinance-frontend:latest
+    restart: unless-stopped
+    networks:
+      - pdfinance-app
+    depends_on:
+      - api
+
+  caddy:
+    image: petardjorovic/pdfinance-caddy:latest
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - pdfinance-app
+    depends_on:
+      - api
+      - frontend
+
+networks:
+  pdfinance-app:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  caddy_config:
+  caddy_data:
