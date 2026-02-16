@@ -57,5 +57,5 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /root/var/www/financeProd
-            docker-compose pull
-            docker-compose up -d
+            docker compose pull
+            docker compose up -d
