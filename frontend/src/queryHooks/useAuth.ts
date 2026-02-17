@@ -4,7 +4,9 @@ import type { User } from "@/lib/types";
 
 export const AUTH = "auth";
 
-export const useAuth = (opts?: UseQueryOptions<User, Error, User>) => {
+export const useAuth = (
+  opts?: Omit<UseQueryOptions<User, Error, User>, "queryKey" | "queryFn">,
+) => {
   const query = useQuery<User, Error, User>({
     queryKey: [AUTH],
     queryFn: getUser,

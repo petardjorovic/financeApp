@@ -11,7 +11,8 @@ type LoginState = {
 export const useGoogleSignIn = () => {
   const navigate = useNavigate();
   const location = useLocation() as { state: LoginState };
-  const redirectUrl = location.state?.redirectUrl || "/";
+  // const redirectUrl = location.state?.redirectUrl || "/";
+  const redirectUrl = location.state?.redirectUrl || "/app";
 
   const { mutate: signInWithGoogle, ...rest } = useMutation<
     { message: string },

@@ -3,7 +3,9 @@ import { useAuth } from "@/queryHooks/useAuth";
 import { Loader2 } from "lucide-react";
 
 function GuestRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+  // Disable automatic /user fetch on guest pages to prevent 401 loop
+  // Only check cached auth if available, never make new request
+  const { user, isLoading } = useAuth({ enabled: false });
 
   if (isLoading)
     return (
