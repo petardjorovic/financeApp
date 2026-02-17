@@ -3,7 +3,8 @@ import { NODE_ENV } from "../constants/env.js";
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "./date.js";
 
 const secure = NODE_ENV !== "development";
-const sameSite = NODE_ENV === "development" ? "strict" : "none";
+// const sameSite = NODE_ENV === "development" ? "strict" : "none";
+const sameSite = NODE_ENV === "development" ? "lax" : "none";
 const REFRESH_PATH = "/auth/refresh";
 
 type Params = {
