@@ -10,9 +10,25 @@ www.{$DOMAIN_NAME:invalid} {
 api.{$DOMAIN_NAME:invalid} {
     reverse_proxy api:4004
 
+    # Handle CORS preflight requests
+    @options method OPTIONS
+    handle @options {
+        header Access-Control-Allow-Origin https://{$DOMAIN_NAME:invalid}
+        header Access-Control-Allow-Methods GET,POST,PUT,DELETE,PATCH,OPTIONS
+        header Access-Control-Allow-Headers Content-Type,Authorization,Cookie
+        header Access-Control-Allow-Credentials true
+        respond 204
+    }
+
 	 header {
         -X-Powered-By
         -Server
+        
+        # CORS headers for all responses
+        Access-Control-Allow-Origin https://{$DOMAIN_NAME:invalid}
+        Access-Control-Allow-Methods GET,POST,PUT,DELETE,PATCH,OPTIONS
+        Access-Control-Allow-Headers Content-Type,Authorization,Cookie
+        Access-Control-Allow-Credentials true
 
         # enable HSTS
         Strict-Transport-Security max-age=31536000;
