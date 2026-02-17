@@ -9,16 +9,28 @@ import routes from "./routes/index.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
+const allowedOrigins = ["https://pd-finance.com"];
+
 const app = express();
 app.set("trust proxy", 1);
 
 app.use(helmet());
+
 app.use(
   cors({
-    origin: "https://pd-finance.com",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
+
+// Ovaj handler omogućava OPTIONS request za sve rute
+app.options("*", cors({ credentials: true, origin: allowedOrigins }));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
