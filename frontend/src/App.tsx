@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import { useNavigate, Route, Routes } from "react-router-dom";
 import { setNavigate } from "./lib/navigation.ts";
 import LoadingSpinnerFull from "./components/LoadingSpinnerFull.tsx";
-import Home from "./pages/Home.tsx";
 import GuestRoute from "./components/GuestRoute.tsx";
 
 const Login = lazy(() => import("./pages/Login.tsx"));
@@ -19,6 +18,7 @@ const RecurringBills = lazy(() => import("./pages/RecurringBills.tsx"));
 const EditTransaction = lazy(() => import("./pages/EditTransaction.tsx"));
 const AddTransaction = lazy(() => import("./pages/AddTransaction.tsx"));
 const Overview = lazy(() => import("./pages/Overview.tsx"));
+const Home = lazy(() => import("./pages/Home.tsx"));
 
 const AppContainer = lazy(() => import("./components/AppContainer.tsx"));
 
@@ -53,6 +53,7 @@ function App() {
             </GuestRoute>
           }
         />
+
         <Route
           path="/register"
           element={

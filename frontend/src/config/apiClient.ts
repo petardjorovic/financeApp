@@ -50,7 +50,7 @@ API.interceptors.response.use(
       status: error.response?.status,
       ...(error.response?.data as object),
     });
-  }
+  },
 );
 
 export default API;

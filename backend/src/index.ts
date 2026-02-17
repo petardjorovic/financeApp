@@ -10,10 +10,15 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
 const app = express();
+app.set("trust proxy", 1);
 
 app.use(helmet());
-
-app.set("trust proxy", 1);
+app.use(
+  cors({
+    origin: APP_ORIGIN,
+    credentials: true,
+  }),
+);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -30,12 +35,6 @@ app.use(limiter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: APP_ORIGIN,
-    credentials: true,
-  })
-);
 app.use(cookieParser());
 
 app.use("/", routes);
