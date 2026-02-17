@@ -8,7 +8,7 @@ www.{$DOMAIN_NAME:invalid} {
 }
 
 api.{$DOMAIN_NAME:invalid} {
-    reverse_proxy api:4004
+    reverse_proxy api:4000
 
     # Handle CORS preflight requests
     @options method OPTIONS
